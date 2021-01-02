@@ -3,19 +3,36 @@ BASE_URL := "https://www.carlpearson.net"
 
 .PHONY: all
 .DEFAULT_GOAL := all
-all: html $(DST_DIR)/robots.txt $(DST_DIR)/sitemap.xml
+all: css index nav html $(DST_DIR)/robots.txt $(DST_DIR)/sitemap.xml
 
 PUBLICATIONS_DIR := publications
-MD_FILES = $(shell find $(PUBLICATIONS_DIR) -type f -name '*.md')
-HTML_FILES = $(patsubst %/index.md, $(DST_DIR)/%.html, $(MD_FILES))
-TEMPLATE = $(SRC_DIR)/template.html
-.PHONY: publications
-publications: $(HTML_FILES)
+POSTS_DIR := posts
+MD_FILES = $(shell find $(PUBLICATIONS_DIR) $(POSTS_DIR) -type f -name '*.md')
+HTML_FILES = $(patsubst %.md, $(DST_DIR)/%.html, $(MD_FILES))
+
+.PHONY: html
+html: $(HTML_FILES)
 	@echo $(MD_FILES)
 	@echo $(HTML_FILES)
 
+$(DST_DIR)/css/%.css: %.css
+	mkdir -p $(DST_DIR)/css
+	cp -r $< $@
 
-public/publications/%.html: publications/%/index.md publications/template.html
+.PHONY: css
+css: $(DST_DIR)/css/nav.css
+
+
+public/posts/%.html: posts/%.md posts/template.html
+	@echo $< "->" $@
+	mkdir -p public/posts
+	pandoc --from markdown \
+	--to html \
+	--template posts/template.html \
+	$< -o $@
+
+
+public/publications/%.html: publications/%.md publications/template.html
 	@echo $< "->" $@
 	mkdir -p public/publications
 	pandoc --from markdown \
@@ -24,26 +41,30 @@ public/publications/%.html: publications/%/index.md publications/template.html
 	$< -o $@
 
 
-gen/var_publications.txt: $(MD_FILES)
-	pandoc --from md \
-	--to txt \
-	$^
+$(DST_DIR)/nav.html: nav.md
+		@echo == $< "->" $@ ==
+		pandoc --to html \
+		$< -o $@
+
+nav: $(DST_DIR)/nav.html
 
 # Generate the main index.html
 # various links are automatically added through the --variable option
 # then that file can be included with -H
 # that file can probably created by pandocing all the publication
 # files with a special template
-$(DST_DIR)/index.html: index.md template.html
-	@echo ==generate index.html
+$(DST_DIR)/index.html: index.md css template.html  $(DST_DIR)/nav.html
+	@echo == generate index.html ==
 	mkdir -p $(DST_DIR)
 	pandoc --from markdown \
 	--to html \
 	--template template.html \
+	-B $(DST_DIR)/nav.html \
+	-c css/nav.css \
 	$< -o $@
-	
 
-html: public/index.html publications
+
+index: public/index.html
 	mkdir -p $(DST_DIR)
 	@echo "build html"
 
