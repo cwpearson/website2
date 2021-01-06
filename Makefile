@@ -45,6 +45,9 @@ $(DST_DIR)/nav.html: nav.md
 		@echo == $< "->" $@ ==
 		pandoc --to html \
 		$< -o $@
+		sed -i.bak 's/<ul>/<ul class=\"nav\">/g' $@
+		sed -i.bak 's/<li>/<li class=\"nav\">/g' $@
+		rm $@.bak
 
 nav: $(DST_DIR)/nav.html
 
