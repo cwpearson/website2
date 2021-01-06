@@ -48,13 +48,15 @@ $endfor$
 $if(title)$
 <header id="title-block-header">
 <h1 class="title">$title$</h1>
-$if(subtitle)$
-<p class="subtitle">$subtitle$</p>
-$endif$
 
+<p class="venue">
+$venue$
+</p>
+
+<p class="authors">
 $for(authors)$
-<p class="author">$authors$</p>
-$endfor$
+$authors$$sep$, $endfor$
+</p>
 
 $if(date)$
 <p class="date">$date$</p>
@@ -62,10 +64,16 @@ $endif$
 </header>
 $endif$
 
-$if(toc)$
-<nav id="$idprefix$TOC" role="doc-toc">
-$table-of-contents$
-</nav>
+$if(code)$
+<a href="$code$" class="code">code</a>
+$endif$
+
+$if(paper)$
+<a href="$paper$" class="paper">paper</a>
+$endif$
+
+$if(slides)$
+<a href="$slides$" class="slides">slides</a>
 $endif$
 
 $if(abstract)$
