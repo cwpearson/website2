@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import mistletoe
 
@@ -61,7 +61,7 @@ def find_posts() -> List[PostSpec]:
     return specs
 
 
-def read_markdown(path: Path) -> Tuple[str | None, str]:
+def read_markdown(path: Path) -> Tuple[Union[str, None], str]:
     toml = ""
     md = ""
 
