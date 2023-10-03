@@ -1,4 +1,3 @@
-
 +++
 title = "Received E.A. Reid Fellowship"
 subtitle = ""
