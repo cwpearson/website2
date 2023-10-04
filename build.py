@@ -225,18 +225,6 @@ def render_pub(spec: PubSpec) -> Pub:
     )
 
 
-def output_pub(pub: Pub):
-    with open(TEMPLATES_DIR / "pub.tmpl", "r") as f:
-        tmpl = Template(f.read())
-
-    html = tmpl.safe_substitute({"body_frag": pub.body_html})
-    output_dir = OUTPUT_DIR / pub.spec.output_dir
-    print(f"==== output {pub.spec.markdown_path} -> {output_dir}")
-    output_dir.mkdir(parents=True, exist_ok=True)
-    with open(output_dir / "index.html", "w") as f:
-        f.write(html)
-
-
 def nav_frag() -> str:
     with open(TEMPLATES_DIR / "navbar_frag.html") as f:
         return f.read()
@@ -268,6 +256,26 @@ def footer_frag() -> str:
     )
     html += "</div>\n"
     return html
+
+
+def output_pub(pub: Pub):
+    with open(TEMPLATES_DIR / "pub.tmpl", "r") as f:
+        tmpl = Template(f.read())
+
+    html = tmpl.safe_substitute(
+        {
+            "style_frag": navbar_css() + common_css() + footer_css(),
+            "header_frag": "",
+            "nav_frag": nav_frag(),
+            "body_frag": pub.body_html,
+            "footer_frag": footer_frag(),
+        }
+    )
+    output_dir = OUTPUT_DIR / pub.spec.output_dir
+    print(f"==== output {pub.spec.markdown_path} -> {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with open(output_dir / "index.html", "w") as f:
+        f.write(html)
 
 
 def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
