@@ -290,7 +290,7 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
     top_k_pubs_frag = "<ul>\n"
     for pub in top_k_pubs:
         top_k_pubs_frag += (
-            f'<li><a href="{pub.spec.output_dir}/">{pub.title}</a></li>\n'
+            f'<li><a href="/{pub.spec.output_dir}/">{pub.title}</a></li>\n'
         )
     top_k_pubs_frag += "</ul>\n"
 
@@ -313,16 +313,21 @@ def output_index(html):
         f.write(html)
 
 
-def render_publications() -> str:
+def render_publications(pubs: List[Pub]) -> str:
     with open(TEMPLATES_DIR / "publications.tmpl") as f:
         tmpl = Template(f.read())
+
+    pub_links = "<ul>\n"
+    for pub in sorted(pubs, key=lambda x: x.create_time, reverse=True):
+        pub_links += f'<li><a href="/{pub.spec.output_dir}/">{pub.title}</a></li>\n'
+    pub_links += "</ul>\n"
 
     return tmpl.safe_substitute(
         {
             "style_frag": navbar_css() + common_css() + footer_css(),
             "header_frag": "HEADER",
             "nav_frag": nav_frag(),
-            "body_frag": "BODY",
+            "body_frag": pub_links,
             "footer_frag": footer_frag(),
         }
     )
@@ -357,5 +362,5 @@ if __name__ == "__main__":
     )
     output_index(index_html)
 
-    pubs_html = render_publications()
+    pubs_html = render_publications(pubs)
     output_publications(pubs_html)
