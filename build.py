@@ -208,7 +208,10 @@ def render_pub(spec: PubSpec) -> Pub:
     mod_time = header_data.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
 
-    body_html = mistletoe.markdown(markdown)
+    body_html = ""
+    body_html += f"<h1>{title}</h1>\n"
+    body_html += mistletoe.markdown(markdown)
+
     return Pub(
         spec=spec,
         title=title,
@@ -219,6 +222,11 @@ def render_pub(spec: PubSpec) -> Pub:
 
 
 def output_pub(pub: Pub):
+    with open(TEMPLATES_DIR / "pub.tmpl", "r") as f:
+        tmpl = Template(f.read())
+
+    html = tmpl.safe_substitute({"body_frag": pub.body_html})
+
     if pub.spec.is_dir:
         output_html_dir = (
             OUTPUT_DIR / "publication" / f"{pub.spec.markdown_path.parent.stem}"
@@ -228,7 +236,7 @@ def output_pub(pub: Pub):
     print(f"==== output {pub.spec.markdown_path} -> {output_html_dir}")
     output_html_dir.mkdir(parents=True, exist_ok=True)
     with open(output_html_dir / "index.html", "w") as f:
-        f.write(pub.body_html)
+        f.write(html)
 
 
 def nav_frag() -> str:
