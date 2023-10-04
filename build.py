@@ -147,7 +147,10 @@ def render_post(spec: PostSpec) -> Post:
     mod_time = header_data.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
 
-    body_html = mistletoe.markdown(markdown)
+    body_html = ""
+    body_html += f"<h1>{title}</h1>\n"
+    body_html += mistletoe.markdown(markdown)
+
     return Post(
         spec=spec,
         title=title,
@@ -158,7 +161,7 @@ def render_post(spec: PostSpec) -> Post:
 
 
 def output_post(post: Post):
-    output_dir = OUTPUT_DIR / "post" / f"{post.spec.output_dir}"
+    output_dir = OUTPUT_DIR / f"{post.spec.output_dir}"
     print(f"==== output {post.spec.markdown_path} -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir / "index.html", "w") as f:
