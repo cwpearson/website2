@@ -44,6 +44,7 @@ class Post:
 class PubSpec:
     markdown_path: Path
     is_dir: bool
+    output_dir: str
 
 
 @dataclass
@@ -169,14 +170,17 @@ def find_pubs() -> List[PubSpec]:
 
     for pub in PUBS_DIR.iterdir():
         if pub.is_file():
-            specs += [PubSpec(markdown_path=pub, is_dir=False)]
+            output_dir = Path("publication") / f"{pub.stem}"
+            specs += [PubSpec(markdown_path=pub, is_dir=False, output_dir=output_dir)]
         elif pub.is_dir():
+            output_dir = Path("publication") / f"{pub.stem}"
             md_path = pub / "index.md"
             if md_path.is_file():
                 specs += [
                     PubSpec(
                         markdown_path=md_path,
                         is_dir=True,
+                        output_dir=output_dir,
                     )
                 ]
 
@@ -226,16 +230,10 @@ def output_pub(pub: Pub):
         tmpl = Template(f.read())
 
     html = tmpl.safe_substitute({"body_frag": pub.body_html})
-
-    if pub.spec.is_dir:
-        output_html_dir = (
-            OUTPUT_DIR / "publication" / f"{pub.spec.markdown_path.parent.stem}"
-        )
-    else:
-        output_html_dir = OUTPUT_DIR / "publication" / f"{pub.spec.markdown_path.stem}"
-    print(f"==== output {pub.spec.markdown_path} -> {output_html_dir}")
-    output_html_dir.mkdir(parents=True, exist_ok=True)
-    with open(output_html_dir / "index.html", "w") as f:
+    output_dir = OUTPUT_DIR / pub.spec.output_dir
+    print(f"==== output {pub.spec.markdown_path} -> {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with open(output_dir / "index.html", "w") as f:
         f.write(html)
 
 
@@ -283,7 +281,9 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
 
     top_k_pubs_frag = "<ul>\n"
     for pub in top_k_pubs:
-        top_k_pubs_frag += f"<li>{pub.title}</li>\n"
+        top_k_pubs_frag += (
+            f'<li><a href="{pub.spec.output_dir}/">{pub.title}</a></li>\n'
+        )
     top_k_pubs_frag += "</ul>\n"
 
     return tmpl.safe_substitute(
