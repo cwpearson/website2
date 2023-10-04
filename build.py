@@ -23,6 +23,7 @@ OUTPUT_DIR = Path(__file__).parent / "public"
 class PostSpec:
     markdown_path: Path
     is_dir: bool
+    output_dir: str
     gallery_resources: List[Path] = field(
         default_factory=list
     )  # paths to files in gallery subdirectory
@@ -60,8 +61,9 @@ def find_posts() -> List[PostSpec]:
     specs = []
 
     for post in POSTS_DIR.iterdir():
+        output_dir = Path("post") / f"{post.stem}"
         if post.is_file():
-            specs += [PostSpec(markdown_path=post, is_dir=False)]
+            specs += [PostSpec(markdown_path=post, is_dir=False, output_dir=output_dir)]
         elif post.is_dir():
             md_path = post / "index.md"
             if md_path.is_file():
@@ -80,6 +82,7 @@ def find_posts() -> List[PostSpec]:
                     PostSpec(
                         markdown_path=md_path,
                         is_dir=True,
+                        output_dir=output_dir,
                         gallery_resources=gallery_resources,
                         resources=resources,
                     )
@@ -155,13 +158,10 @@ def render_post(spec: PostSpec) -> Post:
 
 
 def output_post(post: Post):
-    if post.spec.is_dir:
-        output_html_dir = OUTPUT_DIR / "post" / f"{post.spec.markdown_path.parent.stem}"
-    else:
-        output_html_dir = OUTPUT_DIR / "post" / f"{post.spec.markdown_path.stem}"
-    print(f"==== output {post.spec.markdown_path} -> {output_html_dir}")
-    output_html_dir.mkdir(parents=True, exist_ok=True)
-    with open(output_html_dir / "index.html", "w") as f:
+    output_dir = OUTPUT_DIR / "post" / f"{post.spec.output_dir}"
+    print(f"==== output {post.spec.markdown_path} -> {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with open(output_dir / "index.html", "w") as f:
         f.write(post.body_html)
 
 
@@ -169,11 +169,10 @@ def find_pubs() -> List[PubSpec]:
     specs = []
 
     for pub in PUBS_DIR.iterdir():
+        output_dir = Path("publication") / f"{pub.stem}"
         if pub.is_file():
-            output_dir = Path("publication") / f"{pub.stem}"
             specs += [PubSpec(markdown_path=pub, is_dir=False, output_dir=output_dir)]
         elif pub.is_dir():
-            output_dir = Path("publication") / f"{pub.stem}"
             md_path = pub / "index.md"
             if md_path.is_file():
                 specs += [
@@ -284,7 +283,9 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
 
     top_k_posts_frag = "<ul>\n"
     for post in top_k_posts:
-        top_k_posts_frag += f"<li>{post.title}</li>\n"
+        top_k_posts_frag += (
+            f'<li><a href="/{post.spec.output_dir}/">{post.title}</a></li>\n'
+        )
     top_k_posts_frag += "</ul>\n"
 
     top_k_pubs_frag = "<ul>\n"
