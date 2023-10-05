@@ -15,6 +15,22 @@
     break-inside: avoid;
 }
 
+.lhs {
+    width: fit-content;
+}
+
+.bio {
+    max-width: 300px;
+
+    /* resize image */
+    img {
+        height: auto;
+        width: auto;
+        max-width: 300px;
+        max-height: 300px;
+    }
+}
+
 .recent-container {
     display: flex;
     flex-wrap: wrap;
