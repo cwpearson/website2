@@ -1,0 +1,13 @@
+.navbar {
+    background-color: teal;
+}
+
+.nav-links {
+    display: flex;
+    overflow-x: scroll;
+}
+
+.nav-links a {
+    color: #fff;
+    padding: 20px;
+}
