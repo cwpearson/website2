@@ -1,0 +1,23 @@
+.column-container {
+    column-count: 2;
+}
+
+/*remove a column*/
+@media screen and (max-width: 1000px) {
+    .column-container {
+        column-count: 1;
+    }
+}
+
+
+.lhs,
+.rhs {
+    break-inside: avoid;
+}
+
+.recent-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.recent-block {}

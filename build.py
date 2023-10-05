@@ -248,6 +248,11 @@ def footer_css() -> str:
         return f.read()
 
 
+def index_css() -> str:
+    with open(STYLE_DIR / "index.css") as f:
+        return f.read()
+
+
 def copy_static():
     src = STATIC_DIR
     dst = OUTPUT_DIR / "static"
@@ -259,7 +264,7 @@ def footer_frag() -> str:
     now_str = datetime.datetime.now().strftime("%x")
     cp = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True)
     sha = cp.stdout.decode("utf-8").strip()
-    html = "<div class=footer>\n"
+    html = '<div class="footer">\n'
     html += f"<div>build {sha} on {now_str}</div>\n"
     html += (
         f'<div>copyright Carl Pearson {datetime.datetime.now().strftime("%Y")}</div>\n'
@@ -314,7 +319,7 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
 
     return tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + footer_css(),
+            "style_frag": navbar_css() + common_css() + index_css() + footer_css(),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "top_k_posts_frag": top_k_posts_frag,

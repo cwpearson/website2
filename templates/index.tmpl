@@ -2,27 +2,46 @@
 <html lang="en-US">
 
 <style>
-$style_frag
+    $style_frag
 </style>
 
 <head>
-$head_frag
+    $head_frag
 </head>
 
 <body>
-$nav_frag
+    $nav_frag
 
-<h1> Carl Pearson </h1>
+    <h1> Carl Pearson </h1>
 
-<img src="/static/img/avatar.jpg"></img>
+    <div class="column-container">
+        <div class="lhs">
+            <div class="bio">
+                <div class="bio-img">
+                    <img src="/static/img/avatar.jpg"></img>
+                </div>
+                <div class="bio-text">
+                    Carl is a Computer Science and Engineering Research and Development at Sandia National Laboratories.
+                </div>
+            </div>
+        </div>
 
-<h2> Recent Posts </h2>
-$top_k_posts_frag
+        <div class="rhs">
+            <div class="recent-container">
+                <div class="recent-block">
+                    <h2>Recent Posts</h2>
+                    $top_k_posts_frag
+                </div>
 
-<h2> Recent Publications </h2>
-$top_k_pubs_frag
+                <div class="recent-block">
+                    <h2>Recent Publications</h2>
+                    $top_k_pubs_frag
+                </div>
+            </div>
+        </div>
+    </div>
 
-$footer_frag
+    $footer_frag
 </body>
 
 </html>
