@@ -6,6 +6,7 @@ import datetime
 from string import Template
 from pytz import timezone
 import subprocess
+import shutil
 
 import mistletoe
 import yaml
@@ -247,6 +248,13 @@ def footer_css() -> str:
         return f.read()
 
 
+def copy_static():
+    src = STATIC_DIR
+    dst = OUTPUT_DIR / "static"
+    print(f"==== {src} -> {dst}")
+    shutil.copytree(src, dst, dirs_exist_ok=True)
+
+
 def footer_frag() -> str:
     now_str = datetime.datetime.now().strftime("%x")
     cp = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True)
@@ -260,6 +268,12 @@ def footer_frag() -> str:
     return html
 
 
+def head_frag() -> str:
+    html = ""
+    html += '<meta name="viewport" content="width=device-width, initial-scale=1" />\n'
+    return html
+
+
 def output_pub(pub: Pub):
     with open(TEMPLATES_DIR / "pub.tmpl", "r") as f:
         tmpl = Template(f.read())
@@ -267,7 +281,7 @@ def output_pub(pub: Pub):
     html = tmpl.safe_substitute(
         {
             "style_frag": navbar_css() + common_css() + footer_css(),
-            "header_frag": "",
+            "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": pub.body_html,
             "footer_frag": footer_frag(),
@@ -301,7 +315,7 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
     return tmpl.safe_substitute(
         {
             "style_frag": navbar_css() + common_css() + footer_css(),
-            "header_frag": "HEADER",
+            "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "top_k_posts_frag": top_k_posts_frag,
             "top_k_pubs_frag": top_k_pubs_frag,
@@ -329,7 +343,7 @@ def render_publications(pubs: List[Pub]) -> str:
     return tmpl.safe_substitute(
         {
             "style_frag": navbar_css() + common_css() + footer_css(),
-            "header_frag": "HEADER",
+            "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": pub_links,
             "footer_frag": footer_frag(),
@@ -368,3 +382,5 @@ if __name__ == "__main__":
 
     pubs_html = render_publications(pubs)
     output_publications(pubs_html)
+
+    copy_static()
