@@ -302,7 +302,7 @@ def footer_frag() -> str:
 
 def head_frag() -> str:
     html = ""
-    html += '<meta name="viewport" content="width=device-width, initial-scale=1" />\n'
+    html += '<meta name="viewport" content="width=device-width">\n'
     return html
 
 
