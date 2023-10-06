@@ -280,7 +280,6 @@ def copy_static():
 
 
 SHA = None
-DIRTY = None
 
 
 def footer_frag() -> str:
@@ -292,16 +291,8 @@ def footer_frag() -> str:
             ["git", "rev-parse", "--short", "HEAD"], capture_output=True
         )
         SHA = cp.stdout.decode("utf-8").strip()
-    if DIRTY is None:
-        cp = subprocess.run(
-            ["git", "diff-index", "--quiet", "HEAD", "--"], capture_output=True
-        )
-        if cp.returncode == 0:
-            DIRTY = ""
-        else:
-            DIRTY = "-dirty"
     html = '<div class="footer">\n'
-    html += f"<div>build {SHA}{DIRTY} on {now_str}</div>\n"
+    html += f"<div>build {SHA} on {now_str}</div>\n"
     html += (
         f'<div>copyright Carl Pearson {datetime.datetime.now().strftime("%Y")}</div>\n'
     )
