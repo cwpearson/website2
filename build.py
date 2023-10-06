@@ -357,12 +357,12 @@ def pub_card(pub: Pub) -> str:
     return an html fragment for a Pub
     """
 
-    mmddyy = pub.create_time.strftime("%m/%d/%y")
+    mmyy = pub.create_time.strftime("%m/%y")
 
     html = ""
-    html += f'<a href="/{pub.spec.output_dir}">\n'
+    html += f'<a href="/{pub.spec.output_dir}" class="no-decoration">\n'
     html += f'<div class="pub-card">\n'
-    html += f'<div class="pub-date">{mmddyy}</div>\n'
+    html += f'<div class="pub-date">{mmyy}</div>\n'
     html += '<div class="pub-ref">\n'
     html += f'<div class="pub-title">{pub.title}</div>\n'
 
@@ -387,11 +387,10 @@ def render_publications(pubs: List[Pub]) -> str:
     with open(TEMPLATES_DIR / "publications.tmpl") as f:
         tmpl = Template(f.read())
 
-    pub_links = "<ul>\n"
+    pub_links = ""
     for pub in sorted(pubs, key=lambda x: x.create_time, reverse=True):
         # pub_links += f'<li><a href="/{pub.spec.output_dir}/">{pub.title}</a></li>\n'
         pub_links += pub_card(pub)
-    pub_links += "</ul>\n"
 
     return tmpl.safe_substitute(
         {

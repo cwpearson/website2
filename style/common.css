@@ -19,6 +19,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    max-width: 1000px;
 }
 
 .pub-card:hover {
@@ -32,6 +33,10 @@
 .pub-date {
     display: inline;
     padding-right: 10px;
+}
+
+.no-decoration {
+    text-decoration: none;
 }
 
 .pub-authors {
