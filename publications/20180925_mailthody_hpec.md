@@ -1,9 +1,10 @@
 +++
-title = "[HPEC] Collaborative (CPU+ GPU) Algorithms for Triangle Counting and Truss Decomposition"
+title = "Collaborative (CPU+ GPU) Algorithms for Triangle Counting and Truss Decomposition"
 date = 2018-09-25
 draft = false
 tags = ["pangolin"]
-
+venue = "IEEE High Performance Extreme Computing Conference"
+authors = ["Vikram S. Mailthody", "Ketan Date", "Zaid Qureshi", "Carl Pearson", "Rakesh Nagi", "Jinjun Xiong", "Wen-Mei Hwu"]
 +++
 
 **Vikram S. Mailthody, Ketan Date, Zaid Qureshi, Carl Pearson, Rakesh Nagi, Jinjun Xiong, Wen-Mei Hwu**

@@ -56,6 +56,8 @@ class Pub:
     body_html: str
     create_time: datetime.datetime = None
     mod_time: datetime.datetime = create_time
+    authors: List[str] = field(default_factory=list)
+    venue: str = ""
 
 
 def find_posts() -> List[PostSpec]:
@@ -225,6 +227,8 @@ def render_pub(spec: PubSpec) -> Pub:
         body_html=body_html,
         create_time=create_time,
         mod_time=mod_time,
+        venue=header_data.get("venue", ""),
+        authors=header_data.get("authors", []),
     )
 
 
@@ -336,13 +340,53 @@ def output_index(html):
         f.write(html)
 
 
+def authors_span(authors: List[str]) -> str:
+    html = ""
+    for i, author in enumerate(authors):
+        if author == "Carl Pearson" or author == "Pearson, Carl":
+            html += f"<strong>{author}</strong>"
+        else:
+            html += author
+        if i + 1 < len(authors):
+            html += ", "
+    return html
+
+
+def pub_card(pub: Pub) -> str:
+    """
+    return an html fragment for a Pub
+    """
+
+    mmddyy = pub.create_time.strftime("%m/%d/%y")
+
+    html = ""
+    html += f'<a href="/{pub.spec.output_dir}">\n'
+    html += f'<div class="pub-card">\n'
+    html += f'<div class="pub-date">{mmddyy}</div>\n'
+    html += f'<div class="pub-title">{pub.title}</div>\n'
+    html += "<div>\n"
+    if pub.authors:
+        html += f'<div class="pub-authors">{authors_span(pub.authors)}.</div>\n'
+    if pub.venue:
+        _in = "in "
+        if pub.venue.lower() == "arxiv":
+            _in = ""
+        html += f'{_in}<span class="pub-venue">{pub.venue}</span>\n'
+
+    html += "</div>\n"
+    html += "</div>\n"
+    html += "</a>\n"
+    return html
+
+
 def render_publications(pubs: List[Pub]) -> str:
     with open(TEMPLATES_DIR / "publications.tmpl") as f:
         tmpl = Template(f.read())
 
     pub_links = "<ul>\n"
     for pub in sorted(pubs, key=lambda x: x.create_time, reverse=True):
-        pub_links += f'<li><a href="/{pub.spec.output_dir}/">{pub.title}</a></li>\n'
+        # pub_links += f'<li><a href="/{pub.spec.output_dir}/">{pub.title}</a></li>\n'
+        pub_links += pub_card(pub)
     pub_links += "</ul>\n"
 
     return tmpl.safe_substitute(
@@ -358,6 +402,52 @@ def render_publications(pubs: List[Pub]) -> str:
 
 def output_publications(html):
     output_path = OUTPUT_DIR / "publications" / "index.html"
+    output_path.parent.mkdir(exist_ok=True, parents=True)
+    print(f"==== write {output_path}")
+    with open(output_path, "w") as f:
+        f.write(html)
+
+
+def post_card(post: Post) -> str:
+    """
+    return an html fragment for a post
+    """
+
+    mmddyy = post.create_time.strftime("%m/%d/%y")
+
+    html = ""
+    html += f'<a href="/{post.spec.output_dir}">\n'
+    html += f'<div class="post-card">\n'
+    html += f'<span class="post-date">{mmddyy}</span>\n'
+    html += f'<span class="post-title">{post.title}</span>\n'
+    html += "</div>\n"
+    html += "</a>\n"
+    return html
+
+
+def render_posts(posts: List[Post]) -> str:
+    with open(TEMPLATES_DIR / "posts.tmpl") as f:
+        tmpl = Template(f.read())
+
+    post_links = "<ul>\n"
+    for post in sorted(posts, key=lambda x: x.create_time, reverse=True):
+        # post_links += f'<li><a href="/{post.spec.output_dir}/">{post.title}</a></li>\n'
+        post_links += post_card(post)
+    post_links += "</ul>\n"
+
+    return tmpl.safe_substitute(
+        {
+            "style_frag": navbar_css() + common_css() + footer_css(),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "body_frag": post_links,
+            "footer_frag": footer_frag(),
+        }
+    )
+
+
+def output_posts(html):
+    output_path = OUTPUT_DIR / "posts" / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     print(f"==== write {output_path}")
     with open(output_path, "w") as f:
@@ -387,5 +477,8 @@ if __name__ == "__main__":
 
     pubs_html = render_publications(pubs)
     output_publications(pubs_html)
+
+    posts_html = render_posts(posts)
+    output_posts(posts_html)
 
     copy_static()

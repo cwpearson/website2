@@ -1,0 +1,38 @@
+.post-card {
+    background-color: lightgray;
+    margin: 3px;
+}
+
+.post-card:hover {
+    background-color: gray;
+}
+
+.post-title {}
+
+.post-date {}
+
+
+.pub-card {
+    background-color: lightgray;
+    margin: 3px;
+}
+
+.pub-card:hover {
+    background-color: gray;
+}
+
+.pub-title {
+    display: inline;
+}
+
+.pub-date {
+    display: inline;
+}
+
+.pub-authors {
+    display: inline;
+}
+
+.pub-venue {
+    font-style: italic;
+}
