@@ -14,7 +14,11 @@
 
 .pub-card {
     background-color: lightgray;
-    margin: 3px;
+    margin: 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .pub-card:hover {
@@ -27,6 +31,7 @@
 
 .pub-date {
     display: inline;
+    padding-right: 10px;
 }
 
 .pub-authors {
