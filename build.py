@@ -166,11 +166,23 @@ def render_post(spec: PostSpec) -> Post:
 
 
 def output_post(post: Post):
-    output_dir = OUTPUT_DIR / f"{post.spec.output_dir}"
+    with open(TEMPLATES_DIR / "post.tmpl", "r") as f:
+        tmpl = Template(f.read())
+
+    html = tmpl.safe_substitute(
+        {
+            "style_frag": navbar_css() + common_css() + footer_css(),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "body_frag": post.body_html,
+            "footer_frag": footer_frag(),
+        }
+    )
+    output_dir = OUTPUT_DIR / post.spec.output_dir
     print(f"==== output {post.spec.markdown_path} -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir / "index.html", "w") as f:
-        f.write(post.body_html)
+        f.write(html)
 
 
 def find_pubs() -> List[PubSpec]:
@@ -267,12 +279,29 @@ def copy_static():
     shutil.copytree(src, dst, dirs_exist_ok=True)
 
 
+SHA = None
+DIRTY = None
+
+
 def footer_frag() -> str:
+    global SHA
+    global DIRTY
     now_str = datetime.datetime.now().strftime("%x")
-    cp = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True)
-    sha = cp.stdout.decode("utf-8").strip()
+    if SHA is None:
+        cp = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"], capture_output=True
+        )
+        SHA = cp.stdout.decode("utf-8").strip()
+    if DIRTY is None:
+        cp = subprocess.run(
+            ["git", "diff-index", "--quiet", "HEAD", "--"], capture_output=True
+        )
+        if cp.returncode == 0:
+            DIRTY = ""
+        else:
+            DIRTY = "-dirty"
     html = '<div class="footer">\n'
-    html += f"<div>build {sha} on {now_str}</div>\n"
+    html += f"<div>build {SHA}{DIRTY} on {now_str}</div>\n"
     html += (
         f'<div>copyright Carl Pearson {datetime.datetime.now().strftime("%Y")}</div>\n'
     )
@@ -350,6 +379,33 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
 
 def output_index(html):
     output_path = OUTPUT_DIR / "index.html"
+    print(f"==== write {output_path}")
+    with open(output_path, "w") as f:
+        f.write(html)
+
+
+def render_experience() -> str:
+    with open(TEMPLATES_DIR / "experience.tmpl") as f:
+        tmpl = Template(f.read())
+
+    toml_str, yaml_str, md_str = read_markdown("experience.md")
+
+    body_frag = mistletoe.markdown(md_str)
+
+    return tmpl.safe_substitute(
+        {
+            "style_frag": navbar_css() + common_css() + index_css() + footer_css(),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "body_frag": body_frag,
+            "footer_frag": footer_frag(),
+        }
+    )
+
+
+def output_experience(html):
+    output_path = OUTPUT_DIR / "experience" / "index.html"
+    output_path.parent.mkdir(exist_ok=True, parents=True)
     print(f"==== write {output_path}")
     with open(output_path, "w") as f:
         f.write(html)
@@ -504,5 +560,8 @@ if __name__ == "__main__":
 
     posts_html = render_posts(posts)
     output_posts(posts_html)
+
+    experience_html = render_experience()
+    output_experience(experience_html)
 
     copy_static()
