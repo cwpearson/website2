@@ -254,22 +254,22 @@ def nav_frag() -> str:
 
 def navbar_css() -> str:
     with open(STYLE_DIR / "navbar.css") as f:
-        return f.read()
+        return f.read() + "\n"
 
 
 def common_css() -> str:
     with open(STYLE_DIR / "common.css") as f:
-        return f.read()
+        return f.read() + "\n"
 
 
 def footer_css() -> str:
     with open(STYLE_DIR / "footer.css") as f:
-        return f.read()
+        return f.read() + "\n"
 
 
 def index_css() -> str:
     with open(STYLE_DIR / "index.css") as f:
-        return f.read()
+        return f.read() + "\n"
 
 
 def copy_static():

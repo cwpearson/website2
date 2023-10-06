@@ -1,28 +1,28 @@
 .column-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    /*center items on wrap*/
+    justify-content: space-around;
+    align-items: stretch;
 }
-
-/*remove a column*/
-@media screen and (max-width: 1000px) {
-    .column-container {
-        column-count: 1;
-    }
-}
-
 
 /* tight bounding box on this container
 */
 .lhs {
-    width: fit-content;
+    /* border: 1px solid green; */
+}
+
+/* rhs grows to use any extra space */
+.rhs {
+    flex-grow: 1;
+    /* border: 1px solid green; */
 }
 
 /*
 use flex to center items
 */
 .bio {
-    max-width: 300px;
+    max-width: 30dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,10 +31,12 @@ use flex to center items
     img {
         height: auto;
         width: auto;
-        max-width: 300px;
-        max-height: 300px;
+        max-width: 30dvh;
+        max-height: 30dvh;
     }
 }
+
+
 
 .recent-container {
     /* display: flex;
