@@ -362,21 +362,26 @@ def pub_card(pub: Pub) -> str:
     html = ""
     html += f'<a href="/{pub.spec.output_dir}" class="no-decoration">\n'
     html += f'<div class="pub-card">\n'
-    html += f'<div class="pub-date">{mmyy}</div>\n'
     html += '<div class="pub-ref">\n'
     html += f'<div class="pub-title">{pub.title}</div>\n'
 
     html += "<div>\n"
     if pub.authors:
-        html += f'<div class="pub-authors">{authors_span(pub.authors)}.</div>\n'
+        html += f'<div class="pub-authors">{authors_span(pub.authors)}</div>\n'
     if pub.venue:
         _in = "in "
         if pub.venue.lower() == "arxiv":
             _in = ""
-        html += f'{_in}<span class="pub-venue">{pub.venue}</span>\n'
+        elif pub.venue.lower() == "tech report":
+            _in = ""
+        elif "thesis" in pub.venue.lower():
+            _in = ""
+        html += f'<div class="pub-venue-wrapper">{_in}<div class="pub-venue">{pub.venue}</div></div>\n'
     html += "</div>\n"
 
     html += "</div>\n"  # pub-ref
+
+    html += f'<div class="pub-date">{mmyy}</div>\n'
 
     html += "</div>\n"  # pub-card
     html += "</a>\n"
