@@ -9,6 +9,7 @@ import subprocess
 import shutil
 
 import mistletoe
+from mistletoe.contrib.pygments_renderer import PygmentsRenderer
 import yaml
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
@@ -152,7 +153,8 @@ def render_post(spec: PostSpec) -> Post:
 
     body_html = ""
     body_html += f"<h1>{title}</h1>\n"
-    body_html += mistletoe.markdown(markdown)
+    with PygmentsRenderer(style="default") as renderer:
+        body_html += renderer.render(mistletoe.Document(markdown))
 
     return Post(
         spec=spec,
@@ -219,7 +221,8 @@ def render_pub(spec: PubSpec) -> Pub:
 
     body_html = ""
     body_html += f"<h1>{title}</h1>\n"
-    body_html += mistletoe.markdown(markdown)
+    with PygmentsRenderer(style="default") as renderer:
+        body_html += renderer.render(mistletoe.Document(markdown))
 
     return Pub(
         spec=spec,
@@ -307,19 +310,31 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
     with open(TEMPLATES_DIR / "index.tmpl") as f:
         tmpl = Template(f.read())
 
-    top_k_posts_frag = "<ul>\n"
+    top_k_posts_frag = ""
     for post in top_k_posts:
-        top_k_posts_frag += (
-            f'<li><a href="/{post.spec.output_dir}/">{post.title}</a></li>\n'
-        )
-    top_k_posts_frag += "</ul>\n"
+        top_k_posts_frag += post_card(post)
 
-    top_k_pubs_frag = "<ul>\n"
-    for pub in top_k_pubs:
-        top_k_pubs_frag += (
-            f'<li><a href="/{pub.spec.output_dir}/">{pub.title}</a></li>\n'
+    # fake "Post" that just links to all posts
+    top_k_posts_frag += post_card(
+        Post(
+            spec=PostSpec(markdown_path=None, is_dir=None, output_dir=Path("posts")),
+            title="...",
+            body_html=None,
         )
-    top_k_pubs_frag += "</ul>\n"
+    )
+
+    top_k_pubs_frag = ""
+    for pub in top_k_pubs:
+        top_k_pubs_frag += pub_card(pub)
+    top_k_pubs_frag += post_card(
+        Pub(
+            spec=PubSpec(
+                markdown_path=None, is_dir=None, output_dir=Path("publications")
+            ),
+            title="...",
+            body_html=None,
+        )
+    )
 
     return tmpl.safe_substitute(
         {
@@ -421,13 +436,16 @@ def post_card(post: Post) -> str:
     return an html fragment for a post
     """
 
-    mmddyy = post.create_time.strftime("%m/%d/%y")
+    if post.create_time:
+        mmddyy = post.create_time.strftime("%m/%d/%y")
+    else:
+        mmddyy = ""
 
     html = ""
-    html += f'<a href="/{post.spec.output_dir}">\n'
+    html += f'<a href="/{post.spec.output_dir}" class="no-decoration">\n'
     html += f'<div class="post-card">\n'
-    html += f'<span class="post-date">{mmddyy}</span>\n'
-    html += f'<span class="post-title">{post.title}</span>\n'
+    html += f'<div class="post-title">{post.title}</div>\n'
+    html += f'<div class="post-date">{mmddyy}</div>\n'
     html += "</div>\n"
     html += "</a>\n"
     return html
@@ -437,11 +455,9 @@ def render_posts(posts: List[Post]) -> str:
     with open(TEMPLATES_DIR / "posts.tmpl") as f:
         tmpl = Template(f.read())
 
-    post_links = "<ul>\n"
+    post_links = ""
     for post in sorted(posts, key=lambda x: x.create_time, reverse=True):
-        # post_links += f'<li><a href="/{post.spec.output_dir}/">{post.title}</a></li>\n'
         post_links += post_card(post)
-    post_links += "</ul>\n"
 
     return tmpl.safe_substitute(
         {

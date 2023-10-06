@@ -2,3 +2,4 @@ mistletoe==1.2.1
 toml==0.10.2
 pytz
 pyyaml==6.0.1
+pygments==2.16

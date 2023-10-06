@@ -1,15 +1,29 @@
 .post-card {
     background-color: lightgray;
-    margin: 3px;
+    margin: 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .post-card:hover {
     background-color: gray;
 }
 
-.post-title {}
 
-.post-date {}
+.post-card:hover {
+    background-color: gray;
+}
+
+.post-title {
+    display: inline;
+}
+
+.post-date {
+    display: inline;
+}
 
 
 .pub-card {
