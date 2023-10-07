@@ -1,5 +1,6 @@
 +++
 title = "Recognition"
+description = ""
 +++
 
 #### [C3SR Director's Distinguished Service Award](https://c3sr.com)

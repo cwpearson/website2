@@ -1,4 +1,7 @@
 .footer {
-    background-color: lightblue;
     text-align: center;
+
+    hr {
+        color: #e9c46a;
+    }
 }

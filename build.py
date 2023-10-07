@@ -379,6 +379,7 @@ def footer_frag() -> str:
         )
         SHA = cp.stdout.decode("utf-8").strip()
     html = '<div class="footer">\n'
+    html += "<hr \>\n"
     html += f"<div>build {SHA} on {now_str}</div>\n"
     html += (
         f'<div>copyright Carl Pearson {datetime.datetime.now().strftime("%Y")}</div>\n'
@@ -387,9 +388,17 @@ def footer_frag() -> str:
     return html
 
 
-def head_frag() -> str:
+def head_frag(title: str = "", descr: str = "", keywords: List[str] = []) -> str:
     html = ""
     html += '<meta name="viewport" content="width=device-width">\n'
+    if title:
+        html += f"<title>{title}</title>\n"
+    html += '<meta name="generator" content="github.com/cwpearson/website2">\n'
+    html += '<meta name="author" content="Carl Pearson">\n'
+    if descr:
+        html += f'<meta name="keywords" content="{descr}">\n'
+    if keywords:
+        html += f'<meta name="keywords" content="{"".join(keywords)}">\n'
     return html
 
 
@@ -416,6 +425,9 @@ def output_pub(pub: Pub):
 def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
     with open(TEMPLATES_DIR / "index.tmpl") as f:
         tmpl = Template(f.read())
+
+    frontmatter, _ = read_markdown("index.md")
+    bio = frontmatter["bio"]
 
     top_k_posts_frag = ""
     for post in top_k_posts:
@@ -446,15 +458,19 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
     return tmpl.safe_substitute(
         {
             "style_frag": navbar_css() + common_css() + index_css() + footer_css(),
-            "head_frag": head_frag(),
+            "head_frag": head_frag(
+                title="Carl Pearson",
+                descr="Personal site for Carl pearson",
+            ),
             "nav_frag": nav_frag(),
-            "top_k_posts_frag": top_k_posts_frag,
-            "top_k_pubs_frag": top_k_pubs_frag,
-            "footer_frag": footer_frag(),
+            "bio_text": bio,
             "email_svg": EMAIL_SVG,
             "linkedin_svg": LINKEDIN_SVG,
             "github_svg": GITHUB_SVG,
             "scholar_svg": SCHOALR_SVG,
+            "top_k_posts_frag": top_k_posts_frag,
+            "top_k_pubs_frag": top_k_pubs_frag,
+            "footer_frag": footer_frag(),
         }
     )
 
@@ -471,26 +487,21 @@ def render_experience() -> str:
         tmpl = Template(f.read())
 
     frontmatter, md_str = read_markdown("experience.md")
+    title = frontmatter["title"]
+    descr = frontmatter["description"]
 
     body_frag = mistletoe.markdown(md_str)
 
     return tmpl.safe_substitute(
         {
             "style_frag": navbar_css() + common_css() + index_css() + footer_css(),
-            "head_frag": head_frag(),
+            "head_frag": head_frag(title=title, descr=descr),
             "nav_frag": nav_frag(),
+            "title": title,
             "body_frag": body_frag,
             "footer_frag": footer_frag(),
         }
     )
-
-
-def output_experience(html):
-    output_path = OUTPUT_DIR / "experience" / "index.html"
-    output_path.parent.mkdir(exist_ok=True, parents=True)
-    print(f"==== write {output_path}")
-    with open(output_path, "w") as f:
-        f.write(html)
 
 
 def render_recognition() -> str:
@@ -500,20 +511,23 @@ def render_recognition() -> str:
     frontmatter, md_str = read_markdown("recognition.md")
 
     body_frag = mistletoe.markdown(md_str)
+    title = frontmatter["title"]
+    descr = frontmatter["description"]
 
     return tmpl.safe_substitute(
         {
             "style_frag": navbar_css() + common_css() + index_css() + footer_css(),
-            "head_frag": head_frag(),
+            "head_frag": head_frag(title=title, descr=descr),
             "nav_frag": nav_frag(),
+            "title": title,
             "body_frag": body_frag,
             "footer_frag": footer_frag(),
         }
     )
 
 
-def output_recognition(html):
-    output_path = OUTPUT_DIR / "recognition" / "index.html"
+def output_html(prefix, html):
+    output_path = OUTPUT_DIR / prefix / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     print(f"==== write {output_path}")
     with open(output_path, "w") as f:
@@ -690,22 +704,6 @@ def render_talks(talks: List[Talk]) -> str:
     )
 
 
-def output_talks(html):
-    output_path = OUTPUT_DIR / "talks" / "index.html"
-    output_path.parent.mkdir(exist_ok=True, parents=True)
-    print(f"==== write {output_path}")
-    with open(output_path, "w") as f:
-        f.write(html)
-
-
-def output_posts(html):
-    output_path = OUTPUT_DIR / "posts" / "index.html"
-    output_path.parent.mkdir(exist_ok=True, parents=True)
-    print(f"==== write {output_path}")
-    with open(output_path, "w") as f:
-        f.write(html)
-
-
 if __name__ == "__main__":
     post_specs = find_posts()
     for ps in post_specs:
@@ -737,19 +735,19 @@ if __name__ == "__main__":
     )
     output_index(index_html)
 
-    pubs_html = render_publications(pubs)
-    output_publications(pubs_html)
+    publications_html = render_publications(pubs)
+    output_html("publications", publications_html)
 
     posts_html = render_posts(posts)
-    output_posts(posts_html)
+    output_html("posts", posts_html)
 
     talks_html = render_talks(talks)
-    output_talks(talks_html)
+    output_html("talks", talks_html)
 
     experience_html = render_experience()
-    output_experience(experience_html)
+    output_html("experience", experience_html)
 
     recognition_html = render_recognition()
-    output_recognition(recognition_html)
+    output_html("recognition", recognition_html)
 
     copy_static()

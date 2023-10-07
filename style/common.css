@@ -1,3 +1,21 @@
+/*
+264653
+2a9d8f
+e9c46a
+f4a261
+e76f51
+*/
+
+body {
+    background-color: #264653;
+}
+
+h1,
+h2,
+p {
+    color: #8ecae6;
+}
+
 .post-card {
     background-color: lightgray;
     margin: 5px;

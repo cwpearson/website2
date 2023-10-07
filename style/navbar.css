@@ -1,5 +1,15 @@
+/*
+264653
+2a9d8f
+e9c46a
+f4a261
+e76f51
+*/
+
 .navbar {
-    background-color: teal;
+    hr {
+        color: #e9c46a;
+    }
 }
 
 .nav-links {
@@ -8,6 +18,8 @@
 }
 
 .nav-links a {
-    color: #fff;
+    color: #e9c46a;
     padding: 20px;
+    text-decoration: none;
+
 }
