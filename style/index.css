@@ -9,7 +9,23 @@
 /* tight bounding box on this container
 */
 .lhs {
-    /* border: 1px solid green; */
+    border: 1px solid green;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.contact-container {}
+
+.contact-icon {
+    display: inline;
+    margin: 10px;
+
+    svg {
+        width: 50px;
+        height: auto;
+    }
 }
 
 /* rhs grows to use any extra space */
