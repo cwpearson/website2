@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Dict
 import toml
 import datetime
 from string import Template
@@ -61,6 +61,24 @@ class Pub:
     venue: str = ""
 
 
+@dataclass
+class TalkSpec:
+    markdown_path: Path
+    is_dir: bool
+    output_dir: str
+
+
+@dataclass
+class Talk:
+    spec: TalkSpec
+    title: str
+    body_html: str
+    create_time: datetime.datetime = None
+    mod_time: datetime.datetime = create_time
+    authors: List[str] = field(default_factory=list)
+    venue: str = ""
+
+
 def find_posts() -> List[PostSpec]:
     specs = []
 
@@ -95,11 +113,11 @@ def find_posts() -> List[PostSpec]:
     return specs
 
 
-def read_markdown(path: Path) -> Tuple[Union[str, None], Union[str, None], str]:
+def read_markdown(path: Path) -> Tuple[Dict, str]:
     """
     assume +++ delimits toml frontmatter, and --- delimits yaml frontmatter
 
-    returns toml, yaml, markdown
+    returns frontmater dict, markdown
     """
 
     toml_delims = []
@@ -120,13 +138,13 @@ def read_markdown(path: Path) -> Tuple[Union[str, None], Union[str, None], str]:
     if len(toml_delims) >= 2 and toml_delims[0] == 0:
         toml_lines = lines[1 : toml_delims[1]]
         md_lines = lines[toml_delims[1] + 1 :]
-        return "".join(toml_lines), None, "".join(md_lines)
+        return toml.loads("".join(toml_lines)), "".join(md_lines)
     elif len(yaml_delims) >= 2 and yaml_delims[0] == 0:
         yaml_lines = lines[1 : yaml_delims[1]]
         md_lines = lines[yaml_delims[1] + 1 :]
-        return None, "".join(yaml_lines), "".join(md_lines)
+        return yaml.load("".join(yaml_lines), Loader=yaml.CLoader), "".join(md_lines)
     else:
-        return None, None, "".join(lines)
+        return {}, "".join(lines)
 
 
 def maybe_localize_to_mountain(dt: datetime.datetime) -> datetime.datetime:
@@ -139,16 +157,15 @@ def maybe_localize_to_mountain(dt: datetime.datetime) -> datetime.datetime:
 
 def render_post(spec: PostSpec) -> Post:
     print(f"==== render {spec.markdown_path}")
-    toml_str, yaml_str, markdown = read_markdown(spec.markdown_path)
+    frontmatter, markdown = read_markdown(spec.markdown_path)
 
-    if toml_str:
-        header_data = toml.loads(toml_str)
-    elif yaml_str:
-        header_data = yaml.loads(toml_str)
-    title = header_data["title"]
-    create_time = header_data["date"]
+    draft = frontmatter.get("draft", False)
+    if draft:
+        return None
+    title = frontmatter["title"]
+    create_time = frontmatter["date"]
     create_time = maybe_localize_to_mountain(create_time)
-    mod_time = header_data.get("lastmod", create_time)
+    mod_time = frontmatter.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
 
     body_html = ""
@@ -217,18 +234,13 @@ def normalize_to_datetime(o) -> datetime.datetime:
 
 def render_pub(spec: PubSpec) -> Pub:
     print(f"==== render {spec.markdown_path}")
-    toml_str, yaml_str, markdown = read_markdown(spec.markdown_path)
+    frontmatter, markdown = read_markdown(spec.markdown_path)
 
-    if toml_str:
-        print(toml_str)
-        header_data = toml.loads(toml_str)
-    elif yaml_str:
-        header_data = yaml.safe_load(yaml_str)
-    title = header_data["title"]
-    create_time = header_data["date"]
+    title = frontmatter["title"]
+    create_time = frontmatter["date"]
     create_time = normalize_to_datetime(create_time)
     create_time = maybe_localize_to_mountain(create_time)
-    mod_time = header_data.get("lastmod", create_time)
+    mod_time = frontmatter.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
 
     body_html = ""
@@ -242,9 +254,77 @@ def render_pub(spec: PubSpec) -> Pub:
         body_html=body_html,
         create_time=create_time,
         mod_time=mod_time,
-        venue=header_data.get("venue", ""),
-        authors=header_data.get("authors", []),
+        venue=frontmatter.get("venue", ""),
+        authors=frontmatter.get("authors", []),
     )
+
+
+def find_talks() -> List[TalkSpec]:
+    specs = []
+
+    for pub in PUBS_DIR.iterdir():
+        output_dir = Path("talk") / f"{pub.stem}"
+        if pub.is_file():
+            specs += [PubSpec(markdown_path=pub, is_dir=False, output_dir=output_dir)]
+        elif pub.is_dir():
+            md_path = pub / "index.md"
+            if md_path.is_file():
+                specs += [
+                    PubSpec(
+                        markdown_path=md_path,
+                        is_dir=True,
+                        output_dir=output_dir,
+                    )
+                ]
+
+    return specs
+
+
+def render_talk(spec: TalkSpec) -> Pub:
+    print(f"==== render {spec.markdown_path}")
+    frontmatter, markdown = read_markdown(spec.markdown_path)
+
+    title = frontmatter["title"]
+    create_time = frontmatter["date"]
+    create_time = normalize_to_datetime(create_time)
+    create_time = maybe_localize_to_mountain(create_time)
+    mod_time = frontmatter.get("lastmod", create_time)
+    mod_time = maybe_localize_to_mountain(mod_time)
+
+    body_html = ""
+    body_html += f"<h1>{title}</h1>\n"
+    with PygmentsRenderer(style="default") as renderer:
+        body_html += renderer.render(mistletoe.Document(markdown))
+
+    return Talk(
+        spec=spec,
+        title=title,
+        body_html=body_html,
+        create_time=create_time,
+        mod_time=mod_time,
+        venue=frontmatter.get("venue", ""),
+        authors=frontmatter.get("authors", []),
+    )
+
+
+def output_talk(talk: Talk):
+    with open(TEMPLATES_DIR / "talk.tmpl", "r") as f:
+        tmpl = Template(f.read())
+
+    html = tmpl.safe_substitute(
+        {
+            "style_frag": navbar_css() + common_css() + footer_css(),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "body_frag": talk.body_html,
+            "footer_frag": footer_frag(),
+        }
+    )
+    output_dir = OUTPUT_DIR / talk.spec.output_dir
+    print(f"==== output {talk.spec.markdown_path} -> {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with open(output_dir / "index.html", "w") as f:
+        f.write(html)
 
 
 def nav_frag() -> str:
@@ -379,7 +459,7 @@ def render_experience() -> str:
     with open(TEMPLATES_DIR / "experience.tmpl") as f:
         tmpl = Template(f.read())
 
-    toml_str, yaml_str, md_str = read_markdown("experience.md")
+    frontmatter, md_str = read_markdown("experience.md")
 
     body_frag = mistletoe.markdown(md_str)
 
@@ -396,6 +476,33 @@ def render_experience() -> str:
 
 def output_experience(html):
     output_path = OUTPUT_DIR / "experience" / "index.html"
+    output_path.parent.mkdir(exist_ok=True, parents=True)
+    print(f"==== write {output_path}")
+    with open(output_path, "w") as f:
+        f.write(html)
+
+
+def render_recognition() -> str:
+    with open(TEMPLATES_DIR / "recognition.tmpl") as f:
+        tmpl = Template(f.read())
+
+    frontmatter, md_str = read_markdown("recognition.md")
+
+    body_frag = mistletoe.markdown(md_str)
+
+    return tmpl.safe_substitute(
+        {
+            "style_frag": navbar_css() + common_css() + index_css() + footer_css(),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "body_frag": body_frag,
+            "footer_frag": footer_frag(),
+        }
+    )
+
+
+def output_recognition(html):
+    output_path = OUTPUT_DIR / "recognition" / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     print(f"==== write {output_path}")
     with open(output_path, "w") as f:
@@ -530,6 +637,7 @@ if __name__ == "__main__":
     for ps in post_specs:
         print(ps)
     posts = [render_post(spec) for spec in post_specs]
+    posts = [p for p in posts if p is not None]
     for post in posts:
         output_post(post)
 
@@ -539,6 +647,13 @@ if __name__ == "__main__":
     pubs = [render_pub(spec) for spec in pub_specs]
     for pub in pubs:
         output_pub(pub)
+
+    talk_specs = find_talks()
+    for spec in talk_specs:
+        print(spec)
+    talks = [render_talk(spec) for spec in talk_specs]
+    for talk in talks:
+        output_talk(talk)
 
     index_html = render_index(
         top_k_posts=sorted(posts, key=lambda p: p.create_time, reverse=True)[0:5],
@@ -554,5 +669,8 @@ if __name__ == "__main__":
 
     experience_html = render_experience()
     output_experience(experience_html)
+
+    recognition_html = render_recognition()
+    output_recognition(recognition_html)
 
     copy_static()
