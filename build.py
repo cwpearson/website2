@@ -17,6 +17,7 @@ POSTS_DIR = Path(__file__).parent / "posts"
 PUBS_DIR = Path(__file__).parent / "publications"
 STATIC_DIR = Path(__file__).parent / "static"
 STYLE_DIR = Path(__file__).parent / "style"
+TALKS_DIR = Path(__file__).parent / "talks"
 
 OUTPUT_DIR = Path(__file__).parent / "public"
 
@@ -262,15 +263,15 @@ def render_pub(spec: PubSpec) -> Pub:
 def find_talks() -> List[TalkSpec]:
     specs = []
 
-    for pub in PUBS_DIR.iterdir():
-        output_dir = Path("talk") / f"{pub.stem}"
-        if pub.is_file():
-            specs += [PubSpec(markdown_path=pub, is_dir=False, output_dir=output_dir)]
-        elif pub.is_dir():
-            md_path = pub / "index.md"
+    for talk in TALKS_DIR.iterdir():
+        output_dir = Path("talk") / f"{talk.stem}"
+        if talk.is_file():
+            specs += [TalkSpec(markdown_path=talk, is_dir=False, output_dir=output_dir)]
+        elif talk.is_dir():
+            md_path = talk / "index.md"
             if md_path.is_file():
                 specs += [
-                    PubSpec(
+                    TalkSpec(
                         markdown_path=md_path,
                         is_dir=True,
                         output_dir=output_dir,
@@ -624,6 +625,69 @@ def render_posts(posts: List[Post]) -> str:
     )
 
 
+def talk_card(talk: Talk) -> str:
+    """
+    return an html fragment for a Talk
+    """
+
+    mmddyy = talk.create_time.strftime("%m/%d/%y")
+
+    html = ""
+    html += f'<a href="/{talk.spec.output_dir}" class="no-decoration">\n'
+    html += f'<div class="pub-card">\n'
+    html += '<div class="pub-ref">\n'
+    html += f'<div class="pub-title">{talk.title}</div>\n'
+
+    html += "<div>\n"
+    if talk.authors:
+        html += f'<div class="pub-authors">{authors_span(talk.authors)}</div>\n'
+    if talk.venue:
+        _in = "in "
+        if talk.venue.lower() == "arxiv":
+            _in = ""
+        elif talk.venue.lower() == "tech report":
+            _in = ""
+        elif "thesis" in talk.venue.lower():
+            _in = ""
+        html += f'<div class="pub-venue-wrapper">{_in}<div class="pub-venue">{talk.venue}</div></div>\n'
+    html += "</div>\n"
+
+    html += "</div>\n"  # pub-ref
+
+    html += f'<div class="pub-date">{mmddyy}</div>\n'
+
+    html += "</div>\n"  # pub-card
+    html += "</a>\n"
+    return html
+
+
+def render_talks(talks: List[Talk]) -> str:
+    with open(TEMPLATES_DIR / "talks.tmpl") as f:
+        tmpl = Template(f.read())
+
+    talk_links = ""
+    for talk in sorted(talks, key=lambda x: x.create_time, reverse=True):
+        talk_links += talk_card(talk)
+
+    return tmpl.safe_substitute(
+        {
+            "style_frag": navbar_css() + common_css() + footer_css(),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "body_frag": talk_links,
+            "footer_frag": footer_frag(),
+        }
+    )
+
+
+def output_talks(html):
+    output_path = OUTPUT_DIR / "talks" / "index.html"
+    output_path.parent.mkdir(exist_ok=True, parents=True)
+    print(f"==== write {output_path}")
+    with open(output_path, "w") as f:
+        f.write(html)
+
+
 def output_posts(html):
     output_path = OUTPUT_DIR / "posts" / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
@@ -645,6 +709,7 @@ if __name__ == "__main__":
     for spec in pub_specs:
         print(spec)
     pubs = [render_pub(spec) for spec in pub_specs]
+    pubs = [p for p in pubs if p is not None]
     for pub in pubs:
         output_pub(pub)
 
@@ -652,6 +717,7 @@ if __name__ == "__main__":
     for spec in talk_specs:
         print(spec)
     talks = [render_talk(spec) for spec in talk_specs]
+    talks = [t for t in talks if t is not None]
     for talk in talks:
         output_talk(talk)
 
@@ -666,6 +732,9 @@ if __name__ == "__main__":
 
     posts_html = render_posts(posts)
     output_posts(posts_html)
+
+    talks_html = render_talks(talks)
+    output_talks(talks_html)
 
     experience_html = render_experience()
     output_experience(experience_html)

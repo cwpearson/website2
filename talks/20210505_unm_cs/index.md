@@ -1,7 +1,7 @@
 ---
 title: Adding Fast GPU Derived Datatype Handing to Existing MPIs
 
-date: "2021-05-05T00:00:00Z"
+date: 2021-05-05T00:00:00Z
 
 tags: [mpi]
 ---

@@ -1,6 +1,6 @@
 ---
 title: Composable Computing Opportunities and Challenges
-date: "2022-11-15T00:00:00Z"
+date: 2022-11-15T00:00:00Z
 tags: []
 ---
 
