@@ -34,14 +34,18 @@ SCHOALR_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!-
 @dataclass
 class PostSpec:
     markdown_path: Path
-    is_dir: bool
+    # path to the posts's directory, if there is one
+    input_dir: Union[Path, None]
     output_dir: str
-    gallery_resources: List[Path] = field(
-        default_factory=list
-    )  # paths to files in gallery subdirectory
     resources: List[Path] = field(
         default_factory=list
     )  # paths to other things in the post directory
+
+
+@dataclass
+class GalleryItem:
+    image: Path
+    caption: str
 
 
 @dataclass
@@ -51,6 +55,7 @@ class Post:
     body_html: str
     create_time: datetime.datetime = None
     mod_time: datetime.datetime = create_time
+    gallery_html: str = ""
 
 
 @dataclass
@@ -95,27 +100,20 @@ def find_posts() -> List[PostSpec]:
     for post in POSTS_DIR.iterdir():
         output_dir = Path("post") / f"{post.stem}"
         if post.is_file():
-            specs += [PostSpec(markdown_path=post, is_dir=False, output_dir=output_dir)]
+            specs += [
+                PostSpec(markdown_path=post, input_dir=None, output_dir=output_dir)
+            ]
         elif post.is_dir():
             md_path = post / "index.md"
             if md_path.is_file():
-                gallery_path = post / "gallery"
-
-                if gallery_path.is_dir():
-                    gallery_resources = list(gallery_path.iterdir())
-                else:
-                    gallery_resources = []
                 resources = [
-                    x
-                    for x in post.iterdir()
-                    if x.name != "gallery" and x.name != "index.md"
+                    x.relative_to(post) for x in post.iterdir() if x.name != "index.md"
                 ]
                 specs += [
                     PostSpec(
                         markdown_path=md_path,
-                        is_dir=True,
+                        input_dir=post,
                         output_dir=output_dir,
-                        gallery_resources=gallery_resources,
                         resources=resources,
                     )
                 ]
@@ -165,6 +163,29 @@ def maybe_localize_to_mountain(dt: datetime.datetime) -> datetime.datetime:
         return dt
 
 
+def img(src, alt="") -> str:
+    html = f'<img src="{src}"'
+
+    if alt:
+        html += f' alt="{alt}"'
+
+    html += ">"
+    return html
+
+
+def render_gallery_frag(gallery_items: List[GalleryItem]) -> str:
+    if not gallery_items:
+        return ""
+
+    html = '<div class="gallery">\n'
+
+    for gi in gallery_items:
+        html += img(src=Path("gallery") / gi.image, alt=gi.caption) + "\n"
+
+    html += "</div>\n"
+    return html
+
+
 def render_post(spec: PostSpec) -> Post:
     print(f"==== render {spec.markdown_path}")
     frontmatter, markdown = read_markdown(spec.markdown_path)
@@ -178,6 +199,13 @@ def render_post(spec: PostSpec) -> Post:
     mod_time = frontmatter.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
 
+    gallery_items = [
+        GalleryItem(gi["image"], gi["caption"])
+        for gi in frontmatter.get("gallery_item", [])
+    ]
+
+    gallery_html = render_gallery_frag(gallery_items)
+
     body_html = ""
     body_html += f"<h1>{title}</h1>\n"
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
@@ -189,6 +217,7 @@ def render_post(spec: PostSpec) -> Post:
         body_html=body_html,
         create_time=create_time,
         mod_time=mod_time,
+        gallery_html=gallery_html,
     )
 
 
@@ -202,6 +231,7 @@ def output_post(post: Post):
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": post.body_html,
+            "gallery_frag": post.gallery_html,
             "footer_frag": footer_frag(),
         }
     )
@@ -210,6 +240,15 @@ def output_post(post: Post):
     output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir / "index.html", "w") as f:
         f.write(html)
+
+    for res in post.spec.resources:
+        src = post.spec.input_dir / res
+        dst = output_dir / res
+        print(f"==== {src} -> {dst}")
+        if src.is_file():
+            shutil.copy2(src, dst)
+        elif src.is_dir():
+            shutil.copytree(src, dst, dirs_exist_ok=True)
 
 
 def find_pubs() -> List[PubSpec]:
@@ -455,7 +494,7 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
     # fake "Post" that just links to all posts
     top_k_posts_frag += post_card(
         Post(
-            spec=PostSpec(markdown_path=None, is_dir=None, output_dir=Path("posts")),
+            spec=PostSpec(markdown_path=None, input_dir=None, output_dir=Path("posts")),
             title="...",
             body_html=None,
         )

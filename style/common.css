@@ -93,3 +93,16 @@ a:link {
     font-style: italic;
     display: inline;
 }
+
+.gallery {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+}
+
+.gallery img {
+    width: 250px;
+    height: auto;
+    margin: 1em;
+}
