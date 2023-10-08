@@ -1,7 +1,20 @@
 .footer {
+    color: #d5bdaf;
     text-align: center;
+
 
     hr {
         color: #d5bdaf;
     }
+}
+
+.footer a:any-link {
+    color: #d5bdaf;
+}
+
+.footer-items {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
 }

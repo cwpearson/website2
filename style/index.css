@@ -10,7 +10,7 @@
 */
 .lhs {
     max-width: 400px;
-    border: 1px solid green;
+    /* border: 1px solid green; */
     margin-right: 10px;
     display: flex;
     flex-direction: column;
@@ -43,7 +43,6 @@
 /* rhs grows to use any extra space */
 .rhs {
     flex-grow: 1;
-    /* border: 1px solid green; */
 }
 
 
