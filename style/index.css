@@ -10,10 +10,11 @@
 */
 .lhs {
     border: 1px solid green;
-
+    margin-right: 10px;
     display: flex;
     align-items: center;
     flex-direction: column;
+    padding: 10px;
 }
 
 .contact-container {
@@ -27,7 +28,7 @@
     svg {
         width: 50px;
         height: auto;
-        fill: #2a9d8f;
+        fill: #4a4e69;
     }
 }
 
@@ -67,6 +68,11 @@ use flex to center items
             max-width: 150px;
             max-height: 150px;
         }
+    }
+
+    /* remove spacing between columns */
+    .lhs {
+        margin-right: 0px;
     }
 }
 

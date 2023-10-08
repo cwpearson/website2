@@ -1,23 +1,23 @@
 /*
-264653
-2a9d8f
-e9c46a
-f4a261
-e76f51
+edede9
+d6ccc2
+f5ebe0
+e3d5ca
+d5bdaf
 */
 
 body {
-    background-color: #264653;
+    background-color: #f5ebe0;
+    font-family: "Gill Sans", sans-serif;
+    color: black;
 }
 
-h1,
-h2,
-p {
-    color: #8ecae6;
-}
+/* .highlight>pre {
+    color: #f2e9e4;
+} */
 
 .post-card {
-    background-color: lightgray;
+    background-color: #e3d5ca;
     margin: 5px;
     padding: 5px;
     display: flex;
@@ -27,12 +27,7 @@ p {
 }
 
 .post-card:hover {
-    background-color: gray;
-}
-
-
-.post-card:hover {
-    background-color: gray;
+    background-color: #d6ccc2;
 }
 
 .post-title {
@@ -45,7 +40,7 @@ p {
 
 
 .pub-card {
-    background-color: lightgray;
+    background-color: #e3d5ca;
     margin: 5px;
     padding: 5px;
     display: flex;
@@ -55,7 +50,7 @@ p {
 }
 
 .pub-card:hover {
-    background-color: gray;
+    background-color: #d6ccc2;
 }
 
 /*take up all the extra container space*/

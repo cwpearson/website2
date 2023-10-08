@@ -1,14 +1,14 @@
 /*
-264653
-2a9d8f
-e9c46a
-f4a261
-e76f51
+edede9
+d6ccc2
+f5ebe0
+e3d5ca
+d5bdaf
 */
 
 .navbar {
     hr {
-        color: #e9c46a;
+        color: #d5bdaf;
     }
 }
 
@@ -18,8 +18,13 @@ e76f51
 }
 
 .nav-links a {
-    color: #e9c46a;
-    padding: 20px;
+    padding: 15px;
     text-decoration: none;
 
+    background-color: #e3d5ca;
+    margin: 5px;
+}
+
+.nav-links a:hover {
+    background-color: #d6ccc2;
 }
