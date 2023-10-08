@@ -416,6 +416,8 @@ def head_frag(title: str = "", descr: str = "", keywords: List[str] = []) -> str
     with open(TEMPLATES_DIR / "katex_frag.html") as f:
         html += f.read() + "\n"
 
+    html += '<script async src="https://analytics.carlpearson.net/script.js" data-website-id="b5d84f78-f4ee-4ce8-ae90-d2cd59e70fbf"></script>\n'
+
     return html
 
 
