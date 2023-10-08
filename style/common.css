@@ -20,9 +20,10 @@ a:link {
     color: black;
 }
 
-/* .highlight>pre {
-    color: #f2e9e4;
-} */
+/*scroll on narrow screens*/
+.highlight {
+    overflow-x: scroll;
+}
 
 .post-card {
     background-color: #e3d5ca;
