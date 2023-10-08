@@ -16,6 +16,7 @@ TEMPLATES_DIR = Path(__file__).parent / "templates"
 POSTS_DIR = Path(__file__).parent / "posts"
 PUBS_DIR = Path(__file__).parent / "publications"
 STATIC_DIR = Path(__file__).parent / "static"
+THIRDPARTY_DIR = Path(__file__).parent / "thirdparty"
 STYLE_DIR = Path(__file__).parent / "style"
 TALKS_DIR = Path(__file__).parent / "talks"
 
@@ -368,6 +369,13 @@ def copy_static():
     shutil.copytree(src, dst, dirs_exist_ok=True)
 
 
+def copy_thirdparty():
+    src = THIRDPARTY_DIR
+    dst = OUTPUT_DIR / "thirdparty"
+    print(f"==== {src} -> {dst}")
+    shutil.copytree(src, dst, dirs_exist_ok=True)
+
+
 SHA = None
 
 
@@ -401,6 +409,10 @@ def head_frag(title: str = "", descr: str = "", keywords: List[str] = []) -> str
         html += f'<meta name="keywords" content="{descr}">\n'
     if keywords:
         html += f'<meta name="keywords" content="{"".join(keywords)}">\n'
+
+    with open(TEMPLATES_DIR / "katex_frag.html") as f:
+        html += f.read() + "\n"
+
     return html
 
 
@@ -756,3 +768,4 @@ if __name__ == "__main__":
     output_html("recognition", recognition_html)
 
     copy_static()
+    copy_thirdparty()

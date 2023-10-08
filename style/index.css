@@ -9,12 +9,19 @@
 /* tight bounding box on this container
 */
 .lhs {
+    max-width: 400px;
     border: 1px solid green;
     margin-right: 10px;
     display: flex;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
     padding: 10px;
+}
+
+/*safari seems to need it like this, not nested*/
+.lhs img {
+    width: 300px;
+    height: auto;
 }
 
 .contact-container {
@@ -25,11 +32,12 @@
     display: inline;
     margin: 10px;
 
-    svg {
-        width: 50px;
-        height: auto;
-        fill: #4a4e69;
-    }
+}
+
+/*safari seems to need it like this, not nested*/
+.contact-icon svg {
+    width: 50px;
+    height: auto;
 }
 
 /* rhs grows to use any extra space */
@@ -38,41 +46,30 @@
     /* border: 1px solid green; */
 }
 
-/*
-use flex to center items
-*/
-.bio {
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 
-    /* resize image */
-    img {
-        height: auto;
-        width: auto;
-        max-width: 300px;
-        max-height: 300px;
-    }
-}
 
 .bio-text {
     text-align: justify;
 }
 
-@media (max-width: 500px) {
-    .bio {
-        max-width: 100dvw;
-
-        img {
-            max-width: 150px;
-            max-height: 150px;
-        }
-    }
+@media (max-width: 30em) {
 
     /* remove spacing between columns */
     .lhs {
+        max-width: 100dvw;
         margin-right: 0px;
+    }
+
+    /*safari seems to need it like this, not nested*/
+    .lhs img {
+        width: 150px;
+        height: auto;
+    }
+
+    .contact-icon>svg {
+        width: 2em;
+        height: auto;
+        fill: #4a4e69;
     }
 }
 

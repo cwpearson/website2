@@ -12,6 +12,14 @@ body {
     color: black;
 }
 
+a:visited {
+    color: black;
+}
+
+a:link {
+    color: black;
+}
+
 /* .highlight>pre {
     color: #f2e9e4;
 } */
