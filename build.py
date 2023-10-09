@@ -246,11 +246,11 @@ def project_card(project: Project) -> str:
 
     html = ""
     html += f'<a href="/{project.spec.output_dir}" class="no-decoration">\n'
-    html += f'<div class="project-card">\n'
+    html += f'<div class="content-card">\n'
     html += '<div class="project-ref">\n'
     html += f'<div class="project-title">{project.title}</div>\n'
     html += "</div>\n"  # project-ref
-    html += "</div>\n"  # project-card
+    html += "</div>\n"  # content-card
     html += "</a>\n"
     return html
 
@@ -843,7 +843,7 @@ def pub_card(pub: Pub) -> str:
 
     html = ""
     html += f'<a href="/{pub.spec.output_dir}" class="no-decoration">\n'
-    html += f'<div class="pub-card">\n'
+    html += f'<div class="content-card">\n'
     html += '<div class="pub-ref">\n'
     html += f'<div class="pub-title">{pub.title}</div>\n'
 
@@ -865,7 +865,7 @@ def pub_card(pub: Pub) -> str:
 
     html += f'<div class="pub-date">{mmyy}</div>\n'
 
-    html += "</div>\n"  # pub-card
+    html += "</div>\n"  # content-card
     html += "</a>\n"
     return html
 
@@ -915,7 +915,7 @@ def post_card(post: Post) -> str:
 
     html = ""
     html += f'<a href="/{post.spec.output_dir}" class="no-decoration">\n'
-    html += f'<div class="post-card">\n'
+    html += f'<div class="content-card">\n'
     html += f'<div class="post-title">{post.title}</div>\n'
     html += f'<div class="post-date">{mmddyy}</div>\n'
     html += "</div>\n"
@@ -954,7 +954,7 @@ def talk_card(talk: Talk) -> str:
 
     html = ""
     html += f'<a href="/{talk.spec.output_dir}" class="no-decoration">\n'
-    html += f'<div class="pub-card">\n'
+    html += f'<div class="content-card">\n'
     html += '<div class="pub-ref">\n'
     html += f'<div class="pub-title">{talk.title}</div>\n'
 
@@ -976,7 +976,7 @@ def talk_card(talk: Talk) -> str:
 
     html += f'<div class="pub-date">{mmddyy}</div>\n'
 
-    html += "</div>\n"  # pub-card
+    html += "</div>\n"  # content-card
     html += "</a>\n"
     return html
 
