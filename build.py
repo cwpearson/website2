@@ -17,6 +17,7 @@ from PIL import Image
 BYTES_RD = 0
 BYTES_WR = 0
 
+CONTENT_DIR = Path(__file__).parent / "content"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 POSTS_DIR = Path(__file__).parent / "posts"
 PUBS_DIR = Path(__file__).parent / "publications"
@@ -100,31 +101,20 @@ class Talk:
     venue: str = ""
 
 
-def find_posts() -> List[PostSpec]:
-    specs = []
+@dataclass
+class ProjectSpec:
+    markdown_path: Path
+    input_dir: Union[Path, None]
+    output_dir: Path
 
-    for post in POSTS_DIR.iterdir():
-        output_dir = Path("post") / f"{post.stem}"
-        if post.is_file():
-            specs += [
-                PostSpec(markdown_path=post, input_dir=None, output_dir=output_dir)
-            ]
-        elif post.is_dir():
-            md_path = post / "index.md"
-            if md_path.is_file():
-                resources = [
-                    x.relative_to(post) for x in post.iterdir() if x.name != "index.md"
-                ]
-                specs += [
-                    PostSpec(
-                        markdown_path=md_path,
-                        input_dir=post,
-                        output_dir=output_dir,
-                        resources=resources,
-                    )
-                ]
 
-    return specs
+@dataclass
+class Project:
+    spec: ProjectSpec
+    title: str
+    body_html: str
+    tags: List[str]
+    create_time: datetime.datetime = None
 
 
 def file_size(path) -> int:
@@ -171,6 +161,149 @@ def read_markdown(path: Path) -> Tuple[Dict, str]:
         return {}, "".join(lines)
 
 
+def find_projects() -> List[ProjectSpec]:
+    specs = []
+
+    for project in (CONTENT_DIR / "projects").iterdir():
+        if project.name == "index.md":
+            continue
+        output_dir = Path("project") / f"{project.stem}"
+        if project.is_file():
+            specs += [
+                ProjectSpec(
+                    markdown_path=project, input_dir=None, output_dir=output_dir
+                )
+            ]
+        elif project.is_dir():
+            md_path = project / "index.md"
+            if md_path.is_file():
+                specs += [
+                    ProjectSpec(
+                        markdown_path=md_path, input_dir=project, output_dir=output_dir
+                    )
+                ]
+
+    return specs
+
+
+def render_project(spec: ProjectSpec) -> Project:
+    print(f"==== render {spec.markdown_path}")
+    frontmatter, markdown = read_markdown(spec.markdown_path)
+
+    draft = frontmatter.get("draft", False)
+    if draft:
+        return None
+    title = frontmatter["title"]
+    tags = frontmatter.get("tags", [])
+    create_time = frontmatter["date"]
+    create_time = maybe_localize_to_mountain(create_time)
+
+    body_html = ""
+    body_html += f"<h1>{title}</h1>\n"
+    with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
+        body_html += renderer.render(mistletoe.Document(markdown))
+
+    return Project(
+        spec=spec,
+        title=title,
+        body_html=body_html,
+        create_time=create_time,
+        tags=tags,
+    )
+
+
+def output_project(project: Project):
+    global BYTES_RD
+    global BYTES_WR
+
+    tmpl_path = TEMPLATES_DIR / "project.tmpl"
+    BYTES_RD += file_size(tmpl_path)
+    with open(tmpl_path, "r") as f:
+        tmpl = Template(f.read())
+
+    html = tmpl.safe_substitute(
+        {
+            "style_frag": navbar_css() + common_css() + footer_css(),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "body_frag": project.body_html,
+            "footer_frag": footer_frag(),
+        }
+    )
+    output_dir = OUTPUT_DIR / project.spec.output_dir
+    print(f"==== output {project.spec.markdown_path} -> {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    html_path = output_dir / "index.html"
+    with open(html_path, "w") as f:
+        f.write(html)
+    BYTES_WR += file_size(html_path)
+
+
+def project_card(project: Project) -> str:
+    """
+    return an html fragment for a Project
+    """
+
+    html = ""
+    html += f'<a href="/{project.spec.output_dir}" class="no-decoration">\n'
+    html += f'<div class="project-card">\n'
+    html += '<div class="project-ref">\n'
+    html += f'<div class="project-title">{project.title}</div>\n'
+    html += "</div>\n"  # project-ref
+    html += "</div>\n"  # project-card
+    html += "</a>\n"
+    return html
+
+
+def render_projects_index(projects: List[Project]) -> str:
+    global BYTES_RD
+    tmpl_path = TEMPLATES_DIR / "projects.tmpl"
+    BYTES_RD += file_size(tmpl_path)
+    with open(tmpl_path) as f:
+        tmpl = Template(f.read())
+
+    project_links = ""
+    for project in sorted(projects, key=lambda x: x.create_time, reverse=True):
+        project_links += project_card(project)
+
+    return tmpl.safe_substitute(
+        {
+            "style_frag": navbar_css() + common_css() + footer_css(),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "body_frag": project_links,
+            "footer_frag": footer_frag(),
+        }
+    )
+
+
+def find_posts() -> List[PostSpec]:
+    specs = []
+
+    for post in POSTS_DIR.iterdir():
+        output_dir = Path("post") / f"{post.stem}"
+        if post.is_file():
+            specs += [
+                PostSpec(markdown_path=post, input_dir=None, output_dir=output_dir)
+            ]
+        elif post.is_dir():
+            md_path = post / "index.md"
+            if md_path.is_file():
+                resources = [
+                    x.relative_to(post) for x in post.iterdir() if x.name != "index.md"
+                ]
+                specs += [
+                    PostSpec(
+                        markdown_path=md_path,
+                        input_dir=post,
+                        output_dir=output_dir,
+                        resources=resources,
+                    )
+                ]
+
+    return specs
+
+
 def maybe_localize_to_mountain(dt: datetime.datetime) -> datetime.datetime:
     if dt.tzinfo is None or dt.tzinfo.utcoffset(dt) is None:
         mountain = timezone("US/Mountain")
@@ -194,6 +327,28 @@ def img(src, alt="", path=None) -> str:
     return html
 
 
+def move_post_resources(spec: PostSpec):
+    global BYTES_RD
+    global BYTES_WR
+    output_dir = OUTPUT_DIR / spec.output_dir
+    print(f"==== post resources {spec.markdown_path} -> {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for res in spec.resources:
+        src = spec.input_dir / res
+        dst = output_dir / res
+        print(f"==== {src} -> {dst}")
+        if src.is_file():
+            shutil.copy2(src, dst)
+            sz = file_size(dst)
+            BYTES_RD += sz
+            BYTES_WR += sz
+        elif src.is_dir():
+            shutil.copytree(src, dst, dirs_exist_ok=True)
+            sz = dir_size(dst)
+            BYTES_RD += sz
+            BYTES_WR += sz
+
+
 def render_gallery_frag(gallery_items: List[GalleryItem]) -> str:
     if not gallery_items:
         return ""
@@ -201,7 +356,10 @@ def render_gallery_frag(gallery_items: List[GalleryItem]) -> str:
     html = '<div class="gallery">\n'
 
     for gi in gallery_items:
-        html += img(src=Path("gallery") / gi.image, alt=gi.caption) + "\n"
+        html += (
+            img(src=Path("gallery") / gi.image, alt=gi.caption, path=gi.full_path)
+            + "\n"
+        )
 
     html += "</div>\n"
     return html
@@ -272,21 +430,6 @@ def output_post(post: Post):
     with open(html_path, "w") as f:
         f.write(html)
     BYTES_WR += file_size(html_path)
-
-    for res in post.spec.resources:
-        src = post.spec.input_dir / res
-        dst = output_dir / res
-        print(f"==== {src} -> {dst}")
-        if src.is_file():
-            shutil.copy2(src, dst)
-            sz = file_size(dst)
-            BYTES_RD += sz
-            BYTES_WR += sz
-        elif src.is_dir():
-            shutil.copytree(src, dst, dirs_exist_ok=True)
-            sz = dir_size(dst)
-            BYTES_RD += sz
-            BYTES_WR += sz
 
 
 def find_pubs() -> List[PubSpec]:
@@ -395,7 +538,11 @@ def render_talk(spec: TalkSpec) -> Pub:
 
 
 def output_talk(talk: Talk):
-    with open(TEMPLATES_DIR / "talk.tmpl", "r") as f:
+    global BYTES_RD
+    global BYTES_WR
+    tmpl_path = TEMPLATES_DIR / "talk.tmpl"
+    BYTES_RD += file_size(tmpl_path)
+    with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
     html = tmpl.safe_substitute(
@@ -410,22 +557,33 @@ def output_talk(talk: Talk):
     output_dir = OUTPUT_DIR / talk.spec.output_dir
     print(f"==== output {talk.spec.markdown_path} -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
+    html_path = output_dir / "index.html"
     with open(output_dir / "index.html", "w") as f:
         f.write(html)
+    BYTES_WR += file_size(html_path)
 
 
 def nav_frag() -> str:
-    with open(TEMPLATES_DIR / "navbar_frag.html") as f:
-        return f.read()
+    global BYTES_RD
+    path = TEMPLATES_DIR / "navbar_frag.html"
+    BYTES_RD += file_size(path)
+    with open(path) as f:
+        return f.read() + "\n"
 
 
 def navbar_css() -> str:
-    with open(STYLE_DIR / "navbar.css") as f:
+    global BYTES_RD
+    path = STYLE_DIR / "navbar.css"
+    BYTES_RD += file_size(path)
+    with open(path) as f:
         return f.read() + "\n"
 
 
 def common_css() -> str:
-    with open(STYLE_DIR / "common.css") as f:
+    global BYTES_RD
+    path = STYLE_DIR / "common.css"
+    BYTES_RD += file_size(path)
+    with open(path) as f:
         return f.read() + "\n"
 
 
@@ -495,6 +653,7 @@ def footer_frag() -> str:
 
 
 def head_frag(title: str = "", descr: str = "", keywords: List[str] = []) -> str:
+    global BYTES_RD
     html = ""
     html += '<meta name="viewport" content="width=device-width">\n'
     if title:
@@ -506,7 +665,9 @@ def head_frag(title: str = "", descr: str = "", keywords: List[str] = []) -> str
     if keywords:
         html += f'<meta name="keywords" content="{"".join(keywords)}">\n'
 
-    with open(TEMPLATES_DIR / "katex_frag.html") as f:
+    katex_path = TEMPLATES_DIR / "katex_frag.html"
+    BYTES_RD += file_size(katex_path)
+    with open(katex_path) as f:
         html += f.read() + "\n"
 
     html += '<script async src="https://analytics.carlpearson.net/script.js" data-website-id="b5d84f78-f4ee-4ce8-ae90-d2cd59e70fbf"></script>\n'
@@ -515,7 +676,11 @@ def head_frag(title: str = "", descr: str = "", keywords: List[str] = []) -> str
 
 
 def output_pub(pub: Pub):
-    with open(TEMPLATES_DIR / "pub.tmpl", "r") as f:
+    global BYTES_RD
+    global BYTES_WR
+    tmpl_path = TEMPLATES_DIR / "pub.tmpl"
+    BYTES_RD += file_size(tmpl_path)
+    with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
     html = tmpl.safe_substitute(
@@ -530,12 +695,17 @@ def output_pub(pub: Pub):
     output_dir = OUTPUT_DIR / pub.spec.output_dir
     print(f"==== output {pub.spec.markdown_path} -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
-    with open(output_dir / "index.html", "w") as f:
+    html_path = output_dir / "index.html"
+    with open(html_path, "w") as f:
         f.write(html)
+    BYTES_WR += file_size(html_path)
 
 
 def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
-    with open(TEMPLATES_DIR / "index.tmpl") as f:
+    global BYTES_RD
+    tmpl_path = TEMPLATES_DIR / "index.tmpl"
+    BYTES_RD += file_size(tmpl_path)
+    with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
     frontmatter, _ = read_markdown("index.md")
@@ -595,6 +765,7 @@ def output_index(html):
 
 
 def render_experience() -> str:
+    global BYTES_RD
     with open(TEMPLATES_DIR / "experience.tmpl") as f:
         tmpl = Template(f.read())
 
@@ -639,11 +810,13 @@ def render_recognition() -> str:
 
 
 def output_html(prefix, html):
+    global BYTES_WR
     output_path = OUTPUT_DIR / prefix / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     print(f"==== write {output_path}")
     with open(output_path, "w") as f:
         f.write(html)
+    BYTES_WR += file_size(output_path)
 
 
 def authors_span(authors: List[str]) -> str:
@@ -698,7 +871,10 @@ def pub_card(pub: Pub) -> str:
 
 
 def render_publications(pubs: List[Pub]) -> str:
-    with open(TEMPLATES_DIR / "publications.tmpl") as f:
+    global BYTES_RD
+    tmpl_path = TEMPLATES_DIR / "publications.tmpl"
+    BYTES_RD += file_size(tmpl_path)
+    with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
     pub_links = ""
@@ -718,11 +894,13 @@ def render_publications(pubs: List[Pub]) -> str:
 
 
 def output_publications(html):
+    global BYTES_WR
     output_path = OUTPUT_DIR / "publications" / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     print(f"==== write {output_path}")
     with open(output_path, "w") as f:
         f.write(html)
+    BYTES_WR += file_size(output_path)
 
 
 def post_card(post: Post) -> str:
@@ -746,7 +924,10 @@ def post_card(post: Post) -> str:
 
 
 def render_posts(posts: List[Post]) -> str:
-    with open(TEMPLATES_DIR / "posts.tmpl") as f:
+    global BYTES_RD
+    tmpl_path = TEMPLATES_DIR / "posts.tmpl"
+    BYTES_RD += file_size(tmpl_path)
+    with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
     post_links = ""
@@ -801,7 +982,10 @@ def talk_card(talk: Talk) -> str:
 
 
 def render_talks(talks: List[Talk]) -> str:
-    with open(TEMPLATES_DIR / "talks.tmpl") as f:
+    global BYTES_RD
+    tmpl_path = TEMPLATES_DIR / "talks.tmpl"
+    BYTES_RD = file_size(tmpl_path)
+    with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
     talk_links = ""
@@ -826,27 +1010,28 @@ if __name__ == "__main__":
 
     post_specs = find_posts()
     for ps in post_specs:
-        print(ps)
+        move_post_resources(ps)
     posts = [render_post(spec) for spec in post_specs]
     posts = [p for p in posts if p is not None]
     for post in posts:
         output_post(post)
 
     pub_specs = find_pubs()
-    for spec in pub_specs:
-        print(spec)
     pubs = [render_pub(spec) for spec in pub_specs]
     pubs = [p for p in pubs if p is not None]
     for pub in pubs:
         output_pub(pub)
 
     talk_specs = find_talks()
-    for spec in talk_specs:
-        print(spec)
     talks = [render_talk(spec) for spec in talk_specs]
     talks = [t for t in talks if t is not None]
     for talk in talks:
         output_talk(talk)
+
+    project_specs = find_projects()
+    projects = [render_project(spec) for spec in project_specs]
+    for project in projects:
+        output_project(project)
 
     index_html = render_index(
         top_k_posts=sorted(posts, key=lambda p: p.create_time, reverse=True)[0:5],
@@ -868,6 +1053,9 @@ if __name__ == "__main__":
 
     recognition_html = render_recognition()
     output_html("recognition", recognition_html)
+
+    projects_html = render_projects_index(projects)
+    output_html("projects", projects_html)
 
     copy_static()
     copy_thirdparty()

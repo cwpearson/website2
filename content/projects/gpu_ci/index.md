@@ -2,7 +2,7 @@
 title: GPU Continuous Integration with Azure Pipelines
 tags:
 - personal
-date: "2016-04-27T00:00:00Z"
+date: 2016-04-27T00:00:00Z
 
 image:
   caption: 
