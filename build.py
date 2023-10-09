@@ -201,10 +201,7 @@ def render_gallery_frag(gallery_items: List[GalleryItem]) -> str:
     html = '<div class="gallery">\n'
 
     for gi in gallery_items:
-        html += (
-            img(src=Path("gallery") / gi.image, alt=gi.caption, path=gi.full_path)
-            + "\n"
-        )
+        html += img(src=Path("gallery") / gi.image, alt=gi.caption) + "\n"
 
     html += "</div>\n"
     return html
@@ -281,8 +278,8 @@ def output_post(post: Post):
         dst = output_dir / res
         print(f"==== {src} -> {dst}")
         if src.is_file():
-            sz = file_size(dst)
             shutil.copy2(src, dst)
+            sz = file_size(dst)
             BYTES_RD += sz
             BYTES_WR += sz
         elif src.is_dir():
@@ -823,6 +820,8 @@ def render_talks(talks: List[Talk]) -> str:
 
 
 if __name__ == "__main__":
+    shutil.rmtree(OUTPUT_DIR, ignore_errors=True)
+
     start = time.monotonic()
 
     post_specs = find_posts()
