@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Tuple, Union, Dict
 import toml
+import time
 import datetime
 from string import Template
 from pytz import timezone
@@ -11,6 +12,10 @@ import shutil
 import mistletoe
 from mistletoe.contrib.pygments_renderer import PygmentsRenderer
 import yaml
+from PIL import Image
+
+BYTES_RD = 0
+BYTES_WR = 0
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 POSTS_DIR = Path(__file__).parent / "posts"
@@ -44,8 +49,9 @@ class PostSpec:
 
 @dataclass
 class GalleryItem:
-    image: Path
+    image: Path  # post/gallery/image is the path to the image
     caption: str
+    full_path: Path = None  # full path to the image
 
 
 @dataclass
@@ -121,17 +127,27 @@ def find_posts() -> List[PostSpec]:
     return specs
 
 
+def file_size(path) -> int:
+    return Path(path).stat().st_size
+
+
+def dir_size(path) -> int:
+    return sum(file.stat().st_size for file in Path(path).rglob("*"))
+
+
 def read_markdown(path: Path) -> Tuple[Dict, str]:
     """
     assume +++ delimits toml frontmatter, and --- delimits yaml frontmatter
 
     returns frontmater dict, markdown
     """
+    global BYTES_RD
 
     toml_delims = []
     yaml_delims = []
 
     lines = []
+    BYTES_RD += file_size(path)
     with open(path, "r") as f:
         lines = [line for line in f]
 
@@ -163,11 +179,16 @@ def maybe_localize_to_mountain(dt: datetime.datetime) -> datetime.datetime:
         return dt
 
 
-def img(src, alt="") -> str:
+def img(src, alt="", path=None) -> str:
     html = f'<img src="{src}"'
-
     if alt:
         html += f' alt="{alt}"'
+    if path:
+        global BYTES_RD
+        BYTES_RD += file_size(path)
+        im = Image.open(path)
+        w, h = im.size
+        html += f' height="{h}" width="{w}"'
 
     html += ">"
     return html
@@ -180,7 +201,10 @@ def render_gallery_frag(gallery_items: List[GalleryItem]) -> str:
     html = '<div class="gallery">\n'
 
     for gi in gallery_items:
-        html += img(src=Path("gallery") / gi.image, alt=gi.caption) + "\n"
+        html += (
+            img(src=Path("gallery") / gi.image, alt=gi.caption, path=gi.full_path)
+            + "\n"
+        )
 
     html += "</div>\n"
     return html
@@ -200,7 +224,11 @@ def render_post(spec: PostSpec) -> Post:
     mod_time = maybe_localize_to_mountain(mod_time)
 
     gallery_items = [
-        GalleryItem(gi["image"], gi["caption"])
+        GalleryItem(
+            gi["image"],
+            gi["caption"],
+            full_path=OUTPUT_DIR / spec.output_dir / "gallery" / gi["image"],
+        )
         for gi in frontmatter.get("gallery_item", [])
     ]
 
@@ -222,7 +250,12 @@ def render_post(spec: PostSpec) -> Post:
 
 
 def output_post(post: Post):
-    with open(TEMPLATES_DIR / "post.tmpl", "r") as f:
+    global BYTES_RD
+    global BYTES_WR
+
+    tmpl_path = TEMPLATES_DIR / "post.tmpl"
+    BYTES_RD += file_size(tmpl_path)
+    with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
     html = tmpl.safe_substitute(
@@ -238,17 +271,25 @@ def output_post(post: Post):
     output_dir = OUTPUT_DIR / post.spec.output_dir
     print(f"==== output {post.spec.markdown_path} -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
-    with open(output_dir / "index.html", "w") as f:
+    html_path = output_dir / "index.html"
+    with open(html_path, "w") as f:
         f.write(html)
+    BYTES_WR += file_size(html_path)
 
     for res in post.spec.resources:
         src = post.spec.input_dir / res
         dst = output_dir / res
         print(f"==== {src} -> {dst}")
         if src.is_file():
+            sz = file_size(dst)
             shutil.copy2(src, dst)
+            BYTES_RD += sz
+            BYTES_WR += sz
         elif src.is_dir():
             shutil.copytree(src, dst, dirs_exist_ok=True)
+            sz = dir_size(dst)
+            BYTES_RD += sz
+            BYTES_WR += sz
 
 
 def find_pubs() -> List[PubSpec]:
@@ -392,27 +433,43 @@ def common_css() -> str:
 
 
 def footer_css() -> str:
-    with open(STYLE_DIR / "footer.css") as f:
+    global BYTES_RD
+    path = STYLE_DIR / "footer.css"
+    BYTES_RD += file_size(path)
+    with open(path) as f:
         return f.read() + "\n"
 
 
 def index_css() -> str:
-    with open(STYLE_DIR / "index.css") as f:
+    global BYTES_RD
+    path = STYLE_DIR / "index.css"
+    BYTES_RD += file_size(path)
+    with open(path) as f:
         return f.read() + "\n"
 
 
 def copy_static():
+    global BYTES_RD
+    global BYTES_WR
     src = STATIC_DIR
     dst = OUTPUT_DIR / "static"
     print(f"==== {src} -> {dst}")
     shutil.copytree(src, dst, dirs_exist_ok=True)
+    sz = dir_size(dst)
+    BYTES_RD += sz
+    BYTES_WR += sz
 
 
 def copy_thirdparty():
+    global BYTES_RD
+    global BYTES_WR
     src = THIRDPARTY_DIR
     dst = OUTPUT_DIR / "thirdparty"
     print(f"==== {src} -> {dst}")
     shutil.copytree(src, dst, dirs_exist_ok=True)
+    sz = dir_size(dst)
+    BYTES_RD += sz
+    BYTES_WR += sz
 
 
 SHA = None
@@ -766,6 +823,8 @@ def render_talks(talks: List[Talk]) -> str:
 
 
 if __name__ == "__main__":
+    start = time.monotonic()
+
     post_specs = find_posts()
     for ps in post_specs:
         print(ps)
@@ -813,3 +872,9 @@ if __name__ == "__main__":
 
     copy_static()
     copy_thirdparty()
+
+    elapsed = time.monotonic() - start
+
+    print(f"read  {BYTES_RD} B")
+    print(f"wrote {BYTES_WR} B")
+    print(f"{(BYTES_RD + BYTES_WR) / elapsed} B/s")

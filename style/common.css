@@ -99,6 +99,7 @@ a:link {
     flex-direction: row;
     flex-wrap: nowrap;
     overflow-x: scroll;
+    justify-content: center;
 }
 
 .gallery img {
