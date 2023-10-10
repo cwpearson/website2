@@ -1,5 +1,5 @@
 ---
-title: "Fast CUDA-Aware MPI Datatypes without Platform Support (preprint)"
+title: "Fast CUDA-Aware MPI Datatypes without Platform Support"
 date: 2020-12-29T00:00:00
 authors: ["Carl Pearson", "Kun Wu"]
 venue: "arxiv"

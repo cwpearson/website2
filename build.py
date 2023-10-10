@@ -127,6 +127,12 @@ def dir_size(path) -> int:
     return sum(file.stat().st_size for file in Path(path).rglob("*"))
 
 
+def favicons():
+    im = Image.open(STATIC_DIR / "img" / "avatar.jpg")
+    OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
+    im.save(OUTPUT_DIR / "favicon.ico", sizes=[(x, x) for x in [16, 32, 64]])
+
+
 def read_markdown(path: Path) -> Tuple[Dict, str]:
     """
     assume +++ delimits toml frontmatter, and --- delimits yaml frontmatter
@@ -682,7 +688,9 @@ def output_pub(pub: Pub):
             + style("common.css")
             + style("publication.css")
             + style("footer.css"),
-            "head_frag": head_frag(),
+            "head_frag": head_frag(
+                pub.title,
+            ),
             "nav_frag": nav_frag(),
             "title": pub.title,
             "authors": pub.authors_html,
@@ -849,6 +857,8 @@ def venue_div(venue: str, _class="pub-venue") -> str:
     elif venue.lower() == "tech report":
         _in = ""
     elif "thesis" in venue.lower():
+        _in = ""
+    elif "dissertation" in venue.lower():
         _in = ""
     return (
         f'<div class="{_class}-wrapper">{_in}<div class="{_class}">{venue}</div></div>'
@@ -1031,6 +1041,7 @@ if __name__ == "__main__":
     shutil.rmtree(OUTPUT_DIR, ignore_errors=True)
 
     start = time.monotonic()
+    favicons()
 
     post_specs = find_posts()
     for ps in post_specs:
