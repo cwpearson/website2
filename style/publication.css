@@ -1,0 +1,14 @@
+.authors {
+    padding-bottom: 1em;
+}
+
+.venue {
+    display: inline;
+    font-style: italic;
+    padding-bottom: 1em;
+}
+
+.abstract {
+    font-style: italic;
+    padding-bottom: 1em;
+}

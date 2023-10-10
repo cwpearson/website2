@@ -8,6 +8,7 @@ from string import Template
 from pytz import timezone
 import subprocess
 import shutil
+from functools import cache
 
 import mistletoe
 from mistletoe.contrib.pygments_renderer import PygmentsRenderer
@@ -79,8 +80,9 @@ class Pub:
     body_html: str
     create_time: datetime.datetime = None
     mod_time: datetime.datetime = create_time
-    authors: List[str] = field(default_factory=list)
-    venue: str = ""
+    authors_html: str = ""
+    venue_html: str = ""
+    abstract: str = ""
 
 
 @dataclass
@@ -223,7 +225,9 @@ def output_project(project: Project):
 
     html = tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": project.body_html,
@@ -268,7 +272,9 @@ def render_projects_index(projects: List[Project]) -> str:
 
     return tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": project_links,
@@ -415,7 +421,9 @@ def output_post(post: Post):
 
     html = tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": post.body_html,
@@ -473,10 +481,16 @@ def render_pub(spec: PubSpec) -> Pub:
     mod_time = frontmatter.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
 
-    body_html = ""
-    body_html += f"<h1>{title}</h1>\n"
+    authors_html = authors_span(frontmatter.get("authors", []))
+
+    venue = frontmatter.get("venue", "")
+    if venue:
+        venue_html = venue_div(venue, _class="venue")
+    else:
+        venue_html = ""
+
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
-        body_html += renderer.render(mistletoe.Document(markdown))
+        body_html = renderer.render(mistletoe.Document(markdown))
 
     return Pub(
         spec=spec,
@@ -484,8 +498,9 @@ def render_pub(spec: PubSpec) -> Pub:
         body_html=body_html,
         create_time=create_time,
         mod_time=mod_time,
-        venue=frontmatter.get("venue", ""),
-        authors=frontmatter.get("authors", []),
+        venue_html=venue_html,
+        authors_html=authors_html,
+        abstract=frontmatter.get("abstract", ""),
     )
 
 
@@ -547,7 +562,9 @@ def output_talk(talk: Talk):
 
     html = tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": talk.body_html,
@@ -571,33 +588,10 @@ def nav_frag() -> str:
         return f.read() + "\n"
 
 
-def navbar_css() -> str:
+@cache
+def style(css) -> str:
     global BYTES_RD
-    path = STYLE_DIR / "navbar.css"
-    BYTES_RD += file_size(path)
-    with open(path) as f:
-        return f.read() + "\n"
-
-
-def common_css() -> str:
-    global BYTES_RD
-    path = STYLE_DIR / "common.css"
-    BYTES_RD += file_size(path)
-    with open(path) as f:
-        return f.read() + "\n"
-
-
-def footer_css() -> str:
-    global BYTES_RD
-    path = STYLE_DIR / "footer.css"
-    BYTES_RD += file_size(path)
-    with open(path) as f:
-        return f.read() + "\n"
-
-
-def index_css() -> str:
-    global BYTES_RD
-    path = STYLE_DIR / "index.css"
+    path = STYLE_DIR / css
     BYTES_RD += file_size(path)
     with open(path) as f:
         return f.read() + "\n"
@@ -632,7 +626,6 @@ SHA = None
 
 def footer_frag() -> str:
     global SHA
-    global DIRTY
     now_str = datetime.datetime.now().strftime("%x")
     if SHA is None:
         cp = subprocess.run(
@@ -685,9 +678,16 @@ def output_pub(pub: Pub):
 
     html = tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("publication.css")
+            + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
+            "title": pub.title,
+            "authors": pub.authors_html,
+            "venue": pub.venue_html,
+            "abstract": pub.abstract,
             "body_frag": pub.body_html,
             "footer_frag": footer_frag(),
         }
@@ -739,7 +739,11 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
 
     return tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + index_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("cards.css")
+            + style("index.css")
+            + style("footer.css"),
             "head_frag": head_frag(
                 title="Carl Pearson",
                 descr="Personal site for Carl pearson",
@@ -777,7 +781,10 @@ def render_experience() -> str:
 
     return tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + index_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("index.css")
+            + style("footer.css"),
             "head_frag": head_frag(title=title, descr=descr),
             "nav_frag": nav_frag(),
             "title": title,
@@ -799,7 +806,10 @@ def render_recognition() -> str:
 
     return tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + index_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("index.css")
+            + style("footer.css"),
             "head_frag": head_frag(title=title, descr=descr),
             "nav_frag": nav_frag(),
             "title": title,
@@ -820,6 +830,7 @@ def output_html(prefix, html):
 
 
 def authors_span(authors: List[str]) -> str:
+    assert isinstance(authors, list)
     html = ""
     for i, author in enumerate(authors):
         if author == "Carl Pearson" or author == "Pearson, Carl":
@@ -829,6 +840,19 @@ def authors_span(authors: List[str]) -> str:
         if i + 1 < len(authors):
             html += ", "
     return html
+
+
+def venue_div(venue: str, _class="pub-venue") -> str:
+    _in = "in "
+    if venue.lower() == "arxiv":
+        _in = ""
+    elif venue.lower() == "tech report":
+        _in = ""
+    elif "thesis" in venue.lower():
+        _in = ""
+    return (
+        f'<div class="{_class}-wrapper">{_in}<div class="{_class}">{venue}</div></div>'
+    )
 
 
 def pub_card(pub: Pub) -> str:
@@ -848,17 +872,10 @@ def pub_card(pub: Pub) -> str:
     html += f'<div class="pub-title">{pub.title}</div>\n'
 
     html += "<div>\n"
-    if pub.authors:
-        html += f'<div class="pub-authors">{authors_span(pub.authors)}</div>\n'
-    if pub.venue:
-        _in = "in "
-        if pub.venue.lower() == "arxiv":
-            _in = ""
-        elif pub.venue.lower() == "tech report":
-            _in = ""
-        elif "thesis" in pub.venue.lower():
-            _in = ""
-        html += f'<div class="pub-venue-wrapper">{_in}<div class="pub-venue">{pub.venue}</div></div>\n'
+    if pub.authors_html:
+        html += f'<div class="authors">{pub.authors_html}</div>\n'
+    if pub.venue_html:
+        html += pub.venue_html + "\n"
     html += "</div>\n"
 
     html += "</div>\n"  # pub-ref
@@ -879,12 +896,14 @@ def render_publications(pubs: List[Pub]) -> str:
 
     pub_links = ""
     for pub in sorted(pubs, key=lambda x: x.create_time, reverse=True):
-        # pub_links += f'<li><a href="/{pub.spec.output_dir}/">{pub.title}</a></li>\n'
         pub_links += pub_card(pub)
 
     return tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("cards.css")
+            + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": pub_links,
@@ -936,7 +955,9 @@ def render_posts(posts: List[Post]) -> str:
 
     return tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": post_links,
@@ -994,7 +1015,10 @@ def render_talks(talks: List[Talk]) -> str:
 
     return tmpl.safe_substitute(
         {
-            "style_frag": navbar_css() + common_css() + footer_css(),
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("cards.css")
+            + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": talk_links,

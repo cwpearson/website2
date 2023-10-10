@@ -1,0 +1,10 @@
+/*small indent*/
+.authors,
+.venue-wrapper {
+    padding-left: 10px;
+}
+
+.venue {
+    font-style: italic;
+    display: inline;
+}
