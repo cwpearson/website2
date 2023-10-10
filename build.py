@@ -8,7 +8,7 @@ from string import Template
 from pytz import timezone
 import subprocess
 import shutil
-from functools import cache
+from functools import lru_cache
 
 import mistletoe
 from mistletoe.contrib.pygments_renderer import PygmentsRenderer
@@ -588,7 +588,7 @@ def nav_frag() -> str:
         return f.read() + "\n"
 
 
-@cache
+@lru_cache(maxsize=None)
 def style(css) -> str:
     global BYTES_RD
     path = STYLE_DIR / css
