@@ -6,9 +6,9 @@ authors = ["Mert Hidayetoglu", "Carl Pearson", "Vikram Sharma Mailthody", "Eiman
 venue = "2020 IEEE High Performance Extreme Compute Conference"
 abstract = "This paper presents GPU performance optimization and scaling results for inference models of the Sparse Deep Neural Network Challenge 2020.
 Demands for network quality have increased rapidly, pushing the size and thus the memory requirements of many neural networks beyond the capacity ofavailable accelerators.
-Sparse deep neural networks (SpDNN) have shown promise for reining in the memory footprint of large neural networks.\
+Sparse deep neural networks (SpDNN) have shown promise for reining in the memory footprint of large neural networks.
 However, there is room for improvement inimplementing SpDNN operations on GPUs.
-This work presents optimized sparse matrix multiplication kernels fused with theReLU function.
+This work presents optimized sparse matrix multiplication kernels fused with the ReLU function.
 The optimized kernels reuse input feature mapsfrom the shared memory and sparse weights from registers.
 For multi-GPU parallelism, our SpDNN implementation duplicates weights and statically partition the feature maps across GPUs.
 Results for the challenge benchmarks show that the proposed kernel design and multi-GPU parallelization achieve up to 180TeraEdges per second inference throughput.
