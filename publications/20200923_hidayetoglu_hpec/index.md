@@ -1,5 +1,5 @@
 +++
-title = "[HPEC] At-Scale Sparse Deep Neural Network Inference With Efficient GPU Implementation"
+title = "At-Scale Sparse Deep Neural Network Inference With Efficient GPU Implementation"
 date = 2020-09-23  # Schedule page publish date.
 draft = false
 authors = ["Mert Hidayetoglu", "Carl Pearson", "Vikram Sharma Mailthody", "Eiman Ebrahimi", "Jinjun Xiong", "Rakesh Nagi", "Wen-Mei Hwu"]
