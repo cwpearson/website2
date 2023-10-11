@@ -1,5 +1,5 @@
 +++
-title = "[HPDC] TEMPI: An Interposed MPI Library with a Canonical Representation of CUDA-aware Datatypes"
+title = "TEMPI: An Interposed MPI Library with a Canonical Representation of CUDA-aware Datatypes"
 date = 2021-06-24T00:00:00  # Schedule page publish date.
 draft = false
 math = false
