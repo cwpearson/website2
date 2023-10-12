@@ -44,7 +44,7 @@ categories = []
 I was invited to give a guest lecture for the Spring 2020 ECE 408 GPU programming course at the University of Illinois.
 This lecture covers some performance measurement techniques available in CUDA.
 The 75 minute lecture, available on Youtube in four parts:
-* [Slides (pdf)](/pdf/20200416_nsight.pdf)
+* [Slides (pdf)](/static/pdf/20200416_nsight.pdf)
 * [Part 1: Intro](https://youtu.be/uN2qju175aE)
 * [Part 2: CUDA Events](https://youtu.be/yI137sSOlkU)
 * [Part 3: Nsight Compute](https://youtu.be/UNX0KNMQlW8)

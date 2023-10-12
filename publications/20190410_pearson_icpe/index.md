@@ -40,6 +40,6 @@ series = {ICPE ’19}
 }
 ```
 
-* [pdf](/pdf/20190410_pearson_icpe.pdf)
+* [pdf](/static/pdf/20190410_pearson_icpe.pdf)
 * [code](https://github.com/c3sr/comm_scope)
 * [project](/project/scope)
