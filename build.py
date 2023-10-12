@@ -669,6 +669,8 @@ def head_frag(title: str = "", descr: str = "", keywords: List[str] = []) -> str
     with open(katex_path) as f:
         html += f.read() + "\n"
 
+    html += '<link rel="icon" type="image/x-icon" href="/favicon.ico"/>\n'
+
     html += '<script async src="https://analytics.carlpearson.net/script.js" data-website-id="b5d84f78-f4ee-4ce8-ae90-d2cd59e70fbf"></script>\n'
 
     return html

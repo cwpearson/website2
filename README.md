@@ -14,3 +14,4 @@ python build.py && python -m http.server --directory public
   - [ ] paper
 - [ ] favicon
 - [ ] edit this page on Github
+- [ ] only load math for a page if frontmatter has math = true

@@ -1,15 +1,13 @@
 +++
-draft = false
+title = "[ACES] Large Inverse-Scattering Solutions with DBIM on GPU-Enabled Supercomputers"
 
 date = 2017-03-28
-title = "[ACES] Large Inverse-Scattering Solutions with DBIM on GPU-Enabled Supercomputers"
 authors = ["Mert Hidayetoglu", "Carl Pearson", "Weng Cho Chew", "Levent Gurel", "Wen-mei Hwu"]
 
 
 math = false
-
 tags = ["applications"]
-
+draft = false
 +++
 
 **Mert Hidayetoglu, Carl Pearson, Weng Cho Chew, Levent Gurel, Wen-mei Hwu**
