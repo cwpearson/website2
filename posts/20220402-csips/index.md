@@ -3,6 +3,7 @@ title = "Implementation of a Integer Linear Programming Solver in Python"
 date = 2022-04-05T00:00:00
 lastmod = 2022-04-05T00:00:00
 draft = false
+math = true
 
 # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
 authors = ["Carl Pearson"]

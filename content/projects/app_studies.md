@@ -4,7 +4,6 @@ title = "High-Performance Application Studies"
 external_link = ""
 image_preview = ""
 highlight = true
-math = false
 tags = ["applications"]
 
 [header]

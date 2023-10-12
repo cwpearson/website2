@@ -2,7 +2,6 @@
 title = "TEMPI: An Interposed MPI Library with a Canonical Representation of CUDA-aware Datatypes"
 date = 2021-06-24T00:00:00  # Schedule page publish date.
 draft = false
-math = false
 tags = ["stencil", "mpi"]
 venue = "2021 ACM Symposium on High-Performance Parallel and Distributed Computing"
 authors = ["Carl Pearson", "Kun Wu", "I-Hsin Chung", "Jinjun Xiong", "Wen-Mei Hwu"]

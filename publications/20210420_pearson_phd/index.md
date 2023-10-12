@@ -2,7 +2,6 @@
 title = "Movement and Placement of Non-Contiguous Data In Distributed GPU Computing"
 date = 2021-04-20T00:00:00  # Schedule page publish date.
 draft = false
-math = false
 tags = ["stencil", "mpi"]
 venue = "Ph.D. Dissertation"
 authors = ["Carl Pearson"]

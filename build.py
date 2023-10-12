@@ -64,6 +64,7 @@ class Post:
     create_time: datetime.datetime = None
     mod_time: datetime.datetime = create_time
     gallery_html: str = ""
+    math: bool = False  # if post has math in it
 
 
 @dataclass
@@ -389,6 +390,7 @@ def render_post(spec: PostSpec) -> Post:
     create_time = maybe_localize_to_mountain(create_time)
     mod_time = frontmatter.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
+    math = frontmatter.get("math", False)
 
     gallery_items = [
         GalleryItem(
@@ -413,6 +415,7 @@ def render_post(spec: PostSpec) -> Post:
         create_time=create_time,
         mod_time=mod_time,
         gallery_html=gallery_html,
+        math=math,
     )
 
 
@@ -430,7 +433,7 @@ def output_post(post: Post):
             "style_frag": style("navbar.css")
             + style("common.css")
             + style("footer.css"),
-            "head_frag": head_frag(),
+            "head_frag": head_frag(math=post.math),
             "nav_frag": nav_frag(),
             "body_frag": post.body_html,
             "gallery_frag": post.gallery_html,
@@ -651,7 +654,9 @@ def footer_frag() -> str:
     return html
 
 
-def head_frag(title: str = "", descr: str = "", keywords: List[str] = []) -> str:
+def head_frag(
+    title: str = "", descr: str = "", keywords: List[str] = [], math=False
+) -> str:
     global BYTES_RD
     html = ""
     html += '<meta name="viewport" content="width=device-width">\n'
@@ -664,10 +669,11 @@ def head_frag(title: str = "", descr: str = "", keywords: List[str] = []) -> str
     if keywords:
         html += f'<meta name="keywords" content="{"".join(keywords)}">\n'
 
-    katex_path = TEMPLATES_DIR / "katex_frag.html"
-    BYTES_RD += file_size(katex_path)
-    with open(katex_path) as f:
-        html += f.read() + "\n"
+    if math:
+        katex_path = TEMPLATES_DIR / "katex_frag.html"
+        BYTES_RD += file_size(katex_path)
+        with open(katex_path) as f:
+            html += f.read() + "\n"
 
     html += '<link rel="icon" type="image/x-icon" href="/favicon.ico"/>\n'
 

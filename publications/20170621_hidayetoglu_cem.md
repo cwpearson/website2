@@ -1,18 +1,9 @@
 +++
 draft = false
-
 date = 2017-06-21
-title = "[CEM] Scalable Parallel DBIM Solutions of Inverse-Scattering Problems"
-
-math = false
+title = "Scalable Parallel DBIM Solutions of Inverse-Scattering Problems"
 publication = "Computing and Electromagnetics International Workshop (CEM), 2017"
-
-
-
-selected = false
-
 tags = ["applications"]
-
 +++
 
 **Mert Hidayetoglu, Carl Pearson,  Levent Gurel, Wen-mei Hwu, Weng Cho Chew**

@@ -4,7 +4,6 @@ date = 2022-03-04T00:00:00  # Schedule page publish date.
 authors = ["Carl Pearson", "Aurya Javeed", "Karen Devine"]
 venue = "23rd IEEE International Workshop on Parallel and Distributed Scientific and Engineering Computing (PDSEC)"
 draft = false
-math = false
 tags = ["CUDA", "mpi"]
 abstract = """
 <p>
