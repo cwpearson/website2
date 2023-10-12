@@ -1,5 +1,5 @@
 +++
-title = "[HPEC] Update on k-truss Decomposition on GPU"
+title = "Update on k-truss Decomposition on GPU"
 date = 2019-08-22  # Schedule page publish date.
 draft = false
 authors = ["Mohammad Almasri", "Omer Anjum", "Carl Pearson", "Vikram S. Mailthody", "Zaid Qureshi", "Rakesh Nagi", "Jinjun Xiong", "Wen-Mei Hwu"]

@@ -1,5 +1,5 @@
 +++
-title = "[HPEC] Update on Triangle Counting on GPU"
+title = "Update on Triangle Counting on GPU"
 date = 2019-08-22T00:00:00  # Schedule page publish date.
 draft = false
 authors = ["Carl Pearson", "Mohammad Almasri", "Omer Anjum", "Vikram S. Mailthody", "Zaid Qureshi", "Rakesh Nagi", "Jinjun Xiong", "Wen-Mei Hwu"]
