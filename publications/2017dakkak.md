@@ -1,6 +1,6 @@
 +++
 author = "Carl Pearson"
-title = "[IPDPSw] RAI: A Scalable Project Submission System for Parallel Programming Courses"
+title = "RAI: A Scalable Project Submission System for Parallel Programming Courses"
 date = 2017-05-29
 description = ""
 tags = ["teaching"]

@@ -1,6 +1,6 @@
 +++
 author = "Carl Pearson"
-title = "[IPDPSw] WebGPU: A Scalable Online Development Platform for GPU Programming Courses"
+title = "WebGPU: A Scalable Online Development Platform for GPU Programming Courses"
 date = 2016-05-23
 description = ""
 tags = ["teaching"]
