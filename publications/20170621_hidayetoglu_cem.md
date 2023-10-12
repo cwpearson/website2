@@ -1,8 +1,7 @@
 +++
+title = "Scalable Parallel DBIM Solutions of Inverse-Scattering Problems"
 draft = false
 date = 2017-06-21
-title = "Scalable Parallel DBIM Solutions of Inverse-Scattering Problems"
-publication = "Computing and Electromagnetics International Workshop (CEM), 2017"
 tags = ["applications"]
 authors = ["Mert Hidayetoglu", "Carl Pearson", "Levent Gurel", "Wen-mei Hwu", "Weng Cho Chew"]
 venue = "Computing and Electromagnetics International Workshop (CEM), 2017"
