@@ -482,6 +482,7 @@ def output_post(post: Post):
         {
             "style_frag": style("navbar.css")
             + style("common.css")
+            + style("post.css")
             + style("footer.css"),
             "head_frag": head_frag(math=post.math),
             "nav_frag": nav_frag(),
