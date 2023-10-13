@@ -9,6 +9,7 @@ from pytz import timezone
 import subprocess
 import shutil
 from functools import lru_cache
+import gzip
 
 import mistletoe
 from mistletoe.contrib.pygments_renderer import PygmentsRenderer
@@ -17,6 +18,10 @@ from PIL import Image
 
 BYTES_RD = 0
 BYTES_WR = 0
+
+TCP_SLOW_START = 14600
+LARGE_PAGES = []
+SMALL_PAGES = 0
 
 CONTENT_DIR = Path(__file__).parent / "content"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
@@ -120,8 +125,46 @@ class Project:
     create_time: datetime.datetime = None
 
 
+class Timer:
+    def __init__(self):
+        self.elapsed = None
+        self.total = 0
+
+    def start(self):
+        self.elapsed = time.monotonic()
+
+    def stop(self):
+        if self.elapsed is not None:
+            self.total += time.monotonic() - self.elapsed
+            self.elapsed = None
+
+
+TIMER = Timer()
+
+
+def gzipped_size(path) -> int:
+    with open(path, "rb") as f:
+        return len(gzip.compress(f.read()))
+
+
 def file_size(path) -> int:
-    return Path(path).stat().st_size
+    sz = Path(path).stat().st_size
+    return sz
+
+
+def write_file(path, contents) -> int:
+    global BYTES_WR
+    global LARGE_PAGES
+    global SMALL_PAGES
+    with open(path, "w") as f:
+        f.write(contents)
+    TIMER.stop()
+    BYTES_WR += file_size(path)
+    if gzipped_size(path) > TCP_SLOW_START:
+        LARGE_PAGES += [path]
+    else:
+        SMALL_PAGES += 1
+    TIMER.start()
 
 
 def dir_size(path) -> int:
@@ -146,11 +189,12 @@ def read_markdown(path: Path) -> Tuple[Dict, str]:
     yaml_delims = []
 
     lines = []
+    TIMER.stop()
     BYTES_RD += file_size(path)
+    TIMER.start()
     with open(path, "r") as f:
         lines = [line for line in f]
 
-    delims = []
     for li, line in enumerate(lines):
         if line.strip() == "+++":
             toml_delims += [li]
@@ -223,10 +267,11 @@ def render_project(spec: ProjectSpec) -> Project:
 
 def output_project(project: Project):
     global BYTES_RD
-    global BYTES_WR
 
     tmpl_path = TEMPLATES_DIR / "project.tmpl"
+    TIMER.stop()
     BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
     with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
@@ -245,9 +290,7 @@ def output_project(project: Project):
     print(f"==== output {project.spec.markdown_path} -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     html_path = output_dir / "index.html"
-    with open(html_path, "w") as f:
-        f.write(html)
-    BYTES_WR += file_size(html_path)
+    write_file(html_path, html)
 
 
 def project_card(project: Project) -> str:
@@ -269,7 +312,9 @@ def project_card(project: Project) -> str:
 def render_projects_index(projects: List[Project]) -> str:
     global BYTES_RD
     tmpl_path = TEMPLATES_DIR / "projects.tmpl"
+    TIMER.stop()
     BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
     with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
@@ -352,12 +397,16 @@ def move_post_resources(spec: PostSpec):
         print(f"==== {src} -> {dst}")
         if src.is_file():
             shutil.copy2(src, dst)
+            TIMER.stop()
             sz = file_size(dst)
+            TIMER.start()
             BYTES_RD += sz
             BYTES_WR += sz
         elif src.is_dir():
             shutil.copytree(src, dst, dirs_exist_ok=True)
+            TIMER.stop()
             sz = dir_size(dst)
+            TIMER.start()
             BYTES_RD += sz
             BYTES_WR += sz
 
@@ -421,10 +470,11 @@ def render_post(spec: PostSpec) -> Post:
 
 def output_post(post: Post):
     global BYTES_RD
-    global BYTES_WR
 
     tmpl_path = TEMPLATES_DIR / "post.tmpl"
+    TIMER.stop()
     BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
     with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
@@ -444,9 +494,7 @@ def output_post(post: Post):
     print(f"==== output {post.spec.markdown_path} -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     html_path = output_dir / "index.html"
-    with open(html_path, "w") as f:
-        f.write(html)
-    BYTES_WR += file_size(html_path)
+    write_file(html_path, html)
 
 
 def find_pubs() -> List[PubSpec]:
@@ -563,9 +611,10 @@ def render_talk(spec: TalkSpec) -> Pub:
 
 def output_talk(talk: Talk):
     global BYTES_RD
-    global BYTES_WR
     tmpl_path = TEMPLATES_DIR / "talk.tmpl"
+    TIMER.stop()
     BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
     with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
@@ -584,9 +633,7 @@ def output_talk(talk: Talk):
     print(f"==== output {talk.spec.markdown_path} -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     html_path = output_dir / "index.html"
-    with open(output_dir / "index.html", "w") as f:
-        f.write(html)
-    BYTES_WR += file_size(html_path)
+    write_file(html_path, html)
 
 
 def nav_frag() -> str:
@@ -613,7 +660,9 @@ def copy_static():
     dst = OUTPUT_DIR / "static"
     print(f"==== {src} -> {dst}")
     shutil.copytree(src, dst, dirs_exist_ok=True)
+    TIMER.stop()
     sz = dir_size(dst)
+    TIMER.start()
     BYTES_RD += sz
     BYTES_WR += sz
 
@@ -625,7 +674,9 @@ def copy_thirdparty():
     dst = OUTPUT_DIR / "thirdparty"
     print(f"==== {src} -> {dst}")
     shutil.copytree(src, dst, dirs_exist_ok=True)
+    TIMER.stop()
     sz = dir_size(dst)
+    TIMER.start()
     BYTES_RD += sz
     BYTES_WR += sz
 
@@ -671,7 +722,9 @@ def head_frag(
 
     if math:
         katex_path = TEMPLATES_DIR / "katex_frag.html"
+        TIMER.stop()
         BYTES_RD += file_size(katex_path)
+        TIMER.start()
         with open(katex_path) as f:
             html += f.read() + "\n"
 
@@ -686,7 +739,9 @@ def output_pub(pub: Pub):
     global BYTES_RD
     global BYTES_WR
     tmpl_path = TEMPLATES_DIR / "pub.tmpl"
+    TIMER.stop()
     BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
     with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
@@ -712,15 +767,15 @@ def output_pub(pub: Pub):
     print(f"==== output {pub.spec.markdown_path} -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     html_path = output_dir / "index.html"
-    with open(html_path, "w") as f:
-        f.write(html)
-    BYTES_WR += file_size(html_path)
+    write_file(html_path, html)
 
 
 def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
     global BYTES_RD
     tmpl_path = TEMPLATES_DIR / "index.tmpl"
+    TIMER.stop()
     BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
     with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
@@ -780,13 +835,16 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
 def output_index(html):
     output_path = OUTPUT_DIR / "index.html"
     print(f"==== write {output_path}")
-    with open(output_path, "w") as f:
-        f.write(html)
+    write_file(output_path, html)
 
 
 def render_experience() -> str:
     global BYTES_RD
-    with open(TEMPLATES_DIR / "experience.tmpl") as f:
+    tmpl_path = TEMPLATES_DIR / "experience.tmpl"
+    TIMER.stop()
+    BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
+    with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
     frontmatter, md_str = read_markdown("experience.md")
@@ -836,13 +894,10 @@ def render_recognition() -> str:
 
 
 def output_html(prefix, html):
-    global BYTES_WR
     output_path = OUTPUT_DIR / prefix / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     print(f"==== write {output_path}")
-    with open(output_path, "w") as f:
-        f.write(html)
-    BYTES_WR += file_size(output_path)
+    write_file(output_path, html)
 
 
 def authors_span(authors: List[str]) -> str:
@@ -908,7 +963,9 @@ def pub_card(pub: Pub) -> str:
 def render_publications(pubs: List[Pub]) -> str:
     global BYTES_RD
     tmpl_path = TEMPLATES_DIR / "publications.tmpl"
+    TIMER.stop()
     BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
     with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
@@ -935,9 +992,7 @@ def output_publications(html):
     output_path = OUTPUT_DIR / "publications" / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     print(f"==== write {output_path}")
-    with open(output_path, "w") as f:
-        f.write(html)
-    BYTES_WR += file_size(output_path)
+    write_file(output_path, html)
 
 
 def post_card(post: Post) -> str:
@@ -963,7 +1018,9 @@ def post_card(post: Post) -> str:
 def render_posts(posts: List[Post]) -> str:
     global BYTES_RD
     tmpl_path = TEMPLATES_DIR / "posts.tmpl"
+    TIMER.stop()
     BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
     with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
@@ -1023,7 +1080,9 @@ def talk_card(talk: Talk) -> str:
 def render_talks(talks: List[Talk]) -> str:
     global BYTES_RD
     tmpl_path = TEMPLATES_DIR / "talks.tmpl"
-    BYTES_RD = file_size(tmpl_path)
+    TIMER.stop()
+    BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
     with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
@@ -1048,7 +1107,7 @@ def render_talks(talks: List[Talk]) -> str:
 if __name__ == "__main__":
     shutil.rmtree(OUTPUT_DIR, ignore_errors=True)
 
-    start = time.monotonic()
+    TIMER.start()
     favicons()
 
     post_specs = find_posts()
@@ -1103,8 +1162,12 @@ if __name__ == "__main__":
     copy_static()
     copy_thirdparty()
 
-    elapsed = time.monotonic() - start
+    TIMER.stop()
 
     print(f"read  {BYTES_RD} B")
     print(f"wrote {BYTES_WR} B")
-    print(f"{(BYTES_RD + BYTES_WR) / elapsed} B/s")
+    print(f"{(BYTES_RD + BYTES_WR) / TIMER.total} B/s")
+
+    print(f"{len(LARGE_PAGES)} large pages / {SMALL_PAGES} small pages")
+    for path in LARGE_PAGES:
+        print(f"  ({gzipped_size(path)}B) {path} ")
