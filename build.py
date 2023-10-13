@@ -623,6 +623,7 @@ def output_talk(talk: Talk):
         {
             "style_frag": style("navbar.css")
             + style("common.css")
+            + style("talk.css")
             + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
