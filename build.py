@@ -739,7 +739,6 @@ def head_frag(
 
 def output_pub(pub: Pub):
     global BYTES_RD
-    global BYTES_WR
     tmpl_path = TEMPLATES_DIR / "pub.tmpl"
     TIMER.stop()
     BYTES_RD += file_size(tmpl_path)
@@ -990,7 +989,6 @@ def render_publications(pubs: List[Pub]) -> str:
 
 
 def output_publications(html):
-    global BYTES_WR
     output_path = OUTPUT_DIR / "publications" / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     print(f"==== write {output_path}")
