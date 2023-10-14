@@ -5,11 +5,12 @@
 .venue {
     display: inline;
     font-style: italic;
-    padding-bottom: 1em;
+    margin-bottom: 1em;
 }
 
 .abstract {
+    margin-top: 1em;
+    margin-bottom: 1em;
     font-style: italic;
-    padding-bottom: 1em;
 }
 
