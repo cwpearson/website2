@@ -97,3 +97,19 @@ See the [Github repository](https://github.com/cwpearson/nvidia-performance-tool
 * Fort Collins, CO
 * Summer 2012
 
+
+## Volunteer
+
+### University Laboratory High School Board of Directors
+* Urbana, IL
+* April 2023 - present
+
+### University YMCA Board of Directors
+* Urbana, IL
+* Treasurer
+* Board Member
+* Student Board Member
+
+### Amnesty International Board of Directors
+* Urbana, IL
+* Secretary
