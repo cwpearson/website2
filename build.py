@@ -376,7 +376,9 @@ def img(src, alt="", path=None) -> str:
         html += f' alt="{alt}"'
     if path:
         global BYTES_RD
+        TIMER.stop()
         BYTES_RD += file_size(path)
+        TIMER.start()
         im = Image.open(path)
         w, h = im.size
         html += f' height="{h}" width="{w}"'

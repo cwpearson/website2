@@ -20,5 +20,9 @@
 }
 
 .body {
-    max-width: 750px;
+    /*it seems that flex column with align-items canter causes divs to overflow,
+    so just set the max width to never be larger than 100% also.
+    This may be some interaction with <pre> since pages without it work fine
+    when max-width=750*/
+    max-width: min(750px, 100%);
 }

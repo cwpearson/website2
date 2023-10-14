@@ -46,6 +46,7 @@ The panel is moderated by I-Hsin Chung of IBM research.
 The panel is in C147 at the Kay Bailey Hutchinson Convention Center at 10:30am, Tuesday 11/15/22.
 
 ![Wen-Mei Hwu, me, Christian Pinto, Brian Pan, I-Hsin Chung, and Kaoutar El Maghraoui](featured.jpg)
+
 From left to right: Wen-Mei Hwu (Nvidia), me, Christian Pinto (IBM), Brian Pan (H3 Platform), I-Hsin Chung (IBM), and Kaoutar El Maghraoui (IBM).
 
 
