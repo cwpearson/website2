@@ -530,6 +530,17 @@ def normalize_to_datetime(o) -> datetime.datetime:
         raise RuntimeError(type(o))
 
 
+def robots_txt():
+    global BYTES_RD
+    global BYTES_WR
+    shutil.copy(Path(__file__).parent / "robots.txt", OUTPUT_DIR / "robots.txt")
+    TIMER.stop()
+    sz = file_size(OUTPUT_DIR / "robots.txt")
+    BYTES_WR += sz
+    BYTES_RD += sz
+    TIMER.start()
+
+
 def render_pub(spec: PubSpec) -> Pub:
     print(f"==== render {spec.markdown_path}")
     frontmatter, markdown = read_markdown(spec.markdown_path)
@@ -1111,6 +1122,7 @@ if __name__ == "__main__":
 
     TIMER.start()
     favicons()
+    robots_txt()
 
     post_specs = find_posts()
     for ps in post_specs:
