@@ -16,7 +16,7 @@ author = "Carl Pearson"
 - SC'22 ExaMPI Workshop program committee member
 
 ## Academia
-
+- 2021-current Research Professor (LAT) at University of New Mexico Computer Science
 - 2018 Spring University of Illinois Project TA for ECE408/CS483
 - 2017 Fall University of Illinois Head TA for ECE408/CS483
 - 2017-2018 University of Illinois [Mavis Future Faculty Fellow](http://publish.illinois.edu/engr-mavis/2017-2018-mavis-fellows/).
