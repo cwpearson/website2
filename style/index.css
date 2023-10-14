@@ -22,6 +22,7 @@
 .lhs img {
     width: 300px;
     height: auto;
+    border-radius: 2em;
 }
 
 .contact-container {
