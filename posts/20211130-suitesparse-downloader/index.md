@@ -51,7 +51,7 @@ This provides many dimensions to divide the collection along while evaluating pe
 
 
 
-[suitesparse-downloader](github.com/cwpearson/suitesparse-downloader) is a python tool I created to help manage different subsets of the SuiteSparse Collection.
+[suitesparse-downloader](https://github.com/cwpearson/suitesparse-downloader) is a python tool I created to help manage different subsets of the SuiteSparse Collection.
 It is built around [ssgetpy](https://github.com/drdarshan/ssgetpy), a python interface to the metadata attached to the SuiteSparse Collection matrices.
 ssgetpy works by parsing https://sparse.tamu.edu/files/ssstats.csv and building a local database, which it queries.
 ssgetpy also provides some methods to download SuiteSparse Collection matrices.
