@@ -672,16 +672,25 @@ def copy_static():
     global BYTES_RD
     global BYTES_WR
 
-    for e in STATIC_DIR.iterdir():
-        if e.is_dir():
-            dst = OUTPUT_DIR / (e.relative_to(STATIC_DIR))
-            print(f"==== {e} -> {dst}")
-            shutil.copytree(e, dst, dirs_exist_ok=True)
+    for src_path in STATIC_DIR.rglob("*"):
+        if src_path.is_file():
+            dst_path = OUTPUT_DIR / (src_path.relative_to(STATIC_DIR))
+            dst_path.parent.mkdir(exist_ok=True, parents=True)
+            print(f"==== {src_path} -> {dst_path}")
+            if src_path.suffix == ".jpg":
+                src_img = Image.open(src_path)
+                src_img.save(dst_path, optimize=True, quality=85)
+            elif src_path.suffix == ".png":
+                src_img = Image.open(src_path)
+                src_img.save(dst_path, optimize=True)
+            else:
+                shutil.copy(src=src_path, dst=dst_path)
             TIMER.stop()
-            sz = dir_size(dst)
+            src_sz = file_size(src_path)
+            dst_sz = file_size(dst_path)
             TIMER.start()
-            BYTES_RD += sz
-            BYTES_WR += sz
+            BYTES_RD += src_sz
+            BYTES_WR += dst_sz
 
 
 def copy_thirdparty():
