@@ -21,7 +21,7 @@ The second is a more general MPI interposer library, with novel non-contiguous d
 A portable pure-MPI halo exchange is brought to within half the speed of the stencil-specific library, supported by a five order-of-magnitude improvement in MPI communication latency for non-contiguous data.</p>"""
 +++
 
-* [pdf](/static/pdf/20210420_pearson_phd.pdf)
+* [pdf](/pdf/20210420_pearson_phd.pdf)
 * [Comm|Scope (github)](https://github.com/c3sr/comm_scope)
 * [Stencil (github)](https://github.com/cwpearson/stencil)
 * [TEMPI (github)](https://github.com/cwpearson/tempi)

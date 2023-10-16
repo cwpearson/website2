@@ -20,6 +20,6 @@ abstract = "This paper presents GPU performance optimization and scaling results
   }
 ```
 
-* [pdf](/static/pdf/20200923_hidayetoglu_hpec.pdf)
+* [pdf](/pdf/20200923_hidayetoglu_hpec.pdf)
 * [code] (https://github.com/merthidayetoglu/sparse-DNN)
-* [slides](/static/pdf/20200923_hidayetoglu_hpec_slides.pdf)
+* [slides](/pdf/20200923_hidayetoglu_hpec_slides.pdf)

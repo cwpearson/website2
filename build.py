@@ -671,15 +671,17 @@ def style(css) -> str:
 def copy_static():
     global BYTES_RD
     global BYTES_WR
-    src = STATIC_DIR
-    dst = OUTPUT_DIR / "static"
-    print(f"==== {src} -> {dst}")
-    shutil.copytree(src, dst, dirs_exist_ok=True)
-    TIMER.stop()
-    sz = dir_size(dst)
-    TIMER.start()
-    BYTES_RD += sz
-    BYTES_WR += sz
+
+    for e in STATIC_DIR.iterdir():
+        if e.is_dir():
+            dst = OUTPUT_DIR / (e.relative_to(STATIC_DIR))
+            print(f"==== {e} -> {dst}")
+            shutil.copytree(e, dst, dirs_exist_ok=True)
+            TIMER.stop()
+            sz = dir_size(dst)
+            TIMER.start()
+            BYTES_RD += sz
+            BYTES_WR += sz
 
 
 def copy_thirdparty():

@@ -16,7 +16,7 @@ MPI derived datatypes are an abstraction that simplifies handling of non-contigu
 
 ### Link
 
-* [slides](/static/pdf/20210219_unm_slides.pdf)
+* [slides](/pdf/20210219_unm_slides.pdf)
 * [github](https://github.com/cwpearson/tempi)
-* [pdf](/static/pdf/20210121_pearson_arxiv.pdf)
+* [pdf](/pdf/20210121_pearson_arxiv.pdf)
 * [arxiv](https://arxiv.org/abs/2012.14363)

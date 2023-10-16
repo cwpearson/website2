@@ -15,4 +15,4 @@ The recent advancement of technology in both software and hardware enables the c
 ### Link
 
 * [SC online experience](https://sc22.supercomputing.org/presentation/?id=pan111&sess=sess180)
-* [slides](/static/pdf/20221115_sc_panel.pdf)
+* [slides](/pdf/20221115_sc_panel.pdf)

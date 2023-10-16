@@ -21,6 +21,6 @@ abstract = "High-performance distributed computing systems increasingly feature 
 }
 ```
 
-* [pdf](/static/pdf/20200522_pearson_iwapt.pdf)
+* [pdf](/pdf/20200522_pearson_iwapt.pdf)
 * [code](https://github.com/cwpearson/stencil)
-* [slides](/static/pdf/20200522_pearson_iwapt_slides.pdf)
+* [slides](/pdf/20200522_pearson_iwapt_slides.pdf)

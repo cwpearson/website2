@@ -9,8 +9,8 @@ abstract = " MPI derived datatypes are an abstraction that simplifies handling o
 +++
 
 * [talk (youtube)](https://www.youtube.com/watch?v=H-fbTWr85qw)
-* [poster](/static/pdf/20210624_pearson_hpdc_poster.pdf)
-* [pdf](/static/pdf/20210624_pearson_hpdc.pdf)
+* [poster](/pdf/20210624_pearson_hpdc_poster.pdf)
+* [pdf](/pdf/20210624_pearson_hpdc.pdf)
 * [github](https://github.com/cwpearson/tempi)
 * [arxiv](https://arxiv.org/abs/2012.14363)
-* [slides](/static/pdf/20210624_pearson_hpdc_slides.pdf)
+* [slides](/pdf/20210624_pearson_hpdc_slides.pdf)

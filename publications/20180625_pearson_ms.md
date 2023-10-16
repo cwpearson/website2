@@ -9,4 +9,4 @@ abstract = "With the end of Dennard scaling, high-performance computing increasi
 
 +++
 
-* [pdf](/static/pdf/pdf/20180625_pearson_ms.pdf)
+* [pdf](/pdf/pdf/20180625_pearson_ms.pdf)
