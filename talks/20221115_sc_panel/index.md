@@ -1,6 +1,8 @@
 ---
 title: Composable Computing Opportunities and Challenges
 date: 2022-11-15T00:00:00Z
+time_start: 2022-11-15T10:30:00-06:00
+venue: "Kay Bailey Convention Center C147: Composable Computing Opportunities and Challenges"
 tags: []
 ---
 

@@ -103,8 +103,9 @@ class Talk:
     spec: TalkSpec
     title: str
     body_html: str
-    create_time: datetime.datetime = None
-    mod_time: datetime.datetime = create_time
+    publish_time: datetime.datetime = None
+    time_start: datetime.datetime = None
+    time_end: datetime.date = None
     authors: List[str] = field(default_factory=list)
     venue: str = ""
 
@@ -530,6 +531,10 @@ def normalize_to_datetime(o) -> datetime.datetime:
         raise RuntimeError(type(o))
 
 
+def normalize_and_localize(o) -> datetime.datetime:
+    return maybe_localize_to_mountain(normalize_to_datetime(o))
+
+
 def robots_txt():
     global BYTES_RD
     global BYTES_WR
@@ -546,9 +551,7 @@ def render_pub(spec: PubSpec) -> Pub:
     frontmatter, markdown = read_markdown(spec.markdown_path)
 
     title = frontmatter["title"]
-    create_time = frontmatter["date"]
-    create_time = normalize_to_datetime(create_time)
-    create_time = maybe_localize_to_mountain(create_time)
+    create_time = normalize_and_localize(frontmatter["date"])
     mod_time = frontmatter.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
 
@@ -601,11 +604,14 @@ def render_talk(spec: TalkSpec) -> Pub:
     frontmatter, markdown = read_markdown(spec.markdown_path)
 
     title = frontmatter["title"]
-    create_time = frontmatter["date"]
-    create_time = normalize_to_datetime(create_time)
-    create_time = maybe_localize_to_mountain(create_time)
-    mod_time = frontmatter.get("lastmod", create_time)
-    mod_time = maybe_localize_to_mountain(mod_time)
+    publish_time = frontmatter["date"]
+    publish_time = normalize_and_localize(publish_time)
+
+    time_start = frontmatter.get("time_start", None)
+    time_end = frontmatter.get("time_end", None)
+
+    if time_start:
+        time_start = normalize_and_localize(time_start)
 
     body_html = ""
     body_html += f"<h1>{title}</h1>\n"
@@ -616,10 +622,11 @@ def render_talk(spec: TalkSpec) -> Pub:
         spec=spec,
         title=title,
         body_html=body_html,
-        create_time=create_time,
-        mod_time=mod_time,
+        publish_time=publish_time,
         venue=frontmatter.get("venue", ""),
         authors=frontmatter.get("authors", []),
+        time_start=time_start,
+        time_end=time_end,
     )
 
 
@@ -1070,7 +1077,10 @@ def talk_card(talk: Talk) -> str:
     return an html fragment for a Talk
     """
 
-    mmddyy = talk.create_time.strftime("%m/%d/%y")
+    if talk.time_start:
+        mmddyy = talk.time_start.strftime("%m/%d/%y")
+    else:
+        mmddyy = "???"
 
     html = ""
     html += f'<a href="/{talk.spec.output_dir}" class="no-decoration">\n'
@@ -1080,16 +1090,9 @@ def talk_card(talk: Talk) -> str:
 
     html += "<div>\n"
     if talk.authors:
-        html += f'<div class="pub-authors">{authors_span(talk.authors)}</div>\n'
+        html += f'<div class="authors">{authors_span(talk.authors)}</div>\n'
     if talk.venue:
-        _in = "in "
-        if talk.venue.lower() == "arxiv":
-            _in = ""
-        elif talk.venue.lower() == "tech report":
-            _in = ""
-        elif "thesis" in talk.venue.lower():
-            _in = ""
-        html += f'<div class="pub-venue-wrapper">{_in}<div class="pub-venue">{talk.venue}</div></div>\n'
+        html += f'<div class="venue-wrapper">at <div class="venue">{talk.venue}</div></div>\n'
     html += "</div>\n"
 
     html += "</div>\n"  # pub-ref
@@ -1110,8 +1113,14 @@ def render_talks(talks: List[Talk]) -> str:
     with open(tmpl_path) as f:
         tmpl = Template(f.read())
 
+    def bytime(x: Talk):
+        if x.time_start:
+            return x.time_start
+        else:
+            return x.publish_time
+
     talk_links = ""
-    for talk in sorted(talks, key=lambda x: x.create_time, reverse=True):
+    for talk in sorted(talks, key=bytime, reverse=True):
         talk_links += talk_card(talk)
 
     return tmpl.safe_substitute(

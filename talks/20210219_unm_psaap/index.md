@@ -4,6 +4,8 @@ title: Adding Fast GPU Derived Datatype Handing to Existing MPIs
 date: 2021-02-15T00:00:00Z
 
 tags: [mpi]
+time_start: 2021-02-15T13:00:00-06:00
+venue: "University of New Mexico, Albuquerque, NM"
 ---
 
 *February 19th, 1:00 PM, University of New Mexico, Albuquerque, NM*
