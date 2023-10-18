@@ -9,7 +9,8 @@ python build.py && python -m http.server --directory public
 - [ ] talk metadata
   - [x] date start
   - [x] date end
-  - [ ] slides URL
+  - [x] slides URL
+    - [ ] embed doesn't do anything useful in mobile safari
     - [ ] embed if pdf using pdf.js?
 - [x] robots.txt
 - [ ] Image handling

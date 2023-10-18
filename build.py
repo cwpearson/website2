@@ -106,6 +106,7 @@ class Talk:
     time_start: datetime.datetime = None
     time_end: datetime.date = None
     authors_html: str = None
+    how_invited: str = ""
     location: str = ""
     abstract: str = ""
     address: dict = field(default_factory=dict)
@@ -655,6 +656,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         spec=spec,
         title=title,
         body_html=body_html,
+        how_invited=frontmatter.get("how_invited", ""),
         location=frontmatter.get("location", ""),
         authors_html=authors_html,
         time_start=time_start,
@@ -699,12 +701,15 @@ def output_talk(talk: Talk):
 
     slides_object = ""
     if talk.url_slides:
+        slides_object += f"<div class=slides>\n"
         if talk.url_slides.endswith(".pdf"):
-            slides_object = f'<object class="slides" data="{talk.url_slides}" type="application/pdf" width="400" height="300">\n'
-            slides_object += f'alt : <a href="{talk.url_slides}">slides</a>\n'
+            slides_object = f'<object class="slides-viewport" data="{talk.url_slides}" type="application/pdf" width="400" height="300">\n'
+            slides_object += f'<a href="{talk.url_slides}">slides</a>\n'
             slides_object += "</object>\n"
         else:
             slides_object += f'<a href="{talk.url_slides}">slides</a>\n'
+        slides_object += f'<a href="{talk.url_slides}">slides</a>'
+        slides_object += "</div>"
 
     html = tmpl.safe_substitute(
         {
@@ -717,6 +722,7 @@ def output_talk(talk: Talk):
             "title": talk.title,
             "authors": talk.authors_html,
             "time": time_html,
+            "how_invited": talk.how_invited,
             "location": location_html,
             "event": event_frag,
             "address": address_html,
