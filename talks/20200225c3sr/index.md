@@ -18,12 +18,9 @@ This work presents approaches for automatic data placement and communication imp
 
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
-date: 2020-02-28T14:00:00Z
-date_end: 2020-02-28T15:00:00Z
+time_start: 2020-02-28T14:00:00-06:00
+time_end: 2020-02-28T15:00:00-06:00
 all_day: false
-
-# Schedule page publish date (NOT talk date).
-publishDate: "2020-03-08T00:00:00Z"
 
 authors: ["Carl Pearson"]
 tags: []

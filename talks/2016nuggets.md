@@ -1,6 +1,5 @@
 +++
 title = "GPU Performance Nuggets"
-date = 2016-06-15T04:14:45-05:00  # Schedule page publish date.
 draft = false
 
 # Talk start and end times.

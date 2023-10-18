@@ -2,21 +2,31 @@
 <html lang="en-US">
 
 <style>
-$style_frag
+    $style_frag
 </style>
 
 <head>
-$head_frag
+    $head_frag
 </head>
 
 <body>
-$nav_frag
-<div class="body-container">
-<div class="body">
-$body_frag
-</div>
-</div>
-$footer_frag
+    $nav_frag
+    <div class="body-container">
+        <div class="body">
+            <h1>$title</h1>
+            <div class="authors">
+                $authors
+            </div>
+            $time
+            $location
+            $address
+            $abstract
+            <div class="body">
+                $body_frag
+            </div>
+        </div>
+    </div>
+    $footer_frag
 </body>
 
 </html>

@@ -1,6 +1,5 @@
 +++
 title = "Evaluating Characteristics of CUDA Communication Primitives on High-Bandwidth Interconnects"
-date = 2019-03-26T00:00:00  # Schedule page publish date.
 draft = false
 
 # Talk start and end times.

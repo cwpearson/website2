@@ -103,11 +103,13 @@ class Talk:
     spec: TalkSpec
     title: str
     body_html: str
-    publish_time: datetime.datetime = None
     time_start: datetime.datetime = None
     time_end: datetime.date = None
-    authors: List[str] = field(default_factory=list)
-    venue: str = ""
+    authors_html: str = None
+    location: str = ""
+    abstract: str = ""
+    address: dict = field(default_factory=dict)
+    event: str = ""
 
 
 @dataclass
@@ -141,6 +143,40 @@ class Timer:
 
 
 TIMER = Timer()
+
+
+def talk_page_location_div(loc: str) -> str:
+    return f'<div class="location">{loc}</div>\n'
+
+
+def talk_page_address_div(addr: Dict) -> str:
+    return f'<div class="address"></div>\n'
+
+
+def talk_page_time_div(start: datetime.datetime, end: datetime.datetime) -> str:
+    html = ""
+    if not start:
+        return html
+    html += f'<div class="time">\n'
+    if isinstance(start, datetime.datetime):
+        html += f"{start.strftime('%a %d %b %Y, %I:%M%p')}"
+    elif isinstance(start, datetime.date):
+        html += f"{start.strftime('%a %d %b %Y')}"
+    if end and isinstance(end, datetime.datetime):
+        html += f" - {end.strftime('%I:%M%p')}"
+    html += "</div>\n"
+    return html
+
+
+def page_abstract_frag(abstract) -> str:
+    html = ""
+    html += '<div class="abstract">\n'
+    html += '<span style="font-weight: bold;">Abstract: </span>\n'
+    html += '<div class="abstract-text">\n'
+    html += abstract
+    html += "</div>\n"
+    html += "</div>\n"
+    return html
 
 
 def gzipped_size(path) -> int:
@@ -522,17 +558,17 @@ def find_pubs() -> List[PubSpec]:
     return specs
 
 
-def normalize_to_datetime(o) -> datetime.datetime:
-    if isinstance(o, datetime.date):
-        return datetime.datetime.combine(o, datetime.datetime.min.time())  # midnight
-    elif isinstance(o, datetime.datetime):
+def maybe_at_midnight(o) -> datetime.datetime:
+    if isinstance(o, datetime.datetime):
         return o
+    elif isinstance(o, datetime.date):
+        return datetime.datetime.combine(o, datetime.datetime.min.time())  # midnight
     else:
         raise RuntimeError(type(o))
 
 
 def normalize_and_localize(o) -> datetime.datetime:
-    return maybe_localize_to_mountain(normalize_to_datetime(o))
+    return maybe_localize_to_mountain(maybe_at_midnight(o))
 
 
 def robots_txt():
@@ -554,7 +590,6 @@ def render_pub(spec: PubSpec) -> Pub:
     create_time = normalize_and_localize(frontmatter["date"])
     mod_time = frontmatter.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
-
     authors_html = authors_span(frontmatter.get("authors", []))
 
     venue = frontmatter.get("venue", "")
@@ -604,17 +639,13 @@ def render_talk(spec: TalkSpec) -> Pub:
     frontmatter, markdown = read_markdown(spec.markdown_path)
 
     title = frontmatter["title"]
-    publish_time = frontmatter["date"]
-    publish_time = normalize_and_localize(publish_time)
 
     time_start = frontmatter.get("time_start", None)
     time_end = frontmatter.get("time_end", None)
 
-    if time_start:
-        time_start = normalize_and_localize(time_start)
+    authors_html = authors_span(frontmatter.get("authors", []))
 
     body_html = ""
-    body_html += f"<h1>{title}</h1>\n"
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
         body_html += renderer.render(mistletoe.Document(markdown))
 
@@ -622,11 +653,12 @@ def render_talk(spec: TalkSpec) -> Pub:
         spec=spec,
         title=title,
         body_html=body_html,
-        publish_time=publish_time,
-        venue=frontmatter.get("venue", ""),
-        authors=frontmatter.get("authors", []),
+        location=frontmatter.get("location", ""),
+        authors_html=authors_html,
         time_start=time_start,
         time_end=time_end,
+        abstract=frontmatter.get("abstract", ""),
+        event=frontmatter.get("event", ""),
     )
 
 
@@ -639,6 +671,19 @@ def output_talk(talk: Talk):
     with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
+    location_html = ""
+    if talk.location:
+        location_html = talk_page_location_div(talk.location)
+    address_html = ""
+    if talk.address:
+        address_html = talk_page_address_div(talk.address)
+    time_html = ""
+    if talk.time_start:
+        time_html = talk_page_time_div(talk.time_start, talk.time_end)
+    abstract_frag = ""
+    if talk.abstract:
+        abstract_frag = page_abstract_frag(talk.abstract)
+
     html = tmpl.safe_substitute(
         {
             "style_frag": style("navbar.css")
@@ -647,6 +692,12 @@ def output_talk(talk: Talk):
             + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
+            "title": talk.title,
+            "authors": talk.authors_html,
+            "time": time_html,
+            "location": location_html,
+            "address": address_html,
+            "abstract": abstract_frag,
             "body_frag": talk.body_html,
             "footer_frag": footer_frag(),
         }
@@ -1089,10 +1140,11 @@ def talk_card(talk: Talk) -> str:
     html += f'<div class="pub-title">{talk.title}</div>\n'
 
     html += "<div>\n"
-    if talk.authors:
-        html += f'<div class="authors">{authors_span(talk.authors)}</div>\n'
-    if talk.venue:
-        html += f'<div class="venue-wrapper">at <div class="venue">{talk.venue}</div></div>\n'
+    if talk.event:
+        _at = "at "
+        if "online" in talk.event.lower():
+            _at = ""
+        html += f'<div class="venue-wrapper">{_at}<div class="venue">{talk.event}</div></div>\n'
     html += "</div>\n"
 
     html += "</div>\n"  # pub-ref
@@ -1114,8 +1166,11 @@ def render_talks(talks: List[Talk]) -> str:
         tmpl = Template(f.read())
 
     def bytime(x: Talk):
+        """
+        the start time may not be localized, so localize if needed
+        """
         if x.time_start:
-            return x.time_start
+            return normalize_and_localize(x.time_start)
         else:
             return x.publish_time
 

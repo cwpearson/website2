@@ -16,12 +16,8 @@ abstract: ""
 
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
-date: 2020-04-16
-#date_end: "2020-04-16"
+time_start: 2020-04-16
 all_day: true
-
-# Schedule page publish date (NOT talk date).
-publishDate: "2020-04-16T00:00:00Z"
 
 authors: ["Carl Pearson"]
 tags: []

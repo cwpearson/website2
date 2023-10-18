@@ -1,9 +1,9 @@
 ---
 title: Automatic Discovery of Implementation Rules for Fast GPU + MPI Operations
-date: 2022-02-25T00:00:00Z
 tags: [MPI, CUDA]
 time_start: 2022-02-25T16:00:00-06:00
-venue: "MS61: Experiences in Developing GPU Support for DOE Math Libraries"
+location: "MS61: Experiences in Developing GPU Support for DOE Math Libraries"
+event: SIAM Parallel Processing
 ---
 
 *Feb 25th, 4:00 PM, MS61: Experiences in Developing GPU Support for DOE Math Libraries*
