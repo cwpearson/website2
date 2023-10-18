@@ -32,7 +32,7 @@ image:
 links:
 url_code: ""
 url_pdf: ""
-url_slides: "pdf/20200416_nsight.pdf"
+url_slides: "/pdf/20200416_nsight.pdf"
 url_video: "https://www.youtube.com/watch?v=YHrmnaPgFfY"
 
 # Markdown Slides (optional).

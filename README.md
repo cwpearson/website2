@@ -7,9 +7,10 @@ python build.py && python -m http.server --directory public
 ## Roadmap
 
 - [ ] talk metadata
-  - [ ] date start
-  - [ ] date end
-  - [ ] page publish date
+  - [x] date start
+  - [x] date end
+  - [ ] slides URL
+    - [ ] embed if pdf using pdf.js?
 - [x] robots.txt
 - [ ] Image handling
   - v1

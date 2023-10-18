@@ -110,6 +110,8 @@ class Talk:
     abstract: str = ""
     address: dict = field(default_factory=dict)
     event: str = ""
+    event_url: str = None
+    url_slides: str = None
 
 
 @dataclass
@@ -659,6 +661,8 @@ def render_talk(spec: TalkSpec) -> Pub:
         time_end=time_end,
         abstract=frontmatter.get("abstract", ""),
         event=frontmatter.get("event", ""),
+        event_url=frontmatter.get("event_url", None),
+        url_slides=frontmatter.get("url_slides", None),
     )
 
 
@@ -684,6 +688,24 @@ def output_talk(talk: Talk):
     if talk.abstract:
         abstract_frag = page_abstract_frag(talk.abstract)
 
+    event_frag = ""
+    if talk.event:
+        event_frag = f'<div class="event">\n'
+        if talk.event_url:
+            event_frag += f'<a href="{talk.event_url}">{talk.event}</a>\n'
+        else:
+            event_frag += f"{talk.event}\n"
+        event_frag += "</div>"
+
+    slides_object = ""
+    if talk.url_slides:
+        if talk.url_slides.endswith(".pdf"):
+            slides_object = f'<object class="slides" data="{talk.url_slides}" type="application/pdf" width="400" height="300">\n'
+            slides_object += f'alt : <a href="{talk.url_slides}">slides</a>\n'
+            slides_object += "</object>\n"
+        else:
+            slides_object += f'<a href="{talk.url_slides}">slides</a>\n'
+
     html = tmpl.safe_substitute(
         {
             "style_frag": style("navbar.css")
@@ -696,9 +718,11 @@ def output_talk(talk: Talk):
             "authors": talk.authors_html,
             "time": time_html,
             "location": location_html,
+            "event": event_frag,
             "address": address_html,
             "abstract": abstract_frag,
             "body_frag": talk.body_html,
+            "slides_object": slides_object,
             "footer_frag": footer_frag(),
         }
     )
