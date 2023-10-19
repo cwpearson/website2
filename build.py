@@ -701,14 +701,15 @@ def output_talk(talk: Talk):
 
     slides_object = ""
     if talk.url_slides:
-        slides_object += f"<div class=slides>\n"
+        slides_object += f'<div class="slides">\n'
         if talk.url_slides.endswith(".pdf"):
-            slides_object = f'<object class="slides-viewport" data="{talk.url_slides}" type="application/pdf" width="400" height="300">\n'
+            slides_object += f'<object class="slides-viewport" data="{talk.url_slides}" type="application/pdf" width="400" height="300">\n'
             slides_object += f'<a href="{talk.url_slides}">slides</a>\n'
             slides_object += "</object>\n"
+            slides_object += f'<div><a href="{talk.url_slides}">slides</a></div>'
         else:
             slides_object += f'<a href="{talk.url_slides}">slides</a>\n'
-        slides_object += f'<a href="{talk.url_slides}">slides</a>'
+
         slides_object += "</div>"
 
     html = tmpl.safe_substitute(

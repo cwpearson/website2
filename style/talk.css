@@ -8,6 +8,12 @@
     font-style: italic;
 }
 
+.slides {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .slides-viewport {
     width: 100%;
     height: auto;
