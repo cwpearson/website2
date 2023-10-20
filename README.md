@@ -12,6 +12,7 @@ python build.py && python -m http.server --directory public
   - [x] slides URL
     - [ ] embed doesn't do anything useful in mobile safari
     - [ ] embed if pdf using pdf.js?
+  - [ ] publication cross-reference  
 - [x] robots.txt
 - [ ] Image handling
   - v1

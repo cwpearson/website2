@@ -113,6 +113,7 @@ class Talk:
     event: str = ""
     event_url: str = None
     url_slides: str = None
+    publication: str = None
 
 
 @dataclass
@@ -665,6 +666,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         event=frontmatter.get("event", ""),
         event_url=frontmatter.get("event_url", None),
         url_slides=frontmatter.get("url_slides", None),
+        publication=frontmatter.get("publication", None),
     )
 
 
@@ -690,6 +692,12 @@ def output_talk(talk: Talk):
     if talk.abstract:
         abstract_frag = page_abstract_frag(talk.abstract)
 
+    publication_frag = ""
+    if talk.publication:
+        publication_frag = (
+            f'<a href="/publication/{talk.publication}">related publication</a>\n'
+        )
+
     event_frag = ""
     if talk.event:
         event_frag = f'<div class="event">\n'
@@ -701,6 +709,7 @@ def output_talk(talk: Talk):
 
     slides_object = ""
     if talk.url_slides:
+        slides_object += f"<h2>Slides</h2>\n"
         slides_object += f'<div class="slides">\n'
         if talk.url_slides.endswith(".pdf"):
             slides_object += f'<object class="slides-viewport" data="{talk.url_slides}" type="application/pdf" width="400" height="300">\n'
