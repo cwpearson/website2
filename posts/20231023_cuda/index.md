@@ -15,7 +15,7 @@ categories = []
 ## CUDA 12
 
 <table>
-<tr><th> CUDA Release </th><th> cuBLAS Version </th><th> cuBLAS Size (B) </th></tr>
+<tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuSPARSE Size (B) </th></tr>
 <tr><td> 12.0.0 </td><td> 12.0.0.76 </td><td> 450292 B </td></tr>
 <tr><td> 12.0.1 </td><td> 12.0.1.140 </td><td> 539284 B </td></tr>
 <tr><td> 12.1.0 </td><td> 12.0.2.55 </td><td> 539068 B </td></tr>
@@ -38,7 +38,7 @@ categories = []
 ## CUDA 11
 
 <table>
-<tr><th> CUDA Release </th><th> cuBLAS Version </th><th> cuBLAS Size (B) </th></tr>
+<tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuSPARSE Size (B) </th></tr>
 <tr><td> 11.0.1 </td><td> 11.0.0.191 </td><td> 282904 B </td></tr>
 <tr><td> 11.0.2 </td><td> 11.1.0.218 </td><td> 321716 B </td></tr>
 <tr><td> 11.0.3 </td><td> 11.1.1.245 </td><td> 320552 B </td></tr>
