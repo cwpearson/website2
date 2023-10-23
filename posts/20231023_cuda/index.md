@@ -15,24 +15,24 @@ categories = []
 ## CUDA 12
 
 <table>
-<tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuSPARSE Size (B) </th></tr>
-<tr><td> 12.0.0 </td><td> 12.0.0.76 </td><td> 450292 B </td></tr>
-<tr><td> 12.0.1 </td><td> 12.0.1.140 </td><td> 539284 B </td></tr>
-<tr><td> 12.1.0 </td><td> 12.0.2.55 </td><td> 539068 B </td></tr>
-<tr><td> 12.1.1 </td><td> 12.1.0.106 </td><td> 558904 B </td></tr>
-<tr><td> 12.2.0 </td><td> 12.1.1.53 </td><td> 556224 B </td></tr>
-<tr><td> 12.2.1 </td><td> 12.1.2.129 </td><td> 551884 B </td></tr>
-<tr><td> 12.2.2 </td><td> 12.1.2.141 </td><td> 551884 B </td></tr>
+<tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuBLAS Version </th></tr>
+<tr><td> 12.0.0 </td><td> 12.0.0.76 </td><td> 12.0.1.189 </td></tr>
+<tr><td> 12.0.1 </td><td> 12.0.1.140 </td><td> 12.0.2.224 </td></tr>
+<tr><td> 12.1.0 </td><td> 12.0.2.55 </td><td> 12.1.0.26 </td></tr>
+<tr><td> 12.1.1 </td><td> 12.1.0.106 </td><td> 12.1.3.1 </td></tr>
+<tr><td> 12.2.0 </td><td> 12.1.1.53 </td><td> 12.2.1.16 </td></tr>
+<tr><td> 12.2.1 </td><td> 12.1.2.129 </td><td> 12.2.4.5 </td></tr>
+<tr><td> 12.2.2 </td><td> 12.1.2.141 </td><td> 12.2.5.6 </td></tr>
 </table>
 <table>
-<tr><th> CUDA Release </th><th> cuBLAS Version </th><th> cuBLAS Size (B) </th></tr>
-<tr><td> 12.0.0 </td><td> 12.0.1.189 </td><td> 1581892 B </td></tr>
-<tr><td> 12.0.1 </td><td> 12.0.2.224 </td><td> 1604612 B </td></tr>
-<tr><td> 12.1.0 </td><td> 12.1.0.26 </td><td> 1604576 B </td></tr>
-<tr><td> 12.1.1 </td><td> 12.1.3.1 </td><td> 1584144 B </td></tr>
-<tr><td> 12.2.0 </td><td> 12.2.1.16 </td><td> 1584152 B </td></tr>
-<tr><td> 12.2.1 </td><td> 12.2.4.5 </td><td> 1516656 B </td></tr>
-<tr><td> 12.2.2 </td><td> 12.2.5.6 </td><td> 1536844 B </td></tr>
+<tr><th> CUDA Release </th><th> cuSPARSE Size (B) </th><th> cuBLAS Size (B) </th></tr>
+<tr><td> 12.0.0 </td><td> 7592292 </td><td> 450292 (5.93 &#37) </td><td> 1581892 </td></tr>
+<tr><td> 12.0.1 </td><td> 7707896 </td><td> 539284 (6.99 &#37) </td><td> 1604612 </td></tr>
+<tr><td> 12.1.0 </td><td> 7808036 </td><td> 539068 (6.90 &#37) </td><td> 1604576 </td></tr>
+<tr><td> 12.1.1 </td><td> 7326424 </td><td> 558904 (7.62 &#37) </td><td> 1584144 </td></tr>
+<tr><td> 12.2.0 </td><td> 7444644 </td><td> 556224 (7.47 &#37) </td><td> 1584152 </td></tr>
+<tr><td> 12.2.1 </td><td> 7372684 </td><td> 551884 (7.48 &#37) </td><td> 1516656 </td></tr>
+<tr><td> 12.2.2 </td><td> 7394116 </td><td> 551884 (7.46 &#37) </td><td> 1536844 </td></tr>
 </table>
 
 ## CUDA 11
