@@ -15,7 +15,6 @@ categories = []
 The various libraries in each CUDA release follow a somewhat different versioning policy than the release itself.
 
 ## CUDA 12
-
 <table>
 <tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuBLAS Version </th></tr>
 <tr><td> 12.0.0 </td><td> 12.0.0.76 </td><td> 12.0.1.189 </td></tr>
@@ -27,14 +26,14 @@ The various libraries in each CUDA release follow a somewhat different versionin
 <tr><td> 12.2.2 </td><td> 12.1.2.141 </td><td> 12.2.5.6 </td></tr>
 </table>
 <table>
-<tr><th> CUDA Release </th><th> Size (K) </th><th> cuSPARSE Size (K) </th><th> cuBLAS Size (K) </th><th> nvcc Size (K) </th></tr>
-<tr><td> 12.0.0 </td><td> 7592292 </td><td> 450292 (5.93&#37) </td><td> 1581892 (20.83&#37) </td><td> 14908 (.19&#37) </td></tr>
-<tr><td> 12.0.1 </td><td> 7707896 </td><td> 539284 (6.99&#37) </td><td> 1604612 (20.81&#37) </td><td> 14908 (.19&#37) </td></tr>
-<tr><td> 12.1.0 </td><td> 7808036 </td><td> 539068 (6.90&#37) </td><td> 1604576 (20.55&#37) </td><td> 15676 (.20&#37) </td></tr>
-<tr><td> 12.1.1 </td><td> 7326424 </td><td> 558904 (7.62&#37) </td><td> 1584144 (21.62&#37) </td><td> 15680 (.21&#37) </td></tr>
-<tr><td> 12.2.0 </td><td> 7444644 </td><td> 556224 (7.47&#37) </td><td> 1584152 (21.27&#37) </td><td> 20784 (.27&#37) </td></tr>
-<tr><td> 12.2.1 </td><td> 7372684 </td><td> 551884 (7.48&#37) </td><td> 1516656 (20.57&#37) </td><td> 20784 (.28&#37) </td></tr>
-<tr><td> 12.2.2 </td><td> 7394116 </td><td> 551884 (7.46&#37) </td><td> 1536844 (20.78&#37) </td><td> 20784 (.28&#37) </td></tr>
+<tr><th> CUDA Release </th><th> Size (K) </th><th> cuSPARSE Size</th><th> cuBLAS Size</th><th> nvcc Size</th><th> cuFFT Size</th><th> cuRAND Size</th><th> cuSOLVER Size</th><th> npp Size</th></tr>
+<tr><td> 12.0.0 </td><td> 7592292 </td><td> 450292 (5.93&#37) </td><td> 1581892 (20.83&#37) </td><td> 14908 (.19&#37) </td><td> 466720 (6.14&#37) </td><td> 191028 (2.51&#37) </td><td> 819448 (10.79&#37) </td><td> 485744 (6.39&#37) </td></tr>
+<tr><td> 12.0.1 </td><td> 7707896 </td><td> 539284 (6.99&#37) </td><td> 1604612 (20.81&#37) </td><td> 14908 (.19&#37) </td><td> 466724 (6.05&#37) </td><td> 191052 (2.47&#37) </td><td> 819588 (10.63&#37) </td><td> 485944 (6.30&#37) </td></tr>
+<tr><td> 12.1.0 </td><td> 7808036 </td><td> 539068 (6.90&#37) </td><td> 1604576 (20.55&#37) </td><td> 15676 (.20&#37) </td><td> 581472 (7.44&#37) </td><td> 191048 (2.44&#37) </td><td> 819520 (10.49&#37) </td><td> 485972 (6.22&#37) </td></tr>
+<tr><td> 12.1.1 </td><td> 7326424 </td><td> 558904 (7.62&#37) </td><td> 1584144 (21.62&#37) </td><td> 15680 (.21&#37) </td><td> 581480 (7.93&#37) </td><td> 191048 (2.60&#37) </td><td> 336516 (4.59&#37) </td><td> 485976 (6.63&#37) </td></tr>
+<tr><td> 12.2.0 </td><td> 7444644 </td><td> 556224 (7.47&#37) </td><td> 1584152 (21.27&#37) </td><td> 20784 (.27&#37) </td><td> 562832 (7.56&#37) </td><td> 191380 (2.57&#37) </td><td> 341376 (4.58&#37) </td><td> 482748 (6.48&#37) </td></tr>
+<tr><td> 12.2.1 </td><td> 7372684 </td><td> 551884 (7.48&#37) </td><td> 1516656 (20.57&#37) </td><td> 20784 (.28&#37) </td><td> 562828 (7.63&#37) </td><td> 191380 (2.59&#37) </td><td> 342940 (4.65&#37) </td><td> 489096 (6.63&#37) </td></tr>
+<tr><td> 12.2.2 </td><td> 7394116 </td><td> 551884 (7.46&#37) </td><td> 1536844 (20.78&#37) </td><td> 20784 (.28&#37) </td><td> 562824 (7.61&#37) </td><td> 191372 (2.58&#37) </td><td> 342780 (4.63&#37) </td><td> 489108 (6.61&#37) </td></tr>
 </table>
 
 ## CUDA 11
