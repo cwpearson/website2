@@ -2,7 +2,7 @@
 title = "CUDA Release Library Statistics"
 date = 2023-10-23T00:00:00
 lastmod = 2023-10-23T00:00:00
-draft = true
+draft = false
 
 authors = ["Carl Pearson"]
 
