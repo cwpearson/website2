@@ -1,5 +1,5 @@
 +++
-title = "CUDA Release Library Statistics"
+title = "CUDA Releases: Component Versions and Sizes"
 date = 2023-10-23T00:00:00
 lastmod = 2023-10-23T00:00:00
 draft = false
@@ -11,6 +11,8 @@ summary = ""
 projects = []
 categories = []
 +++
+
+The various libraries in each CUDA release follow a somewhat different versioning policy than the release itself.
 
 ## CUDA 12
 
