@@ -36,8 +36,8 @@ categories = []
 | 12.2.2 |  12.2.5.6 | 1536844 B |
 
 ## CUDA 11
-
-<tr><td> CUDA Release </td><td> cuBLAS Version </td><td> cuBLAS Size (B) </td></tr>
+<table>
+<tr><th> CUDA Release </th><th> cuBLAS Version </th><th> cuBLAS Size (B) </th></tr>
 <tr><td> 11.0.1 </td><td> 11.0.0.191 </td><td> 282904 B </td></tr>
 <tr><td> 11.0.2 </td><td> 11.1.0.218 </td><td> 321716 B </td></tr>
 <tr><td> 11.0.3 </td><td> 11.1.1.245 </td><td> 320552 B </td></tr>
@@ -64,8 +64,9 @@ categories = []
 <tr><td> 11.7.0 </td><td> 11.7.3.50 </td><td> 500564 B </td></tr>
 <tr><td> 11.7.1 </td><td> 11.7.4.91 </td><td> 510704 B </td></tr>
 <tr><td> 11.8.0 </td><td> 11.7.5.86 </td><td> 589240 B </td></tr>
-
-<tr><td> CUDA Release </td><td> cuBLAS Version </td><td> cuBLAS Size (B) </td></tr>
+</table>
+<table>
+<tr><th> CUDA Release </th><th> cuBLAS Version </th><th> cuBLAS Size (B) </th></tr>
 <tr><td> 11.0.1 </td><td> 11.0.0.191 </td><td> 506536 B </td></tr>
 <tr><td> 11.0.2 </td><td> 11.1.0.229 </td><td> 593940 B </td></tr>
 <tr><td> 11.0.3 </td><td> 11.2.0.252 </td><td> 608352 B </td></tr>
@@ -92,3 +93,4 @@ categories = []
 <tr><td> 11.7.0 </td><td> 11.10.1.25 </td><td> 1170468 B </td></tr>
 <tr><td> 11.7.1 </td><td> 11.10.3.66 </td><td> 1130248 B </td></tr>
 <tr><td> 11.8.0 </td><td> 11.11.3.6 </td><td> 1716472 B </td></tr>
+</table>
