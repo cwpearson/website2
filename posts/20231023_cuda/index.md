@@ -36,6 +36,7 @@ categories = []
 | 12.2.2 |  12.2.5.6 | 1536844 B |
 
 ## CUDA 11
+
 <table>
 <tr><th> CUDA Release </th><th> cuBLAS Version </th><th> cuBLAS Size (B) </th></tr>
 <tr><td> 11.0.1 </td><td> 11.0.0.191 </td><td> 282904 B </td></tr>
