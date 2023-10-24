@@ -113,6 +113,7 @@ class Talk:
     event: str = ""
     event_url: str = None
     url_slides: str = None
+    url_code: List = field(default_factory=list)
     publication: str = None
 
 
@@ -541,51 +542,6 @@ def output_post(post: Post):
     write_file(html_path, html)
 
 
-def find_pubs() -> List[PubSpec]:
-    specs = []
-
-    for pub in PUBS_DIR.iterdir():
-        output_dir = Path("publication") / f"{pub.stem}"
-        if pub.is_file():
-            specs += [PubSpec(markdown_path=pub, is_dir=False, output_dir=output_dir)]
-        elif pub.is_dir():
-            md_path = pub / "index.md"
-            if md_path.is_file():
-                specs += [
-                    PubSpec(
-                        markdown_path=md_path,
-                        is_dir=True,
-                        output_dir=output_dir,
-                    )
-                ]
-
-    return specs
-
-
-def maybe_at_midnight(o) -> datetime.datetime:
-    if isinstance(o, datetime.datetime):
-        return o
-    elif isinstance(o, datetime.date):
-        return datetime.datetime.combine(o, datetime.datetime.min.time())  # midnight
-    else:
-        raise RuntimeError(type(o))
-
-
-def normalize_and_localize(o) -> datetime.datetime:
-    return maybe_localize_to_mountain(maybe_at_midnight(o))
-
-
-def robots_txt():
-    global BYTES_RD
-    global BYTES_WR
-    shutil.copy(Path(__file__).parent / "robots.txt", OUTPUT_DIR / "robots.txt")
-    TIMER.stop()
-    sz = file_size(OUTPUT_DIR / "robots.txt")
-    BYTES_WR += sz
-    BYTES_RD += sz
-    TIMER.start()
-
-
 def render_pub(spec: PubSpec) -> Pub:
     print(f"==== render {spec.markdown_path}")
     frontmatter, markdown = read_markdown(spec.markdown_path)
@@ -615,6 +571,52 @@ def render_pub(spec: PubSpec) -> Pub:
         authors_html=authors_html,
         abstract=frontmatter.get("abstract", ""),
     )
+
+
+def load_pubs() -> List[PubSpec]:
+    pubs = []
+
+    for pub in PUBS_DIR.iterdir():
+        output_dir = Path("publication") / f"{pub.stem}"
+        if pub.is_file():
+            spec = PubSpec(markdown_path=pub, is_dir=False, output_dir=output_dir)
+        elif pub.is_dir():
+            md_path = pub / "index.md"
+            if md_path.is_file():
+                spec = PubSpec(
+                    markdown_path=md_path,
+                    is_dir=True,
+                    output_dir=output_dir,
+                )
+        else:
+            continue
+        pubs += [render_pub(spec)]
+
+    return pubs
+
+
+def maybe_at_midnight(o) -> datetime.datetime:
+    if isinstance(o, datetime.datetime):
+        return o
+    elif isinstance(o, datetime.date):
+        return datetime.datetime.combine(o, datetime.datetime.min.time())  # midnight
+    else:
+        raise RuntimeError(type(o))
+
+
+def normalize_and_localize(o) -> datetime.datetime:
+    return maybe_localize_to_mountain(maybe_at_midnight(o))
+
+
+def robots_txt():
+    global BYTES_RD
+    global BYTES_WR
+    shutil.copy(Path(__file__).parent / "robots.txt", OUTPUT_DIR / "robots.txt")
+    TIMER.stop()
+    sz = file_size(OUTPUT_DIR / "robots.txt")
+    BYTES_WR += sz
+    BYTES_RD += sz
+    TIMER.start()
 
 
 def find_talks() -> List[TalkSpec]:
@@ -653,6 +655,10 @@ def render_talk(spec: TalkSpec) -> Pub:
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
         body_html += renderer.render(mistletoe.Document(markdown))
 
+    url_code = frontmatter.get("url_code", [])
+    if isinstance(url_code, str):
+        url_code = [url_code]
+
     return Talk(
         spec=spec,
         title=title,
@@ -666,6 +672,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         event=frontmatter.get("event", ""),
         event_url=frontmatter.get("event_url", None),
         url_slides=frontmatter.get("url_slides", None),
+        url_code=url_code,
         publication=frontmatter.get("publication", None),
     )
 
@@ -721,6 +728,20 @@ def output_talk(talk: Talk):
 
         slides_object += "</div>"
 
+    links_frag = ""
+    links_frag += "<h2>Links</h2>\n"
+    if talk.url_code:
+        links_frag += '<div class="talk-page-links">\n'
+        for url in talk.url_code:
+            if "github.com" in url:
+                label = url
+            else:
+                label = url
+            links_frag += '<div class="talk-page-link">\n'
+            links_frag += f'<a href="{url}">{label}</a>\n'
+            links_frag += "</div>\n"
+        links_frag += "</div>\n"
+
     html = tmpl.safe_substitute(
         {
             "style_frag": style("navbar.css")
@@ -738,6 +759,7 @@ def output_talk(talk: Talk):
             "address": address_html,
             "abstract": abstract_frag,
             "body_frag": talk.body_html,
+            "links_frag": links_frag,
             "slides_object": slides_object,
             "footer_frag": footer_frag(),
         }
@@ -1247,9 +1269,7 @@ if __name__ == "__main__":
     for post in posts:
         output_post(post)
 
-    pub_specs = find_pubs()
-    pubs = [render_pub(spec) for spec in pub_specs]
-    pubs = [p for p in pubs if p is not None]
+    pubs = load_pubs()
     for pub in pubs:
         output_pub(pub)
 
