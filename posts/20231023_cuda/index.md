@@ -104,35 +104,6 @@ Since I had to download every single CUDA release to extract this information, I
 ### CUDA 11
 
 <table>
-<tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuBLAS Version </th></tr>
-<tr><td> 11.0.1 </td><td> 11.0.0.191 </td><td> 11.0.0.191 </td></tr>
-<tr><td> 11.0.2 </td><td> 11.1.0.218 </td><td> 11.1.0.229 </td></tr>
-<tr><td> 11.0.3 </td><td> 11.1.1.245 </td><td> 11.2.0.252 </td></tr>
-<tr><td> 11.1.0 </td><td> 11.2.0.275 </td><td> 11.2.1.74 </td></tr>
-<tr><td> 11.1.1 </td><td> 11.3.0.10 </td><td> 11.3.0.106 </td></tr>
-<tr><td> 11.2.0 </td><td> 11.3.1.68 </td><td> 11.3.1.68 </td></tr>
-<tr><td> 11.2.1 </td><td> 11.4.0.135 </td><td> 11.4.1.1026 </td></tr>
-<tr><td> 11.2.2 </td><td> 11.4.1.1152 </td><td> 11.4.1.1043 </td></tr>
-<tr><td> 11.2.0 </td><td> 11.3.1.68 </td><td> 11.3.1.68 </td></tr>
-<tr><td> 11.2.1 </td><td> 11.4.0.135 </td><td> 11.4.1.1026 </td></tr>
-<tr><td> 11.3.0 </td><td> 11.5.0.58 </td><td> 11.4.2.10064 </td></tr>
-<tr><td> 11.3.1 </td><td> 11.6.0.109 </td><td> 11.5.1.109 </td></tr>
-<tr><td> 11.4.0 </td><td> 11.6.0.43 </td><td> 11.5.2.43 </td></tr>
-<tr><td> 11.4.1 </td><td> 11.6.0.100 </td><td> 11.5.4.8 </td></tr>
-<tr><td> 11.4.2 </td><td> 11.6.0.120 </td><td> 11.6.1.51 </td></tr>
-<tr><td> 11.4.3 </td><td> 11.6.0.120 </td><td> 11.6.5.2 </td></tr>
-<tr><td> 11.4.4 </td><td> 11.6.0.120 </td><td> 11.6.5.2 </td></tr>
-<tr><td> 11.5.0 </td><td> 11.7.0.31 </td><td> 11.7.3.1 </td></tr>
-<tr><td> 11.5.1 </td><td> 11.7.0.107 </td><td> 11.7.4.6 </td></tr>
-<tr><td> 11.5.2 </td><td> 11.7.0.107 </td><td> 11.7.4.6 </td></tr>
-<tr><td> 11.6.0 </td><td> 11.7.1.55 </td><td> 11.8.1.74 </td></tr>
-<tr><td> 11.6.1 </td><td> 11.7.2.112 </td><td> 11.8.1.74 </td></tr>
-<tr><td> 11.6.2 </td><td> 11.7.2.124 </td><td> 11.9.2.110 </td></tr>
-<tr><td> 11.7.0 </td><td> 11.7.3.50 </td><td> 11.10.1.25 </td></tr>
-<tr><td> 11.7.1 </td><td> 11.7.4.91 </td><td> 11.10.3.66 </td></tr>
-<tr><td> 11.8.0 </td><td> 11.7.5.86 </td><td> 11.11.3.6 </td></tr>
-</table>
-<table>
 <tr><th> CUDA Release </th><th> Size (K) </th><th> cuSPARSE Size</th><th> cuBLAS Size</th><th> nvcc Size</th><th> cuFFT Size</th><th> cuRAND Size</th><th> cuSOLVER Size</th><th> npp Size</th><th> Nsight Compute</th><th> Nsight Systems</th><th> cuPTI Size</th><th> CUDA GDB Size</th><th> cudart Size</th><th> nvrtc Size </th></tr>
 <tr><td> 11.0.1 </td><td> 5473984 </td><td> 282904 (5.16&#37) </td><td> 506536 (9.25&#37) </td><td> 236 (0&#37) </td><td> 480532 (8.77&#37) </td><td> 140688 (2.57&#37) </td><td> 913816 (16.69&#37) </td><td> 296768 (5.42&#37) </td><td> 688368 (12.57&#37) </td><td> 876460 (16.01&#37) </td><td> 61680 (1.12&#37) </td><td> 52144 (.95&#37) </td><td> 19716 (.36&#37) </td><td> 27140 (.49&#37) </td></tr>
 <tr><td> 11.0.2 </td><td> 5414976 </td><td> 321716 (5.94&#37) </td><td> 593940 (10.96&#37) </td><td> 240 (0&#37) </td><td> 487528 (9.00&#37) </td><td> 140688 (2.59&#37) </td><td> 982344 (18.14&#37) </td><td> 299232 (5.52&#37) </td><td> 689688 (12.73&#37) </td><td> 606528 (11.20&#37) </td><td> 62468 (1.15&#37) </td><td> 52380 (.96&#37) </td><td> 19744 (.36&#37) </td><td> 27148 (.50&#37) </td></tr>
@@ -165,3 +136,4 @@ Since I had to download every single CUDA release to extract this information, I
 ### Methodology
 
 The scripts are stored here [cwpearson/cusparse-versions](github.com/cwpearson/cusparse-versions).
+
