@@ -29,12 +29,12 @@ This means that the cuSPARSE API sometimes changes on a patch release of CUDA.
 Furthermore, the cuSPARSE release that comes with each CUDA release is not documented anywhere, as far as I can tell.
 In Kokkos Kernels, we were using the CUDA release version to detect whether certain cuSPARSE APIs were available, which is wrong, and we were also setting the wrong release threshold.
 
-* https://github.com/kokkos/kokkos-kernels/issues/1967
+* [kokkos-kernels/issues/1967](https://github.com/kokkos/kokkos-kernels/issues/1967)
 
 I made two PRs to fix the problem for cusparseSpMV and cusparseSpMM functions.
 
-* https://github.com/kokkos/kokkos-kernels/pull/2012
-* https://github.com/kokkos/kokkos-kernels/pull/2011
+* [kokkos-kernels/pull/2011](https://github.com/kokkos/kokkos-kernels/pull/2011)
+* [kokkos-kernels/pull/2012](https://github.com/kokkos/kokkos-kernels/pull/2012)
 
 For future reference, here are the cuSPARSE versions that correspond to each CUDA release:
 
@@ -135,5 +135,5 @@ Since I had to download every single CUDA release to extract this information, I
 
 ### Methodology
 
-The scripts are stored here [cwpearson/cusparse-versions](github.com/cwpearson/cusparse-versions).
+The scripts are stored here [cwpearson/cusparse-versions](https://github.com/cwpearson/cusparse-versions).
 
