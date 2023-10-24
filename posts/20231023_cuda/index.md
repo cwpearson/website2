@@ -137,3 +137,9 @@ Since I had to download every single CUDA release to extract this information, I
 
 The scripts are stored here [cwpearson/cusparse-versions](https://github.com/cwpearson/cusparse-versions).
 
+These self-extracting CUDA installers seem to run a built-in binary -- since I'm using the x86 versions of CUDA, this needs to be run on an x86 machine.
+
+* total size: the size of the extracted installer (including the shipped driver)
+* `nvcc` size: the size of the actual `nvcc` binary
+* library sizes: the size of the corresponding directory in the installer (including headers, man pages, whatever else Nvidia ships for that library in the installer)
+
