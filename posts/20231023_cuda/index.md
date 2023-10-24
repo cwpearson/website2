@@ -20,7 +20,23 @@ th, td {
 """
 +++
 
-The various libraries in each CUDA release follow a somewhat different versioning policy than the release itself.
+While I was working on something else, I stumbled across a PR in Trilinos that referenced a problem in how Kokkos Kernels handles cuSPARSE.
+
+* https://github.com/trilinos/Trilinos/pull/12238
+
+The basic problem is that the cuSPARSE version does not necessarily match the CUDA release version.
+This means that the cuSPARSE API sometimes changes on a patch release of CUDA.
+Furthermore, the cuSPARSE release that comes with each CUDA release is not documented anywhere, as far as I can tell.
+In Kokkos Kernels, we were using the CUDA release version to detect whether certain cuSPARSE APIs were available, which is wrong, and we were also setting the wrong release threshold.
+
+* https://github.com/kokkos/kokkos-kernels/issues/1967
+
+I made two PRs to fix the problem for cusparseSpMV and cusparseSpMM functions.
+
+* https://github.com/kokkos/kokkos-kernels/pull/2012
+* https://github.com/kokkos/kokkos-kernels/pull/2011
+
+For future reference, here are the cuSPARSE versions that correspond to each CUDA release:
 
 ## CUDA 12
 <table>
@@ -33,6 +49,45 @@ The various libraries in each CUDA release follow a somewhat different versionin
 <tr><td> 12.2.1 </td><td> 12.1.2.129 </td><td> 12.2.4.5 </td></tr>
 <tr><td> 12.2.2 </td><td> 12.1.2.141 </td><td> 12.2.5.6 </td></tr>
 </table>
+
+## CUDA 11
+
+<table>
+<tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuBLAS Version </th></tr>
+<tr><td> 11.0.1 </td><td> 11.0.0.191 </td><td> 11.0.0.191 </td></tr>
+<tr><td> 11.0.2 </td><td> 11.1.0.218 </td><td> 11.1.0.229 </td></tr>
+<tr><td> 11.0.3 </td><td> 11.1.1.245 </td><td> 11.2.0.252 </td></tr>
+<tr><td> 11.1.0 </td><td> 11.2.0.275 </td><td> 11.2.1.74 </td></tr>
+<tr><td> 11.1.1 </td><td> 11.3.0.10 </td><td> 11.3.0.106 </td></tr>
+<tr><td> 11.2.0 </td><td> 11.3.1.68 </td><td> 11.3.1.68 </td></tr>
+<tr><td> 11.2.1 </td><td> 11.4.0.135 </td><td> 11.4.1.1026 </td></tr>
+<tr><td> 11.2.2 </td><td> 11.4.1.1152 </td><td> 11.4.1.1043 </td></tr>
+<tr><td> 11.2.0 </td><td> 11.3.1.68 </td><td> 11.3.1.68 </td></tr>
+<tr><td> 11.2.1 </td><td> 11.4.0.135 </td><td> 11.4.1.1026 </td></tr>
+<tr><td> 11.3.0 </td><td> 11.5.0.58 </td><td> 11.4.2.10064 </td></tr>
+<tr><td> 11.3.1 </td><td> 11.6.0.109 </td><td> 11.5.1.109 </td></tr>
+<tr><td> 11.4.0 </td><td> 11.6.0.43 </td><td> 11.5.2.43 </td></tr>
+<tr><td> 11.4.1 </td><td> 11.6.0.100 </td><td> 11.5.4.8 </td></tr>
+<tr><td> 11.4.2 </td><td> 11.6.0.120 </td><td> 11.6.1.51 </td></tr>
+<tr><td> 11.4.3 </td><td> 11.6.0.120 </td><td> 11.6.5.2 </td></tr>
+<tr><td> 11.4.4 </td><td> 11.6.0.120 </td><td> 11.6.5.2 </td></tr>
+<tr><td> 11.5.0 </td><td> 11.7.0.31 </td><td> 11.7.3.1 </td></tr>
+<tr><td> 11.5.1 </td><td> 11.7.0.107 </td><td> 11.7.4.6 </td></tr>
+<tr><td> 11.5.2 </td><td> 11.7.0.107 </td><td> 11.7.4.6 </td></tr>
+<tr><td> 11.6.0 </td><td> 11.7.1.55 </td><td> 11.8.1.74 </td></tr>
+<tr><td> 11.6.1 </td><td> 11.7.2.112 </td><td> 11.8.1.74 </td></tr>
+<tr><td> 11.6.2 </td><td> 11.7.2.124 </td><td> 11.9.2.110 </td></tr>
+<tr><td> 11.7.0 </td><td> 11.7.3.50 </td><td> 11.10.1.25 </td></tr>
+<tr><td> 11.7.1 </td><td> 11.7.4.91 </td><td> 11.10.3.66 </td></tr>
+<tr><td> 11.8.0 </td><td> 11.7.5.86 </td><td> 11.11.3.6 </td></tr>
+</table>
+
+## Release Statistics
+
+Since I had to download every single CUDA release to extract this information, I was curious about how the releases have evolved over time.
+
+### CUDA 12
+
 <div style="overflow-x: scroll;">
 <table>
 <tr><th> CUDA Release </th><th> Size (K) </th><th> cuSPARSE Size</th><th> cuBLAS Size</th><th> nvcc Size</th><th> cuFFT Size</th><th> cuRAND Size</th><th> cuSOLVER Size</th><th> npp Size</th><th> Nsight Compute</th><th> Nsight Systems</th><th> cuPTI Size</th><th> CUDA GDB Size</th><th> cudart Size</th><th> nvrtc Size </th></tr>
@@ -46,7 +101,7 @@ The various libraries in each CUDA release follow a somewhat different versionin
 </table>
 </div>
 
-## CUDA 11
+### CUDA 11
 
 <table>
 <tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuBLAS Version </th></tr>
@@ -106,3 +161,7 @@ The various libraries in each CUDA release follow a somewhat different versionin
 <tr><td> 11.7.1 </td><td> 6096648 </td><td> 510704 (8.37&#37) </td><td> 1130248 (18.53&#37) </td><td> 6392 (.10&#37) </td><td> 450500 (7.38&#37) </td><td> 173740 (2.84&#37) </td><td> 642528 (10.53&#37) </td><td> 438192 (7.18&#37) </td><td> 859920 (14.10&#37) </td><td> 611776 (10.03&#37) </td><td> 92008 (1.50&#37) </td><td> 77032 (1.26&#37) </td><td> 6544 (.10&#37) </td><td> 128088 (2.10&#37) </td></tr>
 <tr><td> 11.8.0 </td><td> 7672492 </td><td> 589240 (7.67&#37) </td><td> 1716472 (22.37&#37) </td><td> 14656 (.19&#37) </td><td> 862456 (11.24&#37) </td><td> 200124 (2.60&#37) </td><td> 821540 (10.70&#37) </td><td> 503032 (6.55&#37) </td><td> 939560 (12.24&#37) </td><td> 700068 (9.12&#37) </td><td> 103548 (1.34&#37) </td><td> 77088 (1.00&#37) </td><td> 6880 (.08&#37) </td><td> 138016 (1.79&#37) </td></tr>
 </table>
+
+### Methodology
+
+The scripts are stored here [cwpearson/cusparse-versions](github.com/cwpearson/cusparse-versions).
