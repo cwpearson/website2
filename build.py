@@ -70,6 +70,7 @@ class Post:
     mod_time: datetime.datetime = create_time
     gallery_html: str = ""
     math: bool = False  # if post has math in it
+    css: str = ""  # post-specific styling
 
 
 @dataclass
@@ -509,6 +510,7 @@ def render_post(spec: PostSpec) -> Post:
         mod_time=mod_time,
         gallery_html=gallery_html,
         math=math,
+        css=frontmatter.get("css", ""),
     )
 
 
@@ -527,7 +529,8 @@ def output_post(post: Post):
             "style_frag": style("navbar.css")
             + style("common.css")
             + style("post.css")
-            + style("footer.css"),
+            + style("footer.css")
+            + post.css,
             "head_frag": head_frag(math=post.math),
             "nav_frag": nav_frag(),
             "body_frag": post.body_html,

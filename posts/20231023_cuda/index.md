@@ -10,6 +10,12 @@ tags = []
 summary = ""
 projects = []
 categories = []
+css = """
+th, td {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+"""
 +++
 
 The various libraries in each CUDA release follow a somewhat different versioning policy than the release itself.
@@ -25,6 +31,7 @@ The various libraries in each CUDA release follow a somewhat different versionin
 <tr><td> 12.2.1 </td><td> 12.1.2.129 </td><td> 12.2.4.5 </td></tr>
 <tr><td> 12.2.2 </td><td> 12.1.2.141 </td><td> 12.2.5.6 </td></tr>
 </table>
+<div style="overflow-x: scroll;">
 <table>
 <tr><th> CUDA Release </th><th> Size (K) </th><th> cuSPARSE Size</th><th> cuBLAS Size</th><th> nvcc Size</th><th> cuFFT Size</th><th> cuRAND Size</th><th> cuSOLVER Size</th><th> npp Size</th><th> Nsight Compute</th><th> Nsight Systems</th><th> cuPTI Size</th><th> CUDA GDB Size</th><th> cudart Size</th><th> nvrtc Size </th></tr>
 <tr><td> 12.0.0 </td><td> 7592292 </td><td> 450292 (5.93&#37) </td><td> 1581892 (20.83&#37) </td><td> 14908 (.19&#37) </td><td> 466720 (6.14&#37) </td><td> 191028 (2.51&#37) </td><td> 819448 (10.79&#37) </td><td> 485744 (6.39&#37) </td><td> 1407224 (18.53&#37) </td><td> 706692 (9.30&#37) </td><td> 107396 (1.41&#37) </td><td> 79376 (1.04&#37) </td><td> 6972 (.09&#37) </td><td> 140208 (1.84&#37) </td></tr>
@@ -35,6 +42,7 @@ The various libraries in each CUDA release follow a somewhat different versionin
 <tr><td> 12.2.1 </td><td> 7372684 </td><td> 551884 (7.48&#37) </td><td> 1516656 (20.57&#37) </td><td> 20784 (.28&#37) </td><td> 562828 (7.63&#37) </td><td> 191380 (2.59&#37) </td><td> 342940 (4.65&#37) </td><td> 489096 (6.63&#37) </td><td> 1503044 (20.38&#37) </td><td> 766120 (10.39&#37) </td><td> 110968 (1.50&#37) </td><td> 79376 (1.07&#37) </td><td> 7456 (.10&#37) </td><td> 134136 (1.81&#37) </td></tr>
 <tr><td> 12.2.2 </td><td> 7394116 </td><td> 551884 (7.46&#37) </td><td> 1536844 (20.78&#37) </td><td> 20784 (.28&#37) </td><td> 562824 (7.61&#37) </td><td> 191372 (2.58&#37) </td><td> 342780 (4.63&#37) </td><td> 489108 (6.61&#37) </td><td> 1503092 (20.32&#37) </td><td> 766144 (10.36&#37) </td><td> 111000 (1.50&#37) </td><td> 79356 (1.07&#37) </td><td> 7456 (.10&#37) </td><td> 134216 (1.81&#37) </td></tr>
 </table>
+</div>
 
 ## CUDA 11
 
