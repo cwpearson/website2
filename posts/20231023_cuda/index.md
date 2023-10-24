@@ -12,8 +12,10 @@ projects = []
 categories = []
 css = """
 th, td {
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  white-space: nowrap;
+  text-align: center;
 }
 """
 +++
