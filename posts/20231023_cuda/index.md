@@ -39,6 +39,8 @@ I made two PRs to fix the problem for cusparseSpMV and cusparseSpMM functions.
 For future reference, here are the cuSPARSE versions that correspond to each CUDA release:
 
 ## CUDA 12
+
+<div style="overflow-x: scroll;">
 <table>
 <tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuBLAS Version </th></tr>
 <tr><td> 12.0.0 </td><td> 12.0.0.76 </td><td> 12.0.1.189 </td></tr>
@@ -49,9 +51,11 @@ For future reference, here are the cuSPARSE versions that correspond to each CUD
 <tr><td> 12.2.1 </td><td> 12.1.2.129 </td><td> 12.2.4.5 </td></tr>
 <tr><td> 12.2.2 </td><td> 12.1.2.141 </td><td> 12.2.5.6 </td></tr>
 </table>
+</div>
 
 ## CUDA 11
 
+<div style="overflow-x: scroll;">
 <table>
 <tr><th> CUDA Release </th><th> cuSPARSE Version </th><th> cuBLAS Version </th></tr>
 <tr><td> 11.0.1 </td><td> 11.0.0.191 </td><td> 11.0.0.191 </td></tr>
@@ -81,10 +85,13 @@ For future reference, here are the cuSPARSE versions that correspond to each CUD
 <tr><td> 11.7.1 </td><td> 11.7.4.91 </td><td> 11.10.3.66 </td></tr>
 <tr><td> 11.8.0 </td><td> 11.7.5.86 </td><td> 11.11.3.6 </td></tr>
 </table>
+</div>
 
 ## Release Statistics
 
 Since I had to download every single CUDA release to extract this information, I was curious about how the releases have evolved over time.
+
+![](stacked.png)
 
 ### CUDA 12
 
@@ -132,6 +139,7 @@ Since I had to download every single CUDA release to extract this information, I
 <tr><td> 11.7.0 </td><td> 6063180 </td><td> 500564 (8.25&#37) </td><td> 1170468 (19.30&#37) </td><td> 6388 (.10&#37) </td><td> 450500 (7.43&#37) </td><td> 173740 (2.86&#37) </td><td> 738160 (12.17&#37) </td><td> 405324 (6.68&#37) </td><td> 864656 (10.08&#37) </td><td> 611760 (14.26&#37) </td><td> 91980 (1.51&#37) </td><td> 77016 (1.27&#37) </td><td> 6544 (.10&#37) </td><td> 128084 (2.11&#37) </td><td> 115828 (1.91&#37) </td><td> 350344 (5.77&#37) </td></tr>
 <tr><td> 11.7.1 </td><td> 6096648 </td><td> 510704 (8.37&#37) </td><td> 1130248 (18.53&#37) </td><td> 6392 (.10&#37) </td><td> 450500 (7.38&#37) </td><td> 173740 (2.84&#37) </td><td> 642528 (10.53&#37) </td><td> 438192 (7.18&#37) </td><td> 859920 (10.03&#37) </td><td> 611776 (14.10&#37) </td><td> 92008 (1.50&#37) </td><td> 77032 (1.26&#37) </td><td> 6544 (.10&#37) </td><td> 128088 (2.10&#37) </td><td> 115828 (1.89&#37) </td><td> 355652 (5.83&#37) </td></tr>
 <tr><td> 11.8.0 </td><td> 7672492 </td><td> 589240 (7.67&#37) </td><td> 1716472 (22.37&#37) </td><td> 14656 (.19&#37) </td><td> 862456 (11.24&#37) </td><td> 200124 (2.60&#37) </td><td> 821540 (10.70&#37) </td><td> 503032 (6.55&#37) </td><td> 939560 (9.12&#37) </td><td> 700068 (12.24&#37) </td><td> 103548 (1.34&#37) </td><td> 77088 (1.00&#37) </td><td> 6880 (.08&#37) </td><td> 138016 (1.79&#37) </td><td> 115828 (1.50&#37) </td><td> 395384 (5.15&#37) </td></tr>
+</table>
 </div>
 
 ### Methodology
