@@ -91,7 +91,7 @@ For future reference, here are the cuSPARSE versions that correspond to each CUD
 
 Since I had to download every single CUDA release to extract this information, I was curious about how the releases have evolved over time.
 
-![](stacked.png)
+![](size.png)
 
 ### CUDA 12
 
