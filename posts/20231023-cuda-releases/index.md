@@ -144,6 +144,8 @@ Since I had to download every single CUDA release to extract this information, I
 
 ## Symbols
 
+![](symbols.png)
+
 <table>
 <tr><th>CUDA Release</th><th>cuSPARSE</th><th>cuBLAS</th><th>cuSOLVER</th><th>cuFFT</th><th>cuRAND</th><th>cudart</th><th>cupti</th><th>npp</th></tr>
 <tr><td>12.0.0</td><td>1254</td><td>3111</td><td>3525</td><td>402</td><td>90</td><td>1372</td><td>652</td><td>39787</td></tr>
