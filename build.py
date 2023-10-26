@@ -93,6 +93,7 @@ class Pub:
     authors_html: str = ""
     venue_html: str = ""
     abstract: str = ""
+    url_pdf: str = ""
 
 
 @dataclass
@@ -583,6 +584,7 @@ def render_pub(spec: PubSpec) -> Pub:
         venue_html=venue_html,
         authors_html=authors_html,
         abstract=frontmatter.get("abstract", ""),
+        url_pdf=frontmatter.get("url_pdf", ""),
     )
 
 
@@ -902,6 +904,14 @@ def output_pub(pub: Pub):
     TIMER.start()
     with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
+
+    links_html = ""
+    if pub.url_pdf:
+        links_html += f'<div class="link">\n'
+        links_html += f'<a href="{pub.url_pdf}">PDF</a>\n'
+        links_html += "</div>"
+    if links_html:
+        links_html = f'<div class="link-container>\n' + links_html + "</div>\n"
 
     html = tmpl.safe_substitute(
         {
