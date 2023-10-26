@@ -87,11 +87,21 @@ For future reference, here are the cuSPARSE versions that correspond to each CUD
 </table>
 </div>
 
-## Release Statistics
+### CUDA 10
+
+In the CUDA 10 releases, the versions are programmatically accessible through a library call rather than being defined in the headers, so I couldn't just grep them out of the installation.
+
+## Release Component Sizes
 
 Since I had to download every single CUDA release to extract this information, I was curious about how the releases have evolved over time.
 
-![](size.png)
+[![Stacked plot of CUDA component sizes](size.png)](size.png)
+
+* total size: the size of the extracted installer (including the shipped driver)
+* `nvcc` size: the size of the actual `nvcc` binary
+* other component sizes: 
+  * 11/12: the size of the corresponding directory in the installer (including headers, man pages, whatever else Nvidia ships for that library in the installer)
+  * 10: the size of the `.so` files for that library, or the size of the component directory in the install
 
 ### CUDA 12
 
@@ -107,6 +117,8 @@ Since I had to download every single CUDA release to extract this information, I
 <tr><td>12.2.2</td><td>7394116</td><td>551884 (7.46&#37)</td><td>1536844 (20.78&#37)</td><td>20784 (.28&#37)</td><td>562824 (7.61&#37)</td><td>191372 (2.58&#37)</td><td>342780 (4.63&#37)</td><td>489108 (6.61&#37)</td><td>1503092 (10.36&#37)</td><td>766144 (20.32&#37)</td><td>111000 (1.50&#37)</td><td>79356 (1.07&#37)</td><td>7456 (.10&#37)</td><td>134216 (1.81&#37)</td><td>115896 (1.56&#37)</td><td>332948 (4.50&#37)</td></tr>
 </table>
 </div>
+
+
 
 ### CUDA 11
 
@@ -157,7 +169,9 @@ Since I had to download every single CUDA release to extract this information, I
 
 ## Symbols
 
-![](symbol.png)
+This section counts the external dynamic symbols present in the libraries for a particular component.
+
+[![Line chart of dynamic symbols present in libraries in each CUDA release](symbol.png)](symbol.png)
 
 <div style="overflow-x: scroll;">
 <table>
@@ -217,11 +231,13 @@ Since I had to download every single CUDA release to extract this information, I
 
 ## Methodology
 
-The scripts are stored here [cwpearson/cusparse-versions](https://github.com/cwpearson/cusparse-versions).
+The code to download the CUDA releases and extract the data are available here [cwpearson/cusparse-versions](https://github.com/cwpearson/cusparse-versions).
+I used the Linux runfiles - these self-extracting CUDA installers seem to run a built-in binary, and since I'm using the x86 versions of CUDA, this needs to be run on an x86 machine.
 
-These self-extracting CUDA installers seem to run a built-in binary -- since I'm using the x86 versions of CUDA, this needs to be run on an x86 machine.
+How the sizes are measured varies a bit between CUDA 11/12 and CUDA 10.
+For CUDA 11/12, the `--extract` flag to the runfile creates a single nice, neat directory for each component. That directory includes all the binaries, headers, libraries, and whatever else Nvidia ships for that component. For these releases, the measured size is the size of this complete directory.
+For CUDA 10, the `--extract` flag only creates 3 additional runfiles - one for the driver, one for the samples, and one for the toolkit.
+I found interacting with those files difficult, so I just completed the CUDA 10 install, and the sizes of the components is the size of only the binary or the libraries, not including the headers and whatever else.
+I still used the `--extract` flag just to get the driver on its own to determine the driver size for CUDA 10.
 
-* total size: the size of the extracted installer (including the shipped driver)
-* `nvcc` size: the size of the actual `nvcc` binary
-* library sizes: the size of the corresponding directory in the installer (including headers, man pages, whatever else Nvidia ships for that library in the installer)
-
+Component symbols are the number of defined dynamic symbols in the libraries for a component (`nm -D --defined-only`).
