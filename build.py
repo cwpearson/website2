@@ -71,6 +71,9 @@ class Post:
     gallery_html: str = ""
     math: bool = False  # if post has math in it
     css: str = ""  # post-specific styling
+    keywords: List[str] = field(default_factory=list)
+    tags: List[str] = field(default_factory=list)
+    description: str = ""
 
 
 @dataclass
@@ -511,6 +514,9 @@ def render_post(spec: PostSpec) -> Post:
         gallery_html=gallery_html,
         math=math,
         css=frontmatter.get("css", ""),
+        tags=frontmatter.get("tags", []),
+        keywords=frontmatter.get("keywords", []),
+        description=frontmatter.get("description", ""),
     )
 
 
@@ -531,7 +537,11 @@ def output_post(post: Post):
             + style("post.css")
             + style("footer.css")
             + post.css,
-            "head_frag": head_frag(math=post.math),
+            "head_frag": head_frag(
+                math=post.math,
+                descr=post.description,
+                keywords=post.tags + post.keywords,
+            ),
             "nav_frag": nav_frag(),
             "body_frag": post.body_html,
             "gallery_frag": post.gallery_html,
@@ -865,9 +875,9 @@ def head_frag(
     html += '<meta name="generator" content="github.com/cwpearson/website2">\n'
     html += '<meta name="author" content="Carl Pearson">\n'
     if descr:
-        html += f'<meta name="keywords" content="{descr}">\n'
+        html += f'<meta name="description" content="{descr}">\n'
     if keywords:
-        html += f'<meta name="keywords" content="{"".join(keywords)}">\n'
+        html += f'<meta name="keywords" content="{",".join(keywords)}">\n'
 
     if math:
         katex_path = TEMPLATES_DIR / "katex_frag.html"
