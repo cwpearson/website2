@@ -952,11 +952,12 @@ def output_pub(pub: Pub):
         links_html = f'<div class="link-container">\n' + links_html + "</div>\n"
 
     video_frag = ""
-    # if pub.url_video:
-    #     if "youtube.com" in pub.url_video:
-    #         with open(TEMPLATES_DIR / "youtube_embed_frag.tmpl", "r") as f:
-    #             x = Template(f.read())
-    #         video_frag = x.safe_substitute({"url": pub.url_video})
+    if pub.url_video:
+        if "youtube.com" in pub.url_video:
+            with open(TEMPLATES_DIR / "youtube_embed_frag.tmpl", "r") as f:
+                x = Template(f.read())
+            url = pub.url_video.replace("youtube.com/watch?v=", "youtube.com/embed/")
+            video_frag = x.safe_substitute({"url": url})
 
     html = tmpl.safe_substitute(
         {
