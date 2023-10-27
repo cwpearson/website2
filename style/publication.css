@@ -17,3 +17,30 @@
     display: inline;
     font-style: italic;
 }
+
+.link-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* margin-top: 2em;*/
+    margin-bottom: 0.5em;
+}
+
+.link {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+.link a {
+    padding: 1em;
+    text-decoration: none;
+    background-color: #e3d5ca;
+    border-radius: 0.5em;
+}
+
+.link a:hover {
+    background-color: #d6ccc2;
+}

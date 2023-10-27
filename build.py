@@ -10,6 +10,7 @@ import subprocess
 import shutil
 from functools import lru_cache
 import gzip
+import re
 
 import mistletoe
 from mistletoe.contrib.pygments_renderer import PygmentsRenderer
@@ -94,6 +95,7 @@ class Pub:
     venue_html: str = ""
     abstract: str = ""
     url_pdf: str = ""
+    url_code: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -118,7 +120,7 @@ class Talk:
     event: str = ""
     event_url: str = None
     url_slides: str = None
-    url_code: List = field(default_factory=list)
+    url_code: List[str] = field(default_factory=list)
     publication: str = None
 
 
@@ -434,6 +436,15 @@ def img(src, alt="", path=None) -> str:
     return html
 
 
+def page_href(url: str, hint: str):
+    if "arxiv.org" in url:
+        return f'<a href="{url}">arxiv</a>\n'
+    elif "github.com" in url:
+        m = re.findall("github.com/([^/]+)/([^/]+)/?.*", url)
+        return f'<a href="{url}">github/{m[0][0]}/{m[0][1]}</a>\n'
+    return f'<a href="{url}">{hint}</a>\n'
+
+
 def move_post_resources(spec: PostSpec):
     global BYTES_RD
     global BYTES_WR
@@ -572,6 +583,10 @@ def render_pub(spec: PubSpec) -> Pub:
     else:
         venue_html = ""
 
+    url_code = frontmatter.get("url_code", [])
+    if isinstance(url_code, str):
+        url_code = [url_code]
+
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
         body_html = renderer.render(mistletoe.Document(markdown))
 
@@ -585,6 +600,7 @@ def render_pub(spec: PubSpec) -> Pub:
         authors_html=authors_html,
         abstract=frontmatter.get("abstract", ""),
         url_pdf=frontmatter.get("url_pdf", ""),
+        url_code=url_code,
     )
 
 
@@ -908,10 +924,14 @@ def output_pub(pub: Pub):
     links_html = ""
     if pub.url_pdf:
         links_html += f'<div class="link">\n'
-        links_html += f'<a href="{pub.url_pdf}">PDF</a>\n'
-        links_html += "</div>"
+        links_html += page_href(pub.url_pdf, "PDF")
+        links_html += "</div>\n"
+    for url in pub.url_code:
+        links_html += f'<div class="link">\n'
+        links_html += page_href(url, "code")
+        links_html += "</div>\n"
     if links_html:
-        links_html = f'<div class="link-container>\n' + links_html + "</div>\n"
+        links_html = f'<div class="link-container">\n' + links_html + "</div>\n"
 
     html = tmpl.safe_substitute(
         {
@@ -927,6 +947,7 @@ def output_pub(pub: Pub):
             "authors": pub.authors_html,
             "venue": pub.venue_html,
             "abstract": pub.abstract,
+            "links_frag": links_html,
             "body_frag": pub.body_html,
             "footer_frag": footer_frag(),
         }

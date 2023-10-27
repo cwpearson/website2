@@ -5,6 +5,8 @@ authors = ["Carl Pearson", "Aurya Javeed", "Karen Devine"]
 venue = "23rd IEEE International Workshop on Parallel and Distributed Scientific and Engineering Computing (PDSEC)"
 draft = false
 tags = ["CUDA", "mpi"]
+url_pdf = "https://arxiv.org/abs/2203.02530"
+url_code = "https://github.com/sandialabs/tenzing"
 abstract = """
 <p>
 We present a new strategy for automatically exploring the design space of key CUDA+MPI programs and providing design rules that discriminate slow from fast implementations. 
@@ -21,5 +23,3 @@ We demonstrate our strategy using a key kernel from scientific computing --- spa
 </p>
 """
 +++
-
-* [arxiv](https://arxiv.org/abs/2203.02530)
