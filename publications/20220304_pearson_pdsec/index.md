@@ -7,13 +7,10 @@ draft = false
 tags = ["CUDA", "mpi"]
 url_pdf = "https://arxiv.org/abs/2203.02530"
 url_code = "https://github.com/sandialabs/tenzing"
-abstract = """
-<p>
-We present a new strategy for automatically exploring the design space of key CUDA+MPI programs and providing design rules that discriminate slow from fast implementations. 
+abstract = """We present a new strategy for automatically exploring the design space of key CUDA+MPI programs and providing design rules that discriminate slow from fast implementations. 
 In such programs, the order of operations (e.g., GPU kernels, MPI communication) and assignment of operations to resources (e.g., GPU streams) makes the space of possible designs enormous.
 Systems experts have the task of redesigning and reoptimizing these programs to effectively utilize each new platform.
 This work provides a prototype tool to reduce that burden.
-</p>
 <p>
 In our approach, a directed acyclic graph of CUDA and MPI operations defines the design space for the program.
 Monte-Carlo tree search discovers regions of the design space that have large impact on the program's performance.

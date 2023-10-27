@@ -5,6 +5,8 @@ draft = false
 tags = ["stencil", "mpi"]
 venue = "Ph.D. Dissertation"
 authors = ["Carl Pearson"]
+url_code = ["https://github.com/c3sr/comm_scope", "https://github.com/cwpearson/stencil", "https://github.com/cwpearson/tempi"]
+url_pdf = "/pdf/20210420_pearson_phd.pdf"
 abstract = """<p>
 Steady increase in accelerator performance has driven demand for faster interconnects to avert the memory bandwidth wall.
 This has resulted in wide adoption of heterogeneous systems with varying underlying interconnects, and has delegated the task of understanding and copying data to the system or application developer.
@@ -20,8 +22,3 @@ This library is able to reduce iteration time of a state-of-the-art stencil code
 The second is a more general MPI interposer library, with novel non-contiguous data handling and runtime implementation selection for MPI communication primitives.
 A portable pure-MPI halo exchange is brought to within half the speed of the stencil-specific library, supported by a five order-of-magnitude improvement in MPI communication latency for non-contiguous data.</p>"""
 +++
-
-* [pdf](/pdf/20210420_pearson_phd.pdf)
-* [Comm|Scope (github)](https://github.com/c3sr/comm_scope)
-* [Stencil (github)](https://github.com/cwpearson/stencil)
-* [TEMPI (github)](https://github.com/cwpearson/tempi)

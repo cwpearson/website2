@@ -94,8 +94,10 @@ class Pub:
     authors_html: str = ""
     venue_html: str = ""
     abstract: str = ""
-    url_pdf: str = ""
+    url_pdf: List[str] = field(default_factory=list)
     url_code: List[str] = field(default_factory=list)
+    url_slides: str = ""
+    url_poster: str = ""
 
 
 @dataclass
@@ -587,6 +589,10 @@ def render_pub(spec: PubSpec) -> Pub:
     if isinstance(url_code, str):
         url_code = [url_code]
 
+    url_pdf = frontmatter.get("url_pdf", [])
+    if isinstance(url_pdf, str):
+        url_pdf = [url_pdf]
+
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
         body_html = renderer.render(mistletoe.Document(markdown))
 
@@ -599,8 +605,10 @@ def render_pub(spec: PubSpec) -> Pub:
         venue_html=venue_html,
         authors_html=authors_html,
         abstract=frontmatter.get("abstract", ""),
-        url_pdf=frontmatter.get("url_pdf", ""),
+        url_pdf=url_pdf,
         url_code=url_code,
+        url_slides=frontmatter.get("url_slides", ""),
+        url_poster=frontmatter.get("url_poster", ""),
     )
 
 
@@ -922,13 +930,21 @@ def output_pub(pub: Pub):
         tmpl = Template(f.read())
 
     links_html = ""
-    if pub.url_pdf:
+    for url in pub.url_pdf:
         links_html += f'<div class="link">\n'
-        links_html += page_href(pub.url_pdf, "PDF")
+        links_html += page_href(url, "pdf")
         links_html += "</div>\n"
     for url in pub.url_code:
         links_html += f'<div class="link">\n'
         links_html += page_href(url, "code")
+        links_html += "</div>\n"
+    if pub.url_slides:
+        links_html += f'<div class="link">\n'
+        links_html += page_href(pub.url_slides, "slides")
+        links_html += "</div>\n"
+    if pub.url_poster:
+        links_html += f'<div class="link">\n'
+        links_html += page_href(pub.url_poster, "poster")
         links_html += "</div>\n"
     if links_html:
         links_html = f'<div class="link-container">\n' + links_html + "</div>\n"
