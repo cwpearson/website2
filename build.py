@@ -98,6 +98,7 @@ class Pub:
     url_code: List[str] = field(default_factory=list)
     url_slides: str = ""
     url_poster: str = ""
+    url_video: str = ""
 
 
 @dataclass
@@ -609,6 +610,7 @@ def render_pub(spec: PubSpec) -> Pub:
         url_code=url_code,
         url_slides=frontmatter.get("url_slides", ""),
         url_poster=frontmatter.get("url_poster", ""),
+        url_video=frontmatter.get("url_video", ""),
     )
 
 
@@ -949,6 +951,13 @@ def output_pub(pub: Pub):
     if links_html:
         links_html = f'<div class="link-container">\n' + links_html + "</div>\n"
 
+    video_frag = ""
+    # if pub.url_video:
+    #     if "youtube.com" in pub.url_video:
+    #         with open(TEMPLATES_DIR / "youtube_embed_frag.tmpl", "r") as f:
+    #             x = Template(f.read())
+    #         video_frag = x.safe_substitute({"url": pub.url_video})
+
     html = tmpl.safe_substitute(
         {
             "style_frag": style("navbar.css")
@@ -965,6 +974,7 @@ def output_pub(pub: Pub):
             "abstract": pub.abstract,
             "links_frag": links_html,
             "body_frag": pub.body_html,
+            "video_frag": video_frag,
             "footer_frag": footer_frag(),
         }
     )
