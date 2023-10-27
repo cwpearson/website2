@@ -18,8 +18,11 @@ python build.py && python -m http.server --directory public
   - [x] slides
   - [x] poster
   - [x] code
-  - [ ] automatic video embeds
+  - automatic video embeds
+    - [x] youtube
+    - [ ] vimeo
   - [ ] project cross-reference
+  - [ ] date
 - robots.txt
   - [x] allow all
   - [x] disallow AI
