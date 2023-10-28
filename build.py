@@ -124,6 +124,7 @@ class Talk:
     event_url: str = None
     url_slides: str = None
     url_code: List[str] = field(default_factory=list)
+    url_video: str = ""
     publication: str = None
 
 
@@ -714,6 +715,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         event_url=frontmatter.get("event_url", None),
         url_slides=frontmatter.get("url_slides", None),
         url_code=url_code,
+        url_video=frontmatter.get("url_video", ""),
         publication=frontmatter.get("publication", None),
     )
 
@@ -800,6 +802,7 @@ def output_talk(talk: Talk):
             "address": address_html,
             "abstract": abstract_frag,
             "body_frag": talk.body_html,
+            "video_frag": video_embed_frag(talk.url_video),
             "links_frag": links_frag,
             "slides_object": slides_object,
             "footer_frag": footer_frag(),
@@ -922,6 +925,26 @@ def head_frag(
     return html
 
 
+def video_embed_frag(url) -> str:
+    """takes a url to a video and returns an html fragment to embed it"""
+    if not url:
+        return ""
+
+    if "youtube.com" in url:
+        ms = re.findall(r"\?v=(.*)", url)
+        video_id = ms[0]
+        with open(TEMPLATES_DIR / "youtube_embed_frag.tmpl", "r") as f:
+            tmpl = Template(f.read())
+        return tmpl.safe_substitute({"video_id": video_id})
+
+    if "vimeo.com" in url:
+        ms = re.findall(r"vimeo.com/([^/]*)/?", url)
+        video_id = ms[0]
+        with open(TEMPLATES_DIR / "vimeo_embed_frag.tmpl", "r") as f:
+            tmpl = Template(f.read())
+        return tmpl.safe_substitute({"video_id": video_id})
+
+
 def output_pub(pub: Pub):
     global BYTES_RD
     tmpl_path = TEMPLATES_DIR / "pub.tmpl"
@@ -951,13 +974,7 @@ def output_pub(pub: Pub):
     if links_html:
         links_html = f'<div class="link-container">\n' + links_html + "</div>\n"
 
-    video_frag = ""
-    if pub.url_video:
-        if "youtube.com" in pub.url_video:
-            with open(TEMPLATES_DIR / "youtube_embed_frag.tmpl", "r") as f:
-                x = Template(f.read())
-            url = pub.url_video.replace("youtube.com/watch?v=", "youtube.com/embed/")
-            video_frag = x.safe_substitute({"url": url})
+    video_frag = video_embed_frag(pub.url_video)
 
     html = tmpl.safe_substitute(
         {

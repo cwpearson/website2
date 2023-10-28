@@ -9,6 +9,9 @@ python build.py && python -m http.server --directory public
 - talk metadata
   - [x] date start
   - [x] date end
+  - automatic video embeds
+    - [x] youtube
+    - [x] vimeo
   - [x] slides URL
     - [ ] embed doesn't do anything useful in mobile safari
     - [ ] embed if pdf using pdf.js?
@@ -20,7 +23,7 @@ python build.py && python -m http.server --directory public
   - [x] code
   - automatic video embeds
     - [x] youtube
-    - [ ] vimeo
+    - [x] vimeo
   - [ ] project cross-reference
   - [ ] date
 - robots.txt
