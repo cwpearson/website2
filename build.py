@@ -89,8 +89,7 @@ class Pub:
     spec: PubSpec
     title: str
     body_html: str
-    create_time: datetime.datetime = None
-    mod_time: datetime.datetime = create_time
+    date: datetime.datetime = None
     authors_html: str = ""
     venue_html: str = ""
     abstract: str = ""
@@ -576,9 +575,7 @@ def render_pub(spec: PubSpec) -> Pub:
     frontmatter, markdown = read_markdown(spec.markdown_path)
 
     title = frontmatter["title"]
-    create_time = normalize_and_localize(frontmatter["date"])
-    mod_time = frontmatter.get("lastmod", create_time)
-    mod_time = maybe_localize_to_mountain(mod_time)
+    date = normalize_and_localize(frontmatter["date"])
     authors_html = authors_span(frontmatter.get("authors", []))
 
     venue = frontmatter.get("venue", "")
@@ -602,8 +599,7 @@ def render_pub(spec: PubSpec) -> Pub:
         spec=spec,
         title=title,
         body_html=body_html,
-        create_time=create_time,
-        mod_time=mod_time,
+        date=date,
         venue_html=venue_html,
         authors_html=authors_html,
         abstract=frontmatter.get("abstract", ""),
@@ -989,6 +985,7 @@ def output_pub(pub: Pub):
             "title": pub.title,
             "authors": pub.authors_html,
             "venue": pub.venue_html,
+            "date": pub.date.strftime("%m/%d/%y"),
             "abstract": pub.abstract,
             "links_frag": links_html,
             "body_frag": pub.body_html,
@@ -1166,8 +1163,8 @@ def pub_card(pub: Pub) -> str:
     return an html fragment for a Pub
     """
 
-    if pub.create_time:
-        mmyy = pub.create_time.strftime("%m/%y")
+    if pub.date:
+        mmyy = pub.date.strftime("%m/%y")
     else:
         mmyy = ""
 
@@ -1203,7 +1200,7 @@ def render_publications(pubs: List[Pub]) -> str:
         tmpl = Template(f.read())
 
     pub_links = ""
-    for pub in sorted(pubs, key=lambda x: x.create_time, reverse=True):
+    for pub in sorted(pubs, key=lambda x: x.date, reverse=True):
         pub_links += pub_card(pub)
 
     return tmpl.safe_substitute(
@@ -1374,7 +1371,7 @@ if __name__ == "__main__":
 
     index_html = render_index(
         top_k_posts=sorted(posts, key=lambda p: p.create_time, reverse=True)[0:5],
-        top_k_pubs=sorted(pubs, key=lambda p: p.create_time, reverse=True)[0:5],
+        top_k_pubs=sorted(pubs, key=lambda p: p.date, reverse=True)[0:5],
     )
     output_index(index_html)
 

@@ -21,11 +21,11 @@ python build.py && python -m http.server --directory public
   - [x] slides
   - [x] poster
   - [x] code
+  - [x] date
   - automatic video embeds
     - [x] youtube
     - [x] vimeo
   - [ ] project cross-reference
-  - [ ] date
 - robots.txt
   - [x] allow all
   - [x] disallow AI
