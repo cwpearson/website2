@@ -55,7 +55,7 @@ With that in mind, I began to search around for a solution that would allow us t
 
 I am most familiar with Travis-CI, which does not offer GPU boxes. Their self-hosting is under the Travis CI Enterprise umbrella, and hidden behind a contact email. I took a brief look at CircleCI, which does provide GPU boxes at higher pricing tiers. It also allows for self-hosting, but it seems that the free tier only allow one concurrent job. Jenkins seems to allow self-hosting, but I had never used Jenkins before.
 
-I settled on Azure Pipelines, which has tight integration with Github, a relatively simple self-hosting setup, and many parallel jobs for public self-hosted projects. I don’t want to claim it is the easiest solution, or only solution - the purpose of this post is just to describe a solution.
+I settled on Azure Pipelines, which has tight integration with Github, a relatively simple self-hosting setup, and many parallel jobs for public self-hosted projects. I don't want to claim it is the easiest solution, or only solution - the purpose of this post is just to describe a solution.
 
 ![][fig1]
 *The four components of the CI system: clients who develop code, Github which hosts code, Azure Pipelines which manages the queue of CI pipelines, and the host system with a GPU where the pipelines execute in Docker containers.*
@@ -65,8 +65,8 @@ The entire system has four components.
 
 1. Clients. These are the users who develop GPU codes. They write their code, test it locally (I hope!), and then push it to Github.
 2. Github. Github needs no introduction. It maintains the modification history of the code, and tells Azure Pipelines whenever a new change has been made.
-3. Azure Pipelines. This is a set of software systems running in Microsoft’s cloud. For our purposes, Azure Pipelines is a queue of CI jobs, and also the source of the Azure Pipelines agent binary that execute jobs on the host.
-4. The Host. The host is one or more GPU-enabled computers in a privately hosted computing environment (possibly behind a firewall) that run CI jobs from the Azure Pipelines queue. Docker containers on the host are used to provide a fresh environment for each job and multiplex parallel jobs into a single host. The Azure Pipelines agent runs on the host in order for the host to be tied to the Azure CI system. The agent will register themselves into the Azure Pipeline’s agent pool, which we’ll discuss in detail below.
+3. Azure Pipelines. This is a set of software systems running in Microsoft's cloud. For our purposes, Azure Pipelines is a queue of CI jobs, and also the source of the Azure Pipelines agent binary that execute jobs on the host.
+4. The Host. The host is one or more GPU-enabled computers in a privately hosted computing environment (possibly behind a firewall) that run CI jobs from the Azure Pipelines queue. Docker containers on the host are used to provide a fresh environment for each job and multiplex parallel jobs into a single host. The Azure Pipelines agent runs on the host in order for the host to be tied to the Azure CI system. The agent will register themselves into the Azure Pipeline's agent pool, which we'll discuss in detail below.
 
 Before I get any further into it, the code and documentation for hosting your own similar setup is [on github](https://github.com/cwpearson/azure-pipelines-agent)
 
@@ -135,7 +135,7 @@ Prior to startup, the manager tries to auto-detect which agent image it should u
 Looking Forward
 I currently use this system for a single project. The worker is a machine with a single 12-core Intel Xeon, 32 GB of RAM, and an Nvidia RTX 6000. If it remains stable for a while, we maybe able to move some other C3SR projects over to this system as well!
 
-Ultimately, GPU continuous integration will fall under the capabilities of the [rai](github.com/rai-project) project. Rai’s development is currently focused on supporting requirements for courses at the University of Illinois as well as requirements for the MLModelScope project, so I decided to prototype a different system.
+Ultimately, GPU continuous integration will fall under the capabilities of the [rai](github.com/rai-project) project. Rai's development is currently focused on supporting requirements for courses at the University of Illinois as well as requirements for the MLModelScope project, so I decided to prototype a different system.
 
 I anticipate that another PhD student with a similar background, following this example, could get something similar up and running in a few hours.
 
