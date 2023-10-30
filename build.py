@@ -340,7 +340,11 @@ def output_project(project: Project):
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": project.body_html,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_frag(
+                edit_url=github_edit_url(
+                    project.spec.markdown_path.relative_to(ROOT_DIR)
+                )
+            ),
         }
     )
     output_dir = OUTPUT_DIR / project.spec.output_dir
@@ -565,7 +569,9 @@ def output_post(post: Post):
             "nav_frag": nav_frag(),
             "body_frag": post.body_html,
             "gallery_frag": post.gallery_html,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_frag(
+                edit_url=github_edit_url(post.spec.markdown_path.relative_to(ROOT_DIR))
+            ),
         }
     )
     output_dir = OUTPUT_DIR / post.spec.output_dir
@@ -806,7 +812,9 @@ def output_talk(talk: Talk):
             "video_frag": video_embed_frag(talk.url_video),
             "links_frag": links_frag,
             "slides_object": slides_object,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_frag(
+                edit_url=github_edit_url(talk.spec.markdown_path.relative_to(ROOT_DIR))
+            ),
         }
     )
     output_dir = OUTPUT_DIR / talk.spec.output_dir
@@ -1066,7 +1074,7 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
             "scholar_svg": SCHOALR_SVG,
             "top_k_posts_frag": top_k_posts_frag,
             "top_k_pubs_frag": top_k_pubs_frag,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_frag(edit_url=github_edit_url("index.md")),
         }
     )
 
@@ -1102,7 +1110,7 @@ def render_experience() -> str:
             "nav_frag": nav_frag(),
             "title": title,
             "body_frag": body_frag,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_frag(edit_url=github_edit_url("experience.md")),
         }
     )
 
@@ -1127,7 +1135,7 @@ def render_recognition() -> str:
             "nav_frag": nav_frag(),
             "title": title,
             "body_frag": body_frag,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_frag(edit_url=github_edit_url("recognition.md")),
         }
     )
 
