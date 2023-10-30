@@ -916,6 +916,7 @@ def head_frag(
     global BYTES_RD
     html = ""
     html += '<meta name="viewport" content="width=device-width">\n'
+    html += '<meta charset="utf-8">\n'
     if title:
         html += f"<title>{title}</title>\n"
     html += '<meta name="generator" content="github.com/cwpearson/website2">\n'
