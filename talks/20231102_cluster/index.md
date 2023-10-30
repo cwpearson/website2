@@ -7,6 +7,6 @@ authors: ["Carl Pearson", "Christopher M. Siefert", "Stephen L. Olivier", "Andre
 event: Cluster 2023
 event_url: https://clustercomp.org/2023/program/
 location: Mesa Ballroom
-url_slides: /pdf/20231102_pearson_cluster_talk.pdf
+url_slides: /pdf/20231102_pearson_cluster_lightning.pdf
 how_invited: Lightning Talk
 ---
