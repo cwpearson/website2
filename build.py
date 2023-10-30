@@ -99,6 +99,8 @@ class Pub:
     url_slides: str = ""
     url_poster: str = ""
     url_video: str = ""
+    description: str = ""
+    keywords: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -619,6 +621,8 @@ def render_pub(spec: PubSpec) -> Pub:
         url_slides=frontmatter.get("url_slides", ""),
         url_poster=frontmatter.get("url_poster", ""),
         url_video=frontmatter.get("url_video", ""),
+        description=frontmatter.get("description", ""),
+        keywords=frontmatter.get("tags", []) + frontmatter.get("keywords", []),
     )
 
 
@@ -995,6 +999,8 @@ def output_pub(pub: Pub):
             + style("footer.css"),
             "head_frag": head_frag(
                 pub.title,
+                descr=pub.description,
+                keywords=pub.keywords,
             ),
             "nav_frag": nav_frag(),
             "title": pub.title,

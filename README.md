@@ -39,5 +39,5 @@ python build.py && python -m http.server --directory public
     - [ ] use responsive images
 - [x] projects page
 - [x] favicon
-- [ ] edit this page on Github
+- [x] edit this page on Github
 - [x] only load math for a page if frontmatter has math = true
