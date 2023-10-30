@@ -24,16 +24,17 @@ TCP_SLOW_START = 14600
 LARGE_PAGES = []
 SMALL_PAGES = 0
 
-CONTENT_DIR = Path(__file__).parent / "content"
-TEMPLATES_DIR = Path(__file__).parent / "templates"
-POSTS_DIR = Path(__file__).parent / "posts"
-PUBS_DIR = Path(__file__).parent / "publications"
-STATIC_DIR = Path(__file__).parent / "static"
-THIRDPARTY_DIR = Path(__file__).parent / "thirdparty"
-STYLE_DIR = Path(__file__).parent / "style"
-TALKS_DIR = Path(__file__).parent / "talks"
+ROOT_DIR = Path(__file__).parent
+CONTENT_DIR = ROOT_DIR / "content"
+TEMPLATES_DIR = ROOT_DIR / "templates"
+POSTS_DIR = ROOT_DIR / "posts"
+PUBS_DIR = ROOT_DIR / "publications"
+STATIC_DIR = ROOT_DIR / "static"
+THIRDPARTY_DIR = ROOT_DIR / "thirdparty"
+STYLE_DIR = ROOT_DIR / "style"
+TALKS_DIR = ROOT_DIR / "talks"
 
-OUTPUT_DIR = Path(__file__).parent / "public"
+OUTPUT_DIR = ROOT_DIR / "public"
 
 PYGMENTS_STYLE = "default"
 
@@ -158,6 +159,10 @@ class Timer:
 
 
 TIMER = Timer()
+
+
+def github_edit_url(src_rel: str) -> str:
+    return f"https://github.com/cwpearson/website2/edit/master/{src_rel}"
 
 
 def talk_page_location_div(loc: str) -> str:
@@ -870,7 +875,7 @@ def copy_thirdparty():
 SHA = None
 
 
-def footer_frag() -> str:
+def footer_frag(edit_url="") -> str:
     global SHA
     now_str = datetime.datetime.now().strftime("%x")
     if SHA is None:
@@ -886,6 +891,8 @@ def footer_frag() -> str:
     html += (
         f'<div>copyright Carl Pearson {datetime.datetime.now().strftime("%Y")}</div>\n'
     )
+    if edit_url:
+        html += f'<div><a href="{edit_url}">edit</a></div>\n'
     html += "</div>\n"
     html += "</div>\n"
     return html
@@ -990,7 +997,9 @@ def output_pub(pub: Pub):
             "links_frag": links_html,
             "body_frag": pub.body_html,
             "video_frag": video_frag,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_frag(
+                edit_url=github_edit_url(pub.spec.markdown_path.relative_to(ROOT_DIR))
+            ),
         }
     )
     output_dir = OUTPUT_DIR / pub.spec.output_dir
