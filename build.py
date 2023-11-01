@@ -1387,6 +1387,10 @@ def render_tag_page(
     pubs: List[Pub],
     posts: List[Post],
 ):
+    global BYTES_WR
+    global BYTES_RD
+    global SMALL_PAGES
+    global LARGE_PAGES
     pubs_frag = ""
     if pubs:
         pubs_frag += "<h2>Publications</h2>\n"
@@ -1411,7 +1415,11 @@ def render_tag_page(
         for project in projects:
             projects_frag += project_card(project)
 
-    with open(TEMPLATES_DIR / "tag.tmpl", "r") as f:
+    tmpl_path = TEMPLATES_DIR / "tag.tmpl"
+    TIMER.stop()
+    BYTES_RD += file_size(tmpl_path)
+    TIMER.start()
+    with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
     html = tmpl.safe_substitute(
@@ -1435,6 +1443,13 @@ def render_tag_page(
     output_path.parent.mkdir(exist_ok=True, parents=True)
     with open(output_path, "w") as f:
         f.write(html)
+    TIMER.stop()
+    BYTES_WR += file_size(output_path)
+    if gzipped_size(output_path) > TCP_SLOW_START:
+        LARGE_PAGES += [path]
+    else:
+        SMALL_PAGES += 1
+    TIMER.start()
 
 
 if __name__ == "__main__":

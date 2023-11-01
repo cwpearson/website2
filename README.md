@@ -6,6 +6,10 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
+- tags
+  - [x] generate a page for each tag
+  - [ ] add tag links to each page
+  - [ ] add an all-tags page
 - talk metadata
   - [x] date start
   - [x] date end
