@@ -1387,6 +1387,28 @@ def render_tag_page(
     pubs: List[Pub],
     posts: List[Post],
 ):
+    pubs_frag = ""
+    if pubs:
+        pubs_frag += "<h2>Publications</h2>\n"
+        for pub in pubs:
+            pubs_frag += pub_card(pub)
+
+    posts_frag = ""
+    if posts:
+        posts_frag += "<h2>Posts</h2>\n"
+        for post in posts:
+            posts_frag += post_card(post)
+
+    talks_frag = ""
+    if talks:
+        talks_frag += "<h2>Talks</h2>\n"
+        for talk in talks:
+            talks_frag += talk_card(talk)
+
+    projects_frag = ""
+    if projects:
+        projects_frag += "<h2>Projects</h2>\n"
+
     with open(TEMPLATES_DIR / "tag.tmpl", "r") as f:
         tmpl = Template(f.read())
 
@@ -1399,10 +1421,10 @@ def render_tag_page(
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "title": f"#{tag.canonical()}",
-            "pubs_frag": "",
-            "posts_frag": "",
-            "talks_frag": "",
-            "projects_frag": "",
+            "pubs_frag": pubs_frag,
+            "posts_frag": posts_frag,
+            "talks_frag": talks_frag,
+            "projects_frag": projects_frag,
             "footer_frag": footer_frag(),
         }
     )
