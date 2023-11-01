@@ -1408,6 +1408,8 @@ def render_tag_page(
     projects_frag = ""
     if projects:
         projects_frag += "<h2>Projects</h2>\n"
+        for project in projects:
+            projects_frag += project_card(project)
 
     with open(TEMPLATES_DIR / "tag.tmpl", "r") as f:
         tmpl = Template(f.read())
