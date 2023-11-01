@@ -11,6 +11,7 @@ import shutil
 from functools import lru_cache
 import gzip
 import re
+import urllib
 
 import mistletoe
 from mistletoe.contrib.pygments_renderer import PygmentsRenderer
@@ -45,6 +46,19 @@ LINKEDIN_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!
 SCHOALR_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M243.4 2.6l-224 96c-14 6-21.8 21-18.7 35.8S16.8 160 32 160v8c0 13.3 10.7 24 24 24H456c13.3 0 24-10.7 24-24v-8c15.2 0 28.3-10.7 31.3-25.6s-4.8-29.9-18.7-35.8l-224-96c-8-3.4-17.2-3.4-25.2 0zM128 224H64V420.3c-.6 .3-1.2 .7-1.8 1.1l-48 32c-11.7 7.8-17 22.4-12.9 35.9S17.9 512 32 512H480c14.1 0 26.5-9.2 30.6-22.7s-1.1-28.1-12.9-35.9l-48-32c-.6-.4-1.2-.7-1.8-1.1V224H384V416H344V224H280V416H232V224H168V416H128V224zM256 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>'
 
 
+@dataclass(frozen=True)
+class Tag:
+    raw: str
+
+    def canonical(self) -> str:
+        """get a canonicalized version of the tag"""
+        return self.raw.lower().replace(" ", "_")
+
+    def url_component(self) -> str:
+        """get a version of the tag that's safe for a URL"""
+        return urllib.parse.quote(self.canonical())
+
+
 @dataclass
 class PostSpec:
     markdown_path: Path
@@ -74,7 +88,7 @@ class Post:
     math: bool = False  # if post has math in it
     css: str = ""  # post-specific styling
     keywords: List[str] = field(default_factory=list)
-    tags: List[str] = field(default_factory=list)
+    tags: List[Tag] = field(default_factory=list)
     description: str = ""
 
 
@@ -101,6 +115,7 @@ class Pub:
     url_video: str = ""
     description: str = ""
     keywords: List[str] = field(default_factory=list)
+    tags: List[Tag] = field(default_factory=list)
 
 
 @dataclass
@@ -128,6 +143,7 @@ class Talk:
     url_code: List[str] = field(default_factory=list)
     url_video: str = ""
     publication: str = None
+    tags: List[Tag] = field(default_factory=list)
 
 
 @dataclass
@@ -306,7 +322,6 @@ def render_project(spec: ProjectSpec) -> Project:
     if draft:
         return None
     title = frontmatter["title"]
-    tags = frontmatter.get("tags", [])
     create_time = frontmatter["date"]
     create_time = maybe_localize_to_mountain(create_time)
 
@@ -320,7 +335,7 @@ def render_project(spec: ProjectSpec) -> Project:
         title=title,
         body_html=body_html,
         create_time=create_time,
-        tags=tags,
+        tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
     )
 
 
@@ -540,8 +555,8 @@ def render_post(spec: PostSpec) -> Post:
         gallery_html=gallery_html,
         math=math,
         css=frontmatter.get("css", ""),
-        tags=frontmatter.get("tags", []),
-        keywords=frontmatter.get("keywords", []),
+        tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
+        keywords=frontmatter.get("keywords", []) + frontmatter.get("tags", []),
         description=frontmatter.get("description", ""),
     )
 
@@ -566,7 +581,7 @@ def output_post(post: Post):
             "head_frag": head_frag(
                 math=post.math,
                 descr=post.description,
-                keywords=post.tags + post.keywords,
+                keywords=post.keywords,
             ),
             "nav_frag": nav_frag(),
             "body_frag": post.body_html,
@@ -623,6 +638,7 @@ def render_pub(spec: PubSpec) -> Pub:
         url_video=frontmatter.get("url_video", ""),
         description=frontmatter.get("description", ""),
         keywords=frontmatter.get("tags", []) + frontmatter.get("keywords", []),
+        tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
     )
 
 
@@ -728,6 +744,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         url_code=url_code,
         url_video=frontmatter.get("url_video", ""),
         publication=frontmatter.get("publication", None),
+        tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
     )
 
 
@@ -1363,6 +1380,39 @@ def render_talks(talks: List[Talk]) -> str:
     )
 
 
+def render_tag_page(
+    tag: str,
+    projects: List[Project],
+    talks: List[Talk],
+    pubs: List[Pub],
+    posts: List[Post],
+):
+    with open(TEMPLATES_DIR / "tag.tmpl", "r") as f:
+        tmpl = Template(f.read())
+
+    html = tmpl.safe_substitute(
+        {
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("cards.css")
+            + style("footer.css"),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "title": f"#{tag.canonical()}",
+            "pubs_frag": "",
+            "posts_frag": "",
+            "talks_frag": "",
+            "projects_frag": "",
+            "footer_frag": footer_frag(),
+        }
+    )
+
+    output_path = OUTPUT_DIR / "tag" / tag.url_component() / "index.html"
+    output_path.parent.mkdir(exist_ok=True, parents=True)
+    with open(output_path, "w") as f:
+        f.write(html)
+
+
 if __name__ == "__main__":
     shutil.rmtree(OUTPUT_DIR, ignore_errors=True)
 
@@ -1392,6 +1442,30 @@ if __name__ == "__main__":
     projects = [render_project(spec) for spec in project_specs]
     for project in projects:
         output_project(project)
+
+    # collate different kinds of pages for each tag
+    all_tags = {}
+    for kind, pages in [
+        ("projects", projects),
+        ("talks", talks),
+        ("pubs", pubs),
+        ("posts", posts),
+    ]:
+        for page in pages:
+            for tag in page.tags:
+                if tag not in all_tags:
+                    all_tags[tag] = {
+                        "projects": [],
+                        "talks": [],
+                        "pubs": [],
+                        "posts": [],
+                    }
+                all_tags[tag][kind] += [page]
+
+    for tag, pages in all_tags.items():
+        render_tag_page(
+            tag, pages["projects"], pages["talks"], pages["pubs"], pages["posts"]
+        )
 
     index_html = render_index(
         top_k_posts=sorted(posts, key=lambda p: p.create_time, reverse=True)[0:5],
