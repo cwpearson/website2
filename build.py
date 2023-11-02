@@ -727,7 +727,7 @@ def nav_frag() -> str:
     TIMER.stop()
     BYTES_RD += file_size(path)
     TIMER.start()
-    with open(path) as f:
+    with open(path, "r") as f:
         return f.read() + "\n"
 
 
@@ -738,7 +738,7 @@ def style(css) -> str:
     TIMER.stop()
     BYTES_RD += file_size(path)
     TIMER.start()
-    with open(path) as f:
+    with open(path, "r") as f:
         return f.read() + "\n"
 
 
@@ -749,7 +749,7 @@ def template(tmpl_name) -> Template:
     TIMER.stop()
     BYTES_RD += file_size(path)
     TIMER.start()
-    with open(path) as f:
+    with open(path, "r") as f:
         return Template(f.read() + "\n")
 
 
