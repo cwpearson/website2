@@ -219,7 +219,9 @@ def page_abstract_frag(abstract) -> str:
 
 def gzipped_size(path) -> int:
     with open(path, "rb") as f:
-        return len(gzip.compress(f.read()))
+        # just choose a very small level here, so its likely a host
+        # will be compressing at least this much
+        return len(gzip.compress(f.read(), compresslevel=2))
 
 
 def file_size(path) -> int:
@@ -353,10 +355,12 @@ def output_project(project: Project):
         {
             "style_frag": style("navbar.css")
             + style("common.css")
+            + style("tag.css")
             + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": project.body_html,
+            "tags_frag": render_tags_frag(project.tags),
             "footer_frag": footer_frag(
                 edit_url=github_edit_url(
                     project.spec.markdown_path.relative_to(ROOT_DIR)
@@ -575,6 +579,7 @@ def output_post(post: Post):
         {
             "style_frag": style("navbar.css")
             + style("common.css")
+            + style("tag.css")
             + style("post.css")
             + style("footer.css")
             + post.css,
@@ -586,6 +591,7 @@ def output_post(post: Post):
             "nav_frag": nav_frag(),
             "body_frag": post.body_html,
             "gallery_frag": post.gallery_html,
+            "tags_frag": render_tags_frag(post.tags),
             "footer_frag": footer_frag(
                 edit_url=github_edit_url(post.spec.markdown_path.relative_to(ROOT_DIR))
             ),
@@ -817,6 +823,7 @@ def output_talk(talk: Talk):
         {
             "style_frag": style("navbar.css")
             + style("common.css")
+            + style("tag.css")
             + style("talk.css")
             + style("footer.css"),
             "head_frag": head_frag(),
@@ -833,6 +840,7 @@ def output_talk(talk: Talk):
             "video_frag": video_embed_frag(talk.url_video),
             "links_frag": links_frag,
             "slides_object": slides_object,
+            "tags_frag": render_tags_frag(talk.tags),
             "footer_frag": footer_frag(
                 edit_url=github_edit_url(talk.spec.markdown_path.relative_to(ROOT_DIR))
             ),
@@ -978,6 +986,17 @@ def video_embed_frag(url) -> str:
         return tmpl.safe_substitute({"video_id": video_id})
 
 
+def render_tags_frag(tags: List[Tag]) -> str:
+    html = ""
+    for tag in tags:
+        html += f'<div class="tag">\n'
+        html += page_href("/tag/" + tag.url_component(), "#" + tag.canonical())
+        html += "</div>\n"
+    if html:
+        html = f'<div class="tag-container">\n' + html + "</div>\n"
+    return html
+
+
 def output_pub(pub: Pub):
     global BYTES_RD
     tmpl_path = TEMPLATES_DIR / "pub.tmpl"
@@ -1013,6 +1032,7 @@ def output_pub(pub: Pub):
         {
             "style_frag": style("navbar.css")
             + style("common.css")
+            + style("tag.css")
             + style("publication.css")
             + style("footer.css"),
             "head_frag": head_frag(
@@ -1029,6 +1049,7 @@ def output_pub(pub: Pub):
             "links_frag": links_html,
             "body_frag": pub.body_html,
             "video_frag": video_frag,
+            "tags_frag": render_tags_frag(pub.tags),
             "footer_frag": footer_frag(
                 edit_url=github_edit_url(pub.spec.markdown_path.relative_to(ROOT_DIR))
             ),
