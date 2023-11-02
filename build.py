@@ -1038,25 +1038,16 @@ def output_pub(pub: Pub):
     with open(tmpl_path, "r") as f:
         tmpl = Template(f.read())
 
-    links_html = ""
+    links = []
     for url in pub.url_pdf:
-        links_html += f'<div class="link">\n'
-        links_html += page_href(url, "pdf")
-        links_html += "</div>\n"
+        links += [Link(url=url, name="pdf")]
     for url in pub.url_code:
-        links_html += f'<div class="link">\n'
-        links_html += page_href(url, "code")
-        links_html += "</div>\n"
+        links += [Link(url=url, name="code")]
     if pub.url_slides:
-        links_html += f'<div class="link">\n'
-        links_html += page_href(pub.url_slides, "slides")
-        links_html += "</div>\n"
+        links += [Link(url=pub.url_slides, name="slides")]
     if pub.url_poster:
-        links_html += f'<div class="link">\n'
-        links_html += page_href(pub.url_poster, "poster")
-        links_html += "</div>\n"
-    if links_html:
-        links_html = f'<div class="link-container">\n' + links_html + "</div>\n"
+        links += [Link(url=pub.url_poster, name="poster")]
+    links_html, links_css = render_links_frag(links)
 
     video_frag = video_embed_frag(pub.url_video)
 
@@ -1065,6 +1056,7 @@ def output_pub(pub: Pub):
             "style_frag": style("navbar.css")
             + style("common.css")
             + style("tag.css")
+            + links_css
             + style("publication.css")
             + style("footer.css"),
             "head_frag": head_frag(
