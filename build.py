@@ -746,6 +746,39 @@ def find_talks() -> List[TalkSpec]:
     return specs
 
 
+@lru_cache(maxsize=None)
+def nav_frag() -> str:
+    global BYTES_RD
+    path = TEMPLATES_DIR / "navbar_frag.html"
+    TIMER.stop()
+    BYTES_RD += file_size(path)
+    TIMER.start()
+    with open(path) as f:
+        return f.read() + "\n"
+
+
+@lru_cache(maxsize=None)
+def style(css) -> str:
+    global BYTES_RD
+    path = STYLE_DIR / css
+    TIMER.stop()
+    BYTES_RD += file_size(path)
+    TIMER.start()
+    with open(path) as f:
+        return f.read() + "\n"
+
+
+@lru_cache(maxsize=None)
+def template(tmpl_name) -> Template:
+    global BYTES_RD
+    path = TEMPLATES_DIR / tmpl_name
+    TIMER.stop()
+    BYTES_RD += file_size(path)
+    TIMER.start()
+    with open(path) as f:
+        return Template(f.read() + "\n")
+
+
 def render_talk(spec: TalkSpec) -> Pub:
     print(f"==== render {spec.markdown_path}")
     frontmatter, markdown = read_markdown(spec.markdown_path)
@@ -787,12 +820,6 @@ def render_talk(spec: TalkSpec) -> Pub:
 
 def output_talk(talk: Talk):
     global BYTES_RD
-    tmpl_path = TEMPLATES_DIR / "talk.tmpl"
-    TIMER.stop()
-    BYTES_RD += file_size(tmpl_path)
-    TIMER.start()
-    with open(tmpl_path, "r") as f:
-        tmpl = Template(f.read())
 
     location_html = ""
     if talk.location:
@@ -850,7 +877,7 @@ def output_talk(talk: Talk):
             links_frag += "</div>\n"
         links_frag += "</div>\n"
 
-    html = tmpl.safe_substitute(
+    html = template("talk.tmpl").safe_substitute(
         {
             "style_frag": style("navbar.css")
             + style("common.css")
@@ -882,24 +909,6 @@ def output_talk(talk: Talk):
     output_dir.mkdir(parents=True, exist_ok=True)
     html_path = output_dir / "index.html"
     write_file(html_path, html)
-
-
-@lru_cache(maxsize=None)
-def nav_frag() -> str:
-    global BYTES_RD
-    path = TEMPLATES_DIR / "navbar_frag.html"
-    BYTES_RD += file_size(path)
-    with open(path) as f:
-        return f.read() + "\n"
-
-
-@lru_cache(maxsize=None)
-def style(css) -> str:
-    global BYTES_RD
-    path = STYLE_DIR / css
-    BYTES_RD += file_size(path)
-    with open(path) as f:
-        return f.read() + "\n"
 
 
 def copy_static():
