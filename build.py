@@ -1040,9 +1040,16 @@ def output_pub(pub: Pub):
 
     links = []
     for url in pub.url_pdf:
-        links += [Link(url=url, name="pdf")]
+        if "arxiv" in url:
+            links += [Link(url=url, name="arxiv")]
+        else:
+            links += [Link(url=url, name="pdf")]
     for url in pub.url_code:
-        links += [Link(url=url, name="code")]
+        ms = re.findall(".*github.com/(.+)", url)
+        if ms:
+            links += [Link(url=url, name=ms[0])]
+        else:
+            links += [Link(url=url, name="code")]
     if pub.url_slides:
         links += [Link(url=pub.url_slides, name="slides")]
     if pub.url_poster:
