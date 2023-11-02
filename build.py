@@ -60,6 +60,12 @@ class Tag:
 
 
 @dataclass
+class Link:
+    url: str
+    name: str
+
+
+@dataclass
 class PostSpec:
     markdown_path: Path
     # path to the posts's directory, if there is one
@@ -160,6 +166,7 @@ class Project:
     body_html: str
     tags: List[str]
     create_time: datetime.datetime = None
+    links: List[Link] = field(default_factory=list)
 
 
 class Timer:
@@ -316,6 +323,22 @@ def find_projects() -> List[ProjectSpec]:
     return specs
 
 
+def render_links_frag(links: List[Link]) -> Tuple[str, str]:
+    """generates html,css for links"""
+
+    css = style("page_links.css")
+
+    html = ""
+    for link in links:
+        html += '<div class="page-link">\n'
+        html += f'<a href="{link.url}">{link.name}</a>\n'
+        html += "</div>\n"
+
+    if html:
+        html = f'<div class="page-link-container">{html}</div>\n'
+    return html, css
+
+
 def render_project(spec: ProjectSpec) -> Project:
     print(f"==== render {spec.markdown_path}")
     frontmatter, markdown = read_markdown(spec.markdown_path)
@@ -338,11 +361,17 @@ def render_project(spec: ProjectSpec) -> Project:
         body_html=body_html,
         create_time=create_time,
         tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
+        links=[
+            Link(url=link["url"], name=link["name"])
+            for link in frontmatter.get("links", [])
+        ],
     )
 
 
 def output_project(project: Project):
     global BYTES_RD
+
+    links_html, links_css = render_links_frag(project.links)
 
     tmpl_path = TEMPLATES_DIR / "project.tmpl"
     TIMER.stop()
@@ -356,10 +385,12 @@ def output_project(project: Project):
             "style_frag": style("navbar.css")
             + style("common.css")
             + style("tag.css")
+            + links_css
             + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_frag(),
             "body_frag": project.body_html,
+            "links_frag": links_html,
             "tags_frag": render_tags_frag(project.tags),
             "footer_frag": footer_frag(
                 edit_url=github_edit_url(
@@ -853,6 +884,7 @@ def output_talk(talk: Talk):
     write_file(html_path, html)
 
 
+@lru_cache(maxsize=None)
 def nav_frag() -> str:
     global BYTES_RD
     path = TEMPLATES_DIR / "navbar_frag.html"

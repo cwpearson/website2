@@ -6,6 +6,9 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
+- project
+  - [ ] links
+  - [ ] external_link (replace project page)
 - tags
   - [x] generate a page for each tag
   - [x] add tag links to each page
