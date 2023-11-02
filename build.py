@@ -414,19 +414,11 @@ def project_card(project: Project) -> str:
 
 
 def render_projects_index(projects: List[Project]) -> str:
-    global BYTES_RD
-    tmpl_path = TEMPLATES_DIR / "projects.tmpl"
-    TIMER.stop()
-    BYTES_RD += file_size(tmpl_path)
-    TIMER.start()
-    with open(tmpl_path) as f:
-        tmpl = Template(f.read())
-
     project_links = ""
     for project in sorted(projects, key=lambda x: x.create_time, reverse=True):
         project_links += project_card(project)
 
-    return tmpl.safe_substitute(
+    return template("projects.tmpl").safe_substitute(
         {
             "style_frag": style("navbar.css")
             + style("common.css")
