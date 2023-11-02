@@ -369,18 +369,9 @@ def render_project(spec: ProjectSpec) -> Project:
 
 
 def output_project(project: Project):
-    global BYTES_RD
-
     links_html, links_css = render_links_frag(project.links)
 
-    tmpl_path = TEMPLATES_DIR / "project.tmpl"
-    TIMER.stop()
-    BYTES_RD += file_size(tmpl_path)
-    TIMER.start()
-    with open(tmpl_path, "r") as f:
-        tmpl = Template(f.read())
-
-    html = tmpl.safe_substitute(
+    html = template("project.tmpl").safe_substitute(
         {
             "style_frag": style("navbar.css")
             + style("common.css")
@@ -597,16 +588,7 @@ def render_post(spec: PostSpec) -> Post:
 
 
 def output_post(post: Post):
-    global BYTES_RD
-
-    tmpl_path = TEMPLATES_DIR / "post.tmpl"
-    TIMER.stop()
-    BYTES_RD += file_size(tmpl_path)
-    TIMER.start()
-    with open(tmpl_path, "r") as f:
-        tmpl = Template(f.read())
-
-    html = tmpl.safe_substitute(
+    html = template("post.tmpl").safe_substitute(
         {
             "style_frag": style("navbar.css")
             + style("common.css")
@@ -819,8 +801,6 @@ def render_talk(spec: TalkSpec) -> Pub:
 
 
 def output_talk(talk: Talk):
-    global BYTES_RD
-
     location_html = ""
     if talk.location:
         location_html = talk_page_location_div(talk.location)
@@ -1039,14 +1019,6 @@ def render_tags_frag(tags: List[Tag]) -> str:
 
 
 def output_pub(pub: Pub):
-    global BYTES_RD
-    tmpl_path = TEMPLATES_DIR / "pub.tmpl"
-    TIMER.stop()
-    BYTES_RD += file_size(tmpl_path)
-    TIMER.start()
-    with open(tmpl_path, "r") as f:
-        tmpl = Template(f.read())
-
     links = []
     for url in pub.url_pdf:
         if "arxiv" in url:
@@ -1067,7 +1039,7 @@ def output_pub(pub: Pub):
 
     video_frag = video_embed_frag(pub.url_video)
 
-    html = tmpl.safe_substitute(
+    html = template("pub.tmpl").safe_substitute(
         {
             "style_frag": style("navbar.css")
             + style("common.css")
