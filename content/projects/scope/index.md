@@ -16,11 +16,11 @@ image:
 links:
 - icon: github
   icon_pack: fab
-  name: Scope
-  url: https://github.com/c3sr/scope
+  name: cwpearson/libscope
+  url: https://github.com/cwpearson/libscope
 - icon: github
   icon_pack: fab
-  name: Comm|Scope
+  name: c3sr/comm_scope
   url: https://github.com/c3sr/comm_scope
 url_code: ""
 url_pdf: ""
