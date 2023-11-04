@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Tuple, Union, Dict
+from typing import List, Tuple, Union, Dict, Any
 import toml
 import time
 import datetime
@@ -1481,6 +1481,11 @@ def render_tag_page(
     TIMER.start()
 
 
+def resolve_crossrefs(page, posts, projects, publications, talks):
+    """resolve crossreferences to posts, projects, publications, and talks in page"""
+    pass
+
+
 if __name__ == "__main__":
     shutil.rmtree(OUTPUT_DIR, ignore_errors=True)
 
@@ -1488,28 +1493,40 @@ if __name__ == "__main__":
     favicons()
     robots_txt()
 
+    project_specs = find_projects()
+    projects = [render_project(spec) for spec in project_specs]
+
     post_specs = find_posts()
     for ps in post_specs:
         move_post_resources(ps)
     posts = [render_post(spec) for spec in post_specs]
     posts = [p for p in posts if p is not None]
-    for post in posts:
-        output_post(post)
 
     pubs = load_pubs()
-    for pub in pubs:
-        output_pub(pub)
 
     talk_specs = find_talks()
     talks = [render_talk(spec) for spec in talk_specs]
     talks = [t for t in talks if t is not None]
-    for talk in talks:
-        output_talk(talk)
 
-    project_specs = find_projects()
-    projects = [render_project(spec) for spec in project_specs]
+    # resolve cross-references
+    for post in posts:
+        resolve_crossrefs(post, [], projects, pubs, talks)
+    for project in projects:
+        resolve_crossrefs(project, posts, [], pubs, talks)
+    for pub in pubs:
+        resolve_crossrefs(pub, posts, projects, [], talks)
+    for talk in talks:
+        resolve_crossrefs(talk, posts, projects, pubs, [])
+
+    # generate pages
     for project in projects:
         output_project(project)
+    for post in posts:
+        output_post(post)
+    for talk in talks:
+        output_talk(talk)
+    for pub in pubs:
+        output_pub(pub)
 
     # collate different kinds of pages for each tag
     all_tags = {}
