@@ -1,0 +1,6 @@
+/*wrap youtube embeds in this div to easily control aspect ratio*/
+.youtube-embed {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+}

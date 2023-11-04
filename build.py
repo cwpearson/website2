@@ -849,10 +849,13 @@ def output_talk(talk: Talk):
             links_frag += "</div>\n"
         links_frag += "</div>\n"
 
+    video_html, video_css = video_embed_frag(talk.url_video)
+
     html = template("talk.tmpl").safe_substitute(
         {
             "style_frag": style("navbar.css")
             + style("common.css")
+            + video_css
             + style("tag.css")
             + style("talk.css")
             + style("footer.css"),
@@ -867,7 +870,7 @@ def output_talk(talk: Talk):
             "address": address_html,
             "abstract": abstract_frag,
             "body_frag": talk.body_html,
-            "video_frag": video_embed_frag(talk.url_video),
+            "video_frag": video_html,
             "links_frag": links_frag,
             "slides_object": slides_object,
             "tags_frag": render_tags_frag(talk.tags),
@@ -979,24 +982,24 @@ def head_frag(
     return html
 
 
-def video_embed_frag(url) -> str:
-    """takes a url to a video and returns an html fragment to embed it"""
+def video_embed_frag(url) -> Tuple[str, str]:
+    """takes a url to a video and returns an html fragment, css fragment to embed it"""
     if not url:
-        return ""
+        return "", ""
 
     if "youtube.com" in url:
         ms = re.findall(r"\?v=(.*)", url)
         video_id = ms[0]
         with open(TEMPLATES_DIR / "youtube_embed_frag.tmpl", "r") as f:
             tmpl = Template(f.read())
-        return tmpl.safe_substitute({"video_id": video_id})
+        return tmpl.safe_substitute({"video_id": video_id}), style("video.css")
 
     if "vimeo.com" in url:
         ms = re.findall(r"vimeo.com/([^/]*)/?", url)
         video_id = ms[0]
         with open(TEMPLATES_DIR / "vimeo_embed_frag.tmpl", "r") as f:
             tmpl = Template(f.read())
-        return tmpl.safe_substitute({"video_id": video_id})
+        return tmpl.safe_substitute({"video_id": video_id}), style("video.css")
 
 
 def render_tags_frag(tags: List[Tag]) -> str:
@@ -1029,7 +1032,7 @@ def output_pub(pub: Pub):
         links += [Link(url=pub.url_poster, name="poster")]
     links_html, links_css = render_links_frag(links)
 
-    video_frag = video_embed_frag(pub.url_video)
+    video_html, video_css = video_embed_frag(pub.url_video)
 
     html = template("pub.tmpl").safe_substitute(
         {
@@ -1037,6 +1040,7 @@ def output_pub(pub: Pub):
             + style("common.css")
             + style("tag.css")
             + links_css
+            + video_css
             + style("publication.css")
             + style("footer.css"),
             "head_frag": head_frag(
@@ -1052,7 +1056,7 @@ def output_pub(pub: Pub):
             "abstract": pub.abstract,
             "links_frag": links_html,
             "body_frag": pub.body_html,
-            "video_frag": video_frag,
+            "video_frag": video_html,
             "tags_frag": render_tags_frag(pub.tags),
             "footer_frag": footer_frag(
                 edit_url=github_edit_url(pub.spec.markdown_path.relative_to(ROOT_DIR))
