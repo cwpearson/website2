@@ -13,7 +13,9 @@ python build.py && python -m http.server --directory public
 - tags
   - [x] generate a page for each tag
   - [x] add tag links to each page
-  - [ ] add an all-tags page
+  - [x] add an all-tags page
+    - [ ] link to page from individual tag pages
+    - [ ] "c++" appears twice
 - talk metadata
   - [x] date start
   - [x] date end
