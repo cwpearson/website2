@@ -6,6 +6,7 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
+- [ ] remove duplicate HTML keywords
 - project
   - [x] links
   - [ ] external_link (replace project page)
