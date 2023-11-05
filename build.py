@@ -777,10 +777,10 @@ def render_talk(spec: TalkSpec) -> Pub:
     if isinstance(url_code, str):
         url_code = [url_code]
 
-    venue = frontmatter.get("venue", "")
+    event = frontmatter.get("event", "")
     keywords = frontmatter.get("tags", []) + frontmatter.get("keywords", [])
-    if venue:
-        keywords += [venue]
+    if event:
+        keywords += [event]
 
     return Talk(
         spec=spec,
