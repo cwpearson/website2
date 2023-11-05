@@ -187,6 +187,11 @@ class Timer:
 TIMER = Timer()
 
 
+# typevar to return same type as passed
+def uniqify(l: List) -> List:
+    return list(set(l))
+
+
 def github_edit_url(src_rel: str) -> str:
     return f"https://github.com/cwpearson/website2/edit/master/{src_rel}"
 
@@ -575,7 +580,7 @@ def render_post(spec: PostSpec) -> Post:
         math=math,
         css=frontmatter.get("css", ""),
         tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
-        keywords=frontmatter.get("keywords", []) + frontmatter.get("tags", []),
+        keywords=uniqify(frontmatter.get("keywords", []) + frontmatter.get("tags", [])),
         description=frontmatter.get("description", ""),
     )
 
@@ -627,6 +632,7 @@ def render_pub(spec: PubSpec) -> Pub:
     keywords = frontmatter.get("tags", []) + frontmatter.get("keywords", [])
     if venue:
         keywords += [venue]
+    keywords = uniqify(keywords)
 
     url_code = frontmatter.get("url_code", [])
     if isinstance(url_code, str):
@@ -781,6 +787,7 @@ def render_talk(spec: TalkSpec) -> Pub:
     keywords = frontmatter.get("tags", []) + frontmatter.get("keywords", [])
     if event:
         keywords += [event]
+    keywords = uniqify(keywords)
 
     return Talk(
         spec=spec,
