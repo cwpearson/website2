@@ -366,7 +366,7 @@ def render_project(spec: ProjectSpec) -> Project:
         title=title,
         body_html=body_html,
         create_time=create_time,
-        tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
+        tags=[Tag(tag) for tag in uniqify(frontmatter.get("tags", []))],
         links=[
             Link(url=link["url"], name=link["name"])
             for link in frontmatter.get("links", [])
@@ -579,7 +579,7 @@ def render_post(spec: PostSpec) -> Post:
         gallery_html=gallery_html,
         math=math,
         css=frontmatter.get("css", ""),
-        tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
+        tags=[Tag(tag) for tag in uniqify(frontmatter.get("tags", []))],
         keywords=uniqify(frontmatter.get("keywords", []) + frontmatter.get("tags", [])),
         description=frontmatter.get("description", ""),
     )
@@ -660,7 +660,7 @@ def render_pub(spec: PubSpec) -> Pub:
         url_video=frontmatter.get("url_video", ""),
         description=frontmatter.get("description", ""),
         keywords=keywords,
-        tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
+        tags=[Tag(tag) for tag in uniqify(frontmatter.get("tags", []))],
     )
 
 
@@ -805,7 +805,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         url_code=url_code,
         url_video=frontmatter.get("url_video", ""),
         publication=frontmatter.get("publication", None),
-        tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
+        tags=[Tag(tag) for tag in uniqify(frontmatter.get("tags", []))],
         keywords=keywords,
     )
 
@@ -1489,7 +1489,7 @@ def render_tag_page(
         }
     )
 
-    output_path = OUTPUT_DIR / "tag" / tag.url_component() / "index.html"
+    output_path = OUTPUT_DIR / "tag" / tag.canonical() / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     with open(output_path, "w") as f:
         f.write(html)
@@ -1505,6 +1505,29 @@ def render_tag_page(
 def resolve_crossrefs(page, posts, projects, publications, talks):
     """resolve crossreferences to posts, projects, publications, and talks in page"""
     pass
+
+
+def render_tags(tags: List[Tag]) -> str:
+    body_html = ""
+    for tag in sorted(tags, key=lambda t: t.canonical()):
+        body_html += '<div class="tag">\n'
+        body_html += f'<a href="/tag/{tag.url_component()}">#{tag.canonical()}</a>'
+        body_html += "</div>\n"
+    if body_html:
+        body_html = f'<div class="tag-container">\n{body_html}</div>\n'
+
+    return template("tags.tmpl").safe_substitute(
+        {
+            "style_frag": style("navbar.css")
+            + style("common.css")
+            + style("tag.css")
+            + style("footer.css"),
+            "head_frag": head_frag(),
+            "nav_frag": nav_frag(),
+            "body_frag": body_html,
+            "footer_frag": footer_frag(),
+        }
+    )
 
 
 if __name__ == "__main__":
@@ -1596,6 +1619,9 @@ if __name__ == "__main__":
 
     projects_html = render_projects_index(projects)
     output_html("projects", projects_html)
+
+    tags_html = render_tags(all_tags.keys())
+    output_html("tags", tags_html)
 
     copy_static()
     copy_thirdparty()
