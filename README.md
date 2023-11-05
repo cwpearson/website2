@@ -23,6 +23,7 @@ python build.py && python -m http.server --directory public
     - [ ] embed doesn't do anything useful in mobile safari
     - [ ] embed if pdf using pdf.js?
   - [ ] publication cross-reference  
+  - [x] add venue to keywords
 - publication metadata
   - [x] pdf
   - [x] slides
@@ -33,6 +34,7 @@ python build.py && python -m http.server --directory public
     - [x] youtube
     - [x] vimeo
   - [ ] project cross-reference
+  - [x] add venue to keywords
 - robots.txt
   - [x] allow all
   - [x] disallow AI

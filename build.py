@@ -150,6 +150,7 @@ class Talk:
     url_video: str = ""
     publication: str = None
     tags: List[Tag] = field(default_factory=list)
+    keywords: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -623,6 +624,10 @@ def render_pub(spec: PubSpec) -> Pub:
     else:
         venue_html = ""
 
+    keywords = frontmatter.get("tags", []) + frontmatter.get("keywords", [])
+    if venue:
+        keywords += [venue]
+
     url_code = frontmatter.get("url_code", [])
     if isinstance(url_code, str):
         url_code = [url_code]
@@ -648,7 +653,7 @@ def render_pub(spec: PubSpec) -> Pub:
         url_poster=frontmatter.get("url_poster", ""),
         url_video=frontmatter.get("url_video", ""),
         description=frontmatter.get("description", ""),
-        keywords=frontmatter.get("tags", []) + frontmatter.get("keywords", []),
+        keywords=keywords,
         tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
     )
 
@@ -772,6 +777,11 @@ def render_talk(spec: TalkSpec) -> Pub:
     if isinstance(url_code, str):
         url_code = [url_code]
 
+    venue = frontmatter.get("venue", "")
+    keywords = frontmatter.get("tags", []) + frontmatter.get("keywords", [])
+    if venue:
+        keywords += [venue]
+
     return Talk(
         spec=spec,
         title=title,
@@ -789,6 +799,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         url_video=frontmatter.get("url_video", ""),
         publication=frontmatter.get("publication", None),
         tags=[Tag(tag) for tag in frontmatter.get("tags", [])],
+        keywords=keywords,
     )
 
 
@@ -859,7 +870,10 @@ def output_talk(talk: Talk):
             + style("tag.css")
             + style("talk.css")
             + style("footer.css"),
-            "head_frag": head_frag(),
+            "head_frag": head_frag(
+                title=talk.title,
+                keywords=talk.keywords,
+            ),
             "nav_frag": nav_frag(),
             "title": talk.title,
             "authors": talk.authors_html,
