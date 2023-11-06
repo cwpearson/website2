@@ -6,6 +6,8 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
+- [x] move html fragments to their own folder
+- [ ] have most functions return html + needed style
 - [x] remove duplicate HTML keywords
 - project
   - [x] links

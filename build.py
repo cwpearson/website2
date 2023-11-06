@@ -27,13 +27,14 @@ SMALL_PAGES = 0
 
 ROOT_DIR = Path(__file__).parent
 CONTENT_DIR = ROOT_DIR / "content"
-TEMPLATES_DIR = ROOT_DIR / "templates"
+FRAGMENTS_DIR = ROOT_DIR / "fragments"
 POSTS_DIR = ROOT_DIR / "posts"
 PUBS_DIR = ROOT_DIR / "publications"
 STATIC_DIR = ROOT_DIR / "static"
-THIRDPARTY_DIR = ROOT_DIR / "thirdparty"
 STYLE_DIR = ROOT_DIR / "style"
 TALKS_DIR = ROOT_DIR / "talks"
+TEMPLATES_DIR = ROOT_DIR / "templates"
+THIRDPARTY_DIR = ROOT_DIR / "thirdparty"
 
 OUTPUT_DIR = ROOT_DIR / "public"
 
@@ -377,15 +378,16 @@ def render_project(spec: ProjectSpec) -> Project:
 def output_project(project: Project):
     links_html, links_css = render_links_frag(project.links)
 
+    nav_html, nav_css = nav_frag()
     html = template("project.tmpl").safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("tag.css")
             + links_css
             + style("footer.css"),
             "head_frag": head_frag(),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "body_frag": project.body_html,
             "links_frag": links_html,
             "tags_frag": render_tags_frag(project.tags),
@@ -424,13 +426,12 @@ def render_projects_index(projects: List[Project]) -> str:
     for project in sorted(projects, key=lambda x: x.create_time, reverse=True):
         project_links += project_card(project)
 
+    nav_html, nav_css = nav_frag()
     return template("projects.tmpl").safe_substitute(
         {
-            "style_frag": style("navbar.css")
-            + style("common.css")
-            + style("footer.css"),
+            "style_frag": nav_css + style("common.css") + style("footer.css"),
             "head_frag": head_frag(),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "body_frag": project_links,
             "footer_frag": footer_frag(),
         }
@@ -586,9 +587,10 @@ def render_post(spec: PostSpec) -> Post:
 
 
 def output_post(post: Post):
+    nav_html, nav_css = nav_frag()
     html = template("post.tmpl").safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("tag.css")
             + style("post.css")
@@ -599,7 +601,7 @@ def output_post(post: Post):
                 descr=post.description,
                 keywords=post.keywords,
             ),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "body_frag": post.body_html,
             "gallery_frag": post.gallery_html,
             "tags_frag": render_tags_frag(post.tags),
@@ -732,14 +734,25 @@ def find_talks() -> List[TalkSpec]:
 
 
 @lru_cache(maxsize=None)
-def nav_frag() -> str:
+def fragment(name) -> str:
     global BYTES_RD
-    path = TEMPLATES_DIR / "navbar_frag.html"
+    path = FRAGMENTS_DIR / name
     TIMER.stop()
     BYTES_RD += file_size(path)
     TIMER.start()
     with open(path, "r") as f:
         return f.read() + "\n"
+
+
+@lru_cache(maxsize=None)
+def katex_frag() -> str:
+    return fragment("katex_frag.html")
+
+
+@lru_cache(maxsize=None)
+def nav_frag() -> Tuple[str, str]:
+    """returns html + css for navbar"""
+    return fragment("navbar_frag.html"), style("navbar.css")
 
 
 @lru_cache(maxsize=None)
@@ -868,10 +881,11 @@ def output_talk(talk: Talk):
         links_frag += "</div>\n"
 
     video_html, video_css = video_embed_frag(talk.url_video)
+    nav_html, nav_css = nav_frag()
 
     html = template("talk.tmpl").safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + video_css
             + style("tag.css")
@@ -881,7 +895,7 @@ def output_talk(talk: Talk):
                 title=talk.title,
                 keywords=talk.keywords,
             ),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "title": talk.title,
             "authors": talk.authors_html,
             "time": time_html,
@@ -989,12 +1003,7 @@ def head_frag(
         html += f'<meta name="keywords" content="{",".join(keywords)}">\n'
 
     if math:
-        katex_path = TEMPLATES_DIR / "katex_frag.html"
-        TIMER.stop()
-        BYTES_RD += file_size(katex_path)
-        TIMER.start()
-        with open(katex_path) as f:
-            html += f.read() + "\n"
+        html += katex_frag()
 
     html += '<link rel="icon" type="image/x-icon" href="/favicon.ico"/>\n'
 
@@ -1054,10 +1063,11 @@ def output_pub(pub: Pub):
     links_html, links_css = render_links_frag(links)
 
     video_html, video_css = video_embed_frag(pub.url_video)
+    nav_html, nav_css = nav_frag()
 
     html = template("pub.tmpl").safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("tag.css")
             + links_css
@@ -1069,7 +1079,7 @@ def output_pub(pub: Pub):
                 descr=pub.description,
                 keywords=pub.keywords,
             ),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "title": pub.title,
             "authors": pub.authors_html,
             "venue": pub.venue_html,
@@ -1129,9 +1139,11 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
         )
     )
 
+    nav_html, nav_css = nav_frag()
+
     return tmpl.safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("cards.css")
             + style("index.css")
@@ -1140,7 +1152,7 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
                 title="Carl Pearson",
                 descr="Personal site for Carl pearson",
             ),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "bio_text": bio,
             "email_svg": EMAIL_SVG,
             "linkedin_svg": LINKEDIN_SVG,
@@ -1173,15 +1185,15 @@ def render_experience() -> str:
     descr = frontmatter["description"]
 
     body_frag = mistletoe.markdown(md_str)
-
+    nav_html, nav_css = nav_frag()
     return tmpl.safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("index.css")
             + style("footer.css"),
             "head_frag": head_frag(title=title, descr=descr),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "title": title,
             "body_frag": body_frag,
             "footer_frag": footer_frag(edit_url=github_edit_url("experience.md")),
@@ -1199,14 +1211,16 @@ def render_recognition() -> str:
     title = frontmatter["title"]
     descr = frontmatter["description"]
 
+    nav_html, nav_css = nav_frag()
+
     return tmpl.safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("index.css")
             + style("footer.css"),
             "head_frag": head_frag(title=title, descr=descr),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "title": title,
             "body_frag": body_frag,
             "footer_frag": footer_frag(edit_url=github_edit_url("recognition.md")),
@@ -1294,14 +1308,15 @@ def render_publications(pubs: List[Pub]) -> str:
     for pub in sorted(pubs, key=lambda x: x.date, reverse=True):
         pub_links += pub_card(pub)
 
+    nav_html, nav_css = nav_frag()
     return tmpl.safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("cards.css")
             + style("footer.css"),
             "head_frag": head_frag(),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "body_frag": pub_links,
             "footer_frag": footer_frag(),
         }
@@ -1348,13 +1363,12 @@ def render_posts(posts: List[Post]) -> str:
     for post in sorted(posts, key=lambda x: x.create_time, reverse=True):
         post_links += post_card(post)
 
+    nav_html, nav_css = nav_frag()
     return tmpl.safe_substitute(
         {
-            "style_frag": style("navbar.css")
-            + style("common.css")
-            + style("footer.css"),
+            "style_frag": nav_css + style("common.css") + style("footer.css"),
             "head_frag": head_frag(),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "body_frag": post_links,
             "footer_frag": footer_frag(),
         }
@@ -1416,14 +1430,15 @@ def render_talks(talks: List[Talk]) -> str:
     for talk in sorted(talks, key=bytime, reverse=True):
         talk_links += talk_card(talk)
 
+    nav_html, nav_css = nav_frag()
     return tmpl.safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("cards.css")
             + style("footer.css"),
             "head_frag": head_frag(),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "body_frag": talk_links,
             "footer_frag": footer_frag(),
         }
@@ -1465,21 +1480,15 @@ def render_tag_page(
         for project in projects:
             projects_frag += project_card(project)
 
-    tmpl_path = TEMPLATES_DIR / "tag.tmpl"
-    TIMER.stop()
-    BYTES_RD += file_size(tmpl_path)
-    TIMER.start()
-    with open(tmpl_path, "r") as f:
-        tmpl = Template(f.read())
-
-    html = tmpl.safe_substitute(
+    nav_html, nav_css = nav_frag()
+    html = template("tag.tmpl").safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("cards.css")
             + style("footer.css"),
             "head_frag": head_frag(),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "title": f"#{tag.canonical()}",
             "pubs_frag": pubs_frag,
             "posts_frag": posts_frag,
@@ -1516,14 +1525,15 @@ def render_tags(tags: List[Tag]) -> str:
     if body_html:
         body_html = f'<div class="tag-container">\n{body_html}</div>\n'
 
+    nav_html, nav_css = nav_frag()
     return template("tags.tmpl").safe_substitute(
         {
-            "style_frag": style("navbar.css")
+            "style_frag": nav_css
             + style("common.css")
             + style("tag.css")
             + style("footer.css"),
             "head_frag": head_frag(),
-            "nav_frag": nav_frag(),
+            "nav_frag": nav_html,
             "body_frag": body_html,
             "footer_frag": footer_frag(),
         }
