@@ -20,7 +20,7 @@ python build.py && python -m http.server --directory public
   - [x] add tag links to each page
   - [x] add an all-tags page
     - [ ] link to page from individual tag pages
-    - [ ] "c++" appears twice
+    - [x] "c++" appears twice
 - talk metadata
   - [x] date start
   - [x] date end
