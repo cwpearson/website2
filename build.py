@@ -51,13 +51,20 @@ SCHOALR_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!-
 class Tag:
     raw: str
 
-    def canonical(self) -> str:
-        """get a canonicalized version of the tag"""
-        return self.raw.lower().replace(" ", "_")
+    def string(self) -> str:
+        return self.raw
 
     def url_component(self) -> str:
         """get a version of the tag that's safe for a URL"""
-        return urllib.parse.quote(self.canonical())
+        return urllib.parse.quote(self.raw)
+
+
+def canonical_tags(l: List[str]) -> List[Tag]:
+    """returns a list of canonical tags for a list of strings"""
+    s = set()
+    for tag in l:
+        s.add(Tag(tag.lower().replace(" ", "_")))
+    return list(s)
 
 
 @dataclass
@@ -356,6 +363,7 @@ def render_project(spec: ProjectSpec) -> Project:
     title = frontmatter["title"]
     create_time = frontmatter["date"]
     create_time = maybe_localize_to_mountain(create_time)
+    raw_tags = frontmatter.get("tags", [])
 
     body_html = ""
     body_html += f"<h1>{title}</h1>\n"
@@ -367,7 +375,7 @@ def render_project(spec: ProjectSpec) -> Project:
         title=title,
         body_html=body_html,
         create_time=create_time,
-        tags=[Tag(tag) for tag in uniqify(frontmatter.get("tags", []))],
+        tags=canonical_tags(raw_tags),
         links=[
             Link(url=link["url"], name=link["name"])
             for link in frontmatter.get("links", [])
@@ -565,6 +573,7 @@ def render_post(spec: PostSpec) -> Post:
     ]
 
     gallery_html = render_gallery_frag(gallery_items)
+    raw_tags = frontmatter.get("tags", [])
 
     body_html = ""
     body_html += f"<h1>{title}</h1>\n"
@@ -580,8 +589,8 @@ def render_post(spec: PostSpec) -> Post:
         gallery_html=gallery_html,
         math=math,
         css=frontmatter.get("css", ""),
-        tags=[Tag(tag) for tag in uniqify(frontmatter.get("tags", []))],
-        keywords=uniqify(frontmatter.get("keywords", []) + frontmatter.get("tags", [])),
+        tags=canonical_tags(raw_tags),
+        keywords=uniqify(frontmatter.get("keywords", []) + raw_tags),
         description=frontmatter.get("description", ""),
     )
 
@@ -624,6 +633,7 @@ def render_pub(spec: PubSpec) -> Pub:
     title = frontmatter["title"]
     date = normalize_and_localize(frontmatter["date"])
     authors_html = authors_span(frontmatter.get("authors", []))
+    raw_tags = frontmatter.get("tags", [])
 
     venue = frontmatter.get("venue", "")
     if venue:
@@ -631,7 +641,7 @@ def render_pub(spec: PubSpec) -> Pub:
     else:
         venue_html = ""
 
-    keywords = frontmatter.get("tags", []) + frontmatter.get("keywords", [])
+    keywords = raw_tags + frontmatter.get("keywords", [])
     if venue:
         keywords += [venue]
     keywords = uniqify(keywords)
@@ -662,7 +672,7 @@ def render_pub(spec: PubSpec) -> Pub:
         url_video=frontmatter.get("url_video", ""),
         description=frontmatter.get("description", ""),
         keywords=keywords,
-        tags=[Tag(tag) for tag in uniqify(frontmatter.get("tags", []))],
+        tags=canonical_tags(raw_tags),
     )
 
 
@@ -787,6 +797,7 @@ def render_talk(spec: TalkSpec) -> Pub:
     time_end = frontmatter.get("time_end", None)
 
     authors_html = authors_span(frontmatter.get("authors", []))
+    raw_tags = frontmatter.get("tags", [])
 
     body_html = ""
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
@@ -797,7 +808,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         url_code = [url_code]
 
     event = frontmatter.get("event", "")
-    keywords = frontmatter.get("tags", []) + frontmatter.get("keywords", [])
+    keywords = raw_tags + frontmatter.get("keywords", [])
     if event:
         keywords += [event]
     keywords = uniqify(keywords)
@@ -818,7 +829,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         url_code=url_code,
         url_video=frontmatter.get("url_video", ""),
         publication=frontmatter.get("publication", None),
-        tags=[Tag(tag) for tag in uniqify(frontmatter.get("tags", []))],
+        tags=canonical_tags(raw_tags),
         keywords=keywords,
     )
 
@@ -1036,7 +1047,7 @@ def render_tags_frag(tags: List[Tag]) -> str:
     html = ""
     for tag in tags:
         html += f'<div class="tag">\n'
-        html += page_href("/tag/" + tag.url_component(), "#" + tag.canonical())
+        html += page_href("/tag/" + tag.url_component(), "#" + tag.string())
         html += "</div>\n"
     if html:
         html = f'<div class="tag-container">\n' + html + "</div>\n"
@@ -1489,7 +1500,7 @@ def render_tag_page(
             + style("footer.css"),
             "head_frag": head_frag(),
             "nav_frag": nav_html,
-            "title": f"#{tag.canonical()}",
+            "title": f"#{tag.string()}",
             "pubs_frag": pubs_frag,
             "posts_frag": posts_frag,
             "talks_frag": talks_frag,
@@ -1498,7 +1509,7 @@ def render_tag_page(
         }
     )
 
-    output_path = OUTPUT_DIR / "tag" / tag.canonical() / "index.html"
+    output_path = OUTPUT_DIR / "tag" / tag.string() / "index.html"
     output_path.parent.mkdir(exist_ok=True, parents=True)
     with open(output_path, "w") as f:
         f.write(html)
@@ -1518,9 +1529,9 @@ def resolve_crossrefs(page, posts, projects, publications, talks):
 
 def render_tags(tags: List[Tag]) -> str:
     body_html = ""
-    for tag in sorted(tags, key=lambda t: t.canonical()):
+    for tag in sorted(tags, key=lambda t: t.string()):
         body_html += '<div class="tag">\n'
-        body_html += f'<a href="/tag/{tag.url_component()}">#{tag.canonical()}</a>'
+        body_html += f'<a href="/tag/{tag.url_component()}">#{tag.string()}</a>'
         body_html += "</div>\n"
     if body_html:
         body_html = f'<div class="tag-container">\n{body_html}</div>\n'

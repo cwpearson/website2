@@ -6,13 +6,16 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
-- [x] move html fragments to their own folder
-- [ ] have most functions return html + needed style
+- have most functions return html + needed style
+  - [x] navbar
+  - [ ] footer
+  - [ ] tags
 - [x] remove duplicate HTML keywords
 - project
   - [x] links
   - [ ] external_link (replace project page)
 - tags
+  - [x] canonicalize tags when reading (prevents duplicates later)
   - [x] generate a page for each tag
   - [x] add tag links to each page
   - [x] add an all-tags page
@@ -55,3 +58,4 @@ python build.py && python -m http.server --directory public
 - [x] favicon
 - [x] edit this page on Github
 - [x] only load math for a page if frontmatter has math = true
+- [x] move html fragments to their own folder
