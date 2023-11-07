@@ -1,7 +1,5 @@
 +++
 title = "Evaluating Characteristics of CUDA Communication Primitives on High-Bandwidth Interconnects"
-draft = false
-
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
 time_start = 2019-04-10T16:00:00
@@ -41,7 +39,7 @@ projects = ["scope"]
 
 # Tags (optional).
 #   Set `tags = []` for no tags, or use the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
-tags = []
+tags = ["microbenchmark", "bandwidth", "latency", "CUDA", "nvlink", "pcie", "POWER8", "POWER9", "x86", "cache", "GPU"]
 
 # Slides (optional).
 #   Associate this talk with Markdown slides.

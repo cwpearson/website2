@@ -41,7 +41,7 @@ projects = ["scope"]
 
 # Tags (optional).
 #   Set `tags = []` for no tags, or use the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
-tags = []
+tags = ["microbenchmark", "bandwidth", "latency", "CUDA", "nvlink", "pcie", "POWER8", "POWER9", "x86", "cache", "GPU"]
 
 # Slides (optional).
 #   Associate this talk with Markdown slides.

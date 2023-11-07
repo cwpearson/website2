@@ -23,7 +23,7 @@ time_end: 2020-02-28T15:00:00-06:00
 all_day: false
 
 authors: ["Carl Pearson"]
-tags: []
+tags: ["stencil", "GPU"]
 
 # Is this a featured talk? (true/false)
 featured: true

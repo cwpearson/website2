@@ -7,7 +7,7 @@ draft = false
 # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
 authors = ["Carl Pearson"]
 
-tags = ["c3sr"]
+tags = []
 
 summary = "I MC'ed the Center for Cognitive Computing and Systems Research anniversary celebration."
 

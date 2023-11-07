@@ -2,7 +2,7 @@
 title: Using Kokkos to Tpetra Finite Element Assembly
 time_start: 2023-11-01T14:30:00-06:00
 time_end: 2023-11-01T15:00:00-06:00
-tags: []
+tags: ["kokkos", "tpetra", "finite elements"]
 authors: ["Carl Pearson", "Christopher M. Siefert"]
 event: Trilinos User Group Meeting
 event_url: https://trilinos.github.io/trilinos_user-developer_group_meeting_2023.html

@@ -20,7 +20,7 @@ time_start: 2020-04-16
 all_day: true
 
 authors: ["Carl Pearson"]
-tags: []
+tags: ["nvidia", "nsight", "profiling", "GPU"]
 
 # Is this a featured talk? (true/false)
 featured: false
