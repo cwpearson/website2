@@ -387,23 +387,22 @@ def output_project(project: Project):
     links_html, links_css = render_links_frag(project.links)
 
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag(
+        edit_url=github_edit_url(project.spec.markdown_path.relative_to(ROOT_DIR))
+    )
     html = template("project.tmpl").safe_substitute(
         {
             "style_frag": nav_css
             + style("common.css")
             + style("tag.css")
             + links_css
-            + style("footer.css"),
+            + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,
             "body_frag": project.body_html,
             "links_frag": links_html,
             "tags_frag": render_tags_frag(project.tags),
-            "footer_frag": footer_frag(
-                edit_url=github_edit_url(
-                    project.spec.markdown_path.relative_to(ROOT_DIR)
-                )
-            ),
+            "footer_frag": footer_html,
         }
     )
     output_dir = OUTPUT_DIR / project.spec.output_dir
@@ -435,13 +434,14 @@ def render_projects_index(projects: List[Project]) -> str:
         project_links += project_card(project)
 
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag()
     return template("projects.tmpl").safe_substitute(
         {
-            "style_frag": nav_css + style("common.css") + style("footer.css"),
+            "style_frag": nav_css + style("common.css") + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,
             "body_frag": project_links,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_html,
         }
     )
 
@@ -597,13 +597,16 @@ def render_post(spec: PostSpec) -> Post:
 
 def output_post(post: Post):
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag(
+        edit_url=github_edit_url(post.spec.markdown_path.relative_to(ROOT_DIR))
+    )
     html = template("post.tmpl").safe_substitute(
         {
             "style_frag": nav_css
             + style("common.css")
             + style("tag.css")
             + style("post.css")
-            + style("footer.css")
+            + footer_css
             + post.css,
             "head_frag": head_frag(
                 math=post.math,
@@ -614,9 +617,7 @@ def output_post(post: Post):
             "body_frag": post.body_html,
             "gallery_frag": post.gallery_html,
             "tags_frag": render_tags_frag(post.tags),
-            "footer_frag": footer_frag(
-                edit_url=github_edit_url(post.spec.markdown_path.relative_to(ROOT_DIR))
-            ),
+            "footer_frag": footer_html,
         }
     )
     output_dir = OUTPUT_DIR / post.spec.output_dir
@@ -893,6 +894,9 @@ def output_talk(talk: Talk):
 
     video_html, video_css = video_embed_frag(talk.url_video)
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag(
+        edit_url=github_edit_url(talk.spec.markdown_path.relative_to(ROOT_DIR))
+    )
 
     html = template("talk.tmpl").safe_substitute(
         {
@@ -901,7 +905,7 @@ def output_talk(talk: Talk):
             + video_css
             + style("tag.css")
             + style("talk.css")
-            + style("footer.css"),
+            + footer_css,
             "head_frag": head_frag(
                 title=talk.title,
                 keywords=talk.keywords,
@@ -920,9 +924,7 @@ def output_talk(talk: Talk):
             "links_frag": links_frag,
             "slides_object": slides_object,
             "tags_frag": render_tags_frag(talk.tags),
-            "footer_frag": footer_frag(
-                edit_url=github_edit_url(talk.spec.markdown_path.relative_to(ROOT_DIR))
-            ),
+            "footer_frag": footer_html,
         }
     )
     output_dir = OUTPUT_DIR / talk.spec.output_dir
@@ -974,7 +976,8 @@ def copy_thirdparty():
 SHA = None
 
 
-def footer_frag(edit_url="") -> str:
+def footer_frag(edit_url="") -> Tuple[str, str]:
+    """returns html,css for the footer"""
     global SHA
     now_str = datetime.datetime.now().strftime("%x")
     if SHA is None:
@@ -994,7 +997,7 @@ def footer_frag(edit_url="") -> str:
         html += f'<div><a href="{edit_url}">edit</a></div>\n'
     html += "</div>\n"
     html += "</div>\n"
-    return html
+    return html, style("footer.css")
 
 
 def head_frag(
@@ -1075,6 +1078,9 @@ def output_pub(pub: Pub):
 
     video_html, video_css = video_embed_frag(pub.url_video)
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag(
+        edit_url=github_edit_url(pub.spec.markdown_path.relative_to(ROOT_DIR))
+    )
 
     html = template("pub.tmpl").safe_substitute(
         {
@@ -1084,7 +1090,7 @@ def output_pub(pub: Pub):
             + links_css
             + video_css
             + style("publication.css")
-            + style("footer.css"),
+            + footer_css,
             "head_frag": head_frag(
                 pub.title,
                 descr=pub.description,
@@ -1100,9 +1106,7 @@ def output_pub(pub: Pub):
             "body_frag": pub.body_html,
             "video_frag": video_html,
             "tags_frag": render_tags_frag(pub.tags),
-            "footer_frag": footer_frag(
-                edit_url=github_edit_url(pub.spec.markdown_path.relative_to(ROOT_DIR))
-            ),
+            "footer_frag": footer_html,
         }
     )
     output_dir = OUTPUT_DIR / pub.spec.output_dir
@@ -1151,6 +1155,7 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
     )
 
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag(edit_url=github_edit_url("index.md"))
 
     return tmpl.safe_substitute(
         {
@@ -1158,7 +1163,7 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
             + style("common.css")
             + style("cards.css")
             + style("index.css")
-            + style("footer.css"),
+            + footer_css,
             "head_frag": head_frag(
                 title="Carl Pearson",
                 descr="Personal site for Carl pearson",
@@ -1171,7 +1176,7 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
             "scholar_svg": SCHOALR_SVG,
             "top_k_posts_frag": top_k_posts_frag,
             "top_k_pubs_frag": top_k_pubs_frag,
-            "footer_frag": footer_frag(edit_url=github_edit_url("index.md")),
+            "footer_frag": footer_html,
         }
     )
 
@@ -1197,17 +1202,18 @@ def render_experience() -> str:
 
     body_frag = mistletoe.markdown(md_str)
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag(edit_url=github_edit_url("experience.md"))
     return tmpl.safe_substitute(
         {
             "style_frag": nav_css
             + style("common.css")
             + style("index.css")
-            + style("footer.css"),
+            + footer_css,
             "head_frag": head_frag(title=title, descr=descr),
             "nav_frag": nav_html,
             "title": title,
             "body_frag": body_frag,
-            "footer_frag": footer_frag(edit_url=github_edit_url("experience.md")),
+            "footer_frag": footer_html,
         }
     )
 
@@ -1223,18 +1229,19 @@ def render_recognition() -> str:
     descr = frontmatter["description"]
 
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag(edit_url=github_edit_url("recognition.md"))
 
     return tmpl.safe_substitute(
         {
             "style_frag": nav_css
             + style("common.css")
             + style("index.css")
-            + style("footer.css"),
+            + footer_css,
             "head_frag": head_frag(title=title, descr=descr),
             "nav_frag": nav_html,
             "title": title,
             "body_frag": body_frag,
-            "footer_frag": footer_frag(edit_url=github_edit_url("recognition.md")),
+            "footer_frag": footer_html,
         }
     )
 
@@ -1320,16 +1327,17 @@ def render_publications(pubs: List[Pub]) -> str:
         pub_links += pub_card(pub)
 
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag()
     return tmpl.safe_substitute(
         {
             "style_frag": nav_css
             + style("common.css")
             + style("cards.css")
-            + style("footer.css"),
+            + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,
             "body_frag": pub_links,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_html,
         }
     )
 
@@ -1375,13 +1383,14 @@ def render_posts(posts: List[Post]) -> str:
         post_links += post_card(post)
 
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag()
     return tmpl.safe_substitute(
         {
-            "style_frag": nav_css + style("common.css") + style("footer.css"),
+            "style_frag": nav_css + style("common.css") + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,
             "body_frag": post_links,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_html,
         }
     )
 
@@ -1442,16 +1451,17 @@ def render_talks(talks: List[Talk]) -> str:
         talk_links += talk_card(talk)
 
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag()
     return tmpl.safe_substitute(
         {
             "style_frag": nav_css
             + style("common.css")
             + style("cards.css")
-            + style("footer.css"),
+            + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,
             "body_frag": talk_links,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_html,
         }
     )
 
@@ -1492,12 +1502,13 @@ def render_tag_page(
             projects_frag += project_card(project)
 
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag()
     html = template("tag.tmpl").safe_substitute(
         {
             "style_frag": nav_css
             + style("common.css")
             + style("cards.css")
-            + style("footer.css"),
+            + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,
             "title": f"#{tag.string()}",
@@ -1505,7 +1516,7 @@ def render_tag_page(
             "posts_frag": posts_frag,
             "talks_frag": talks_frag,
             "projects_frag": projects_frag,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_html,
         }
     )
 
@@ -1537,16 +1548,14 @@ def render_tags(tags: List[Tag]) -> str:
         body_html = f'<div class="tag-container">\n{body_html}</div>\n'
 
     nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag()
     return template("tags.tmpl").safe_substitute(
         {
-            "style_frag": nav_css
-            + style("common.css")
-            + style("tag.css")
-            + style("footer.css"),
+            "style_frag": nav_css + style("common.css") + style("tag.css") + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,
             "body_frag": body_html,
-            "footer_frag": footer_frag(),
+            "footer_frag": footer_html,
         }
     )
 

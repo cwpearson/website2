@@ -1,6 +1,6 @@
 +++
 title = "Experience"
-description = ""
+description = "Carl Pearson's industry and academic experience"
 date = ""
 aliases = []
 author = "Carl Pearson"

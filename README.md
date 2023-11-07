@@ -8,7 +8,7 @@ python build.py && python -m http.server --directory public
 
 - have most functions return html + needed style
   - [x] navbar
-  - [ ] footer
+  - [x] footer
   - [ ] tags
 - [x] remove duplicate HTML keywords
 - project
