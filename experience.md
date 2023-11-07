@@ -100,7 +100,7 @@ See the [Github repository](https://github.com/cwpearson/nvidia-performance-tool
 
 ## Volunteer
 
-### University Laboratory High School Board of Directors
+### University Laboratory High School Alumni Association Board of Directors
 * Urbana, IL
 * April 2023 - present
 
