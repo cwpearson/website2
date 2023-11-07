@@ -2,7 +2,7 @@
 title = "Collaborative (CPU+ GPU) Algorithms for Triangle Counting and Truss Decomposition"
 date = 2018-09-25
 draft = false
-tags = ["pangolin"]
+tags = ["triangle counting", "k-truss", "CUDA", "NVGraph", "minsky", "power8", "nvlink", "P100"]
 authors = ["Vikram S. Mailthody", "Ketan Date", "Zaid Qureshi", "Carl Pearson", "Rakesh Nagi", "Jinjun Xiong", "Wen-Mei Hwu"]
 venue = "2018 IEEE High Performance Extreme Computing Conference"
 url_pdf = "/pdf/20180925_mailthody_hpec.pdf"
