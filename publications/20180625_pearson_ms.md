@@ -2,7 +2,7 @@
 title = "Heterogeneous Application and System Modeling"
 date = 2018-06-25
 draft = false
-tags = ["scope"]
+tags = ["benchmark", "GPU", "nvlink", "pcie", "v100", "p100", "numa"]
 authors = ["Carl Pearson"]
 venue = "M.S. Thesis, May 2018"
 url_pdf = "/pdf/pdf/20180625_pearson_ms.pdf"

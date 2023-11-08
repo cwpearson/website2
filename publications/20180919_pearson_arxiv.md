@@ -1,7 +1,7 @@
 +++
 title = "SCOPE: C3SR Systems Characterization and Benchmarking Framework"
 date = 2018-09-18
-tags = ["scope"]
+tags = ["benchmark"]
 venue = "tech report"
 url_pdf = ["/pdf/20180918_pearson_arxiv.pdf", "https://arxiv.org/abs/1809.08311"]
 authors = ["Carl Pearson", "Abdul Dakkak", "Cheng Li", "Sarah Hashash", "Jinjun Xiong", "Wen-Mei Hwu"]

@@ -2,7 +2,7 @@
 title = "Evaluating Characteristics of CUDA Communication Primitives on High-Bandwidth Interconnects"
 date = 2019-04-09  # Schedule page publish date.
 draft = false
-tags = ["scope"]
+tags = ["benchmark", "nvlink", "pcie", "V100", "P100"]
 authors = ["Carl Pearson", "Adbul Dakkak", "Sarah Hashash", "Cheng Li", "I-Hsin Chung", "Jinjun Xiong", "Wen-Mei Hwu"]
 venue = "2019 ACM/SPEC International Conference on Performance Engineering"
 url_pdf = "/pdf/20190410_pearson_icpe.pdf"

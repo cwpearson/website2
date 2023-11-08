@@ -1,7 +1,7 @@
 +++
 title = "Comparative Performance Evaluation of Multi-GPU MLFMM Implementation for 2-D VIE Problems"
 date = 2017-06-21
-tags = ["applications"]
+tags = ["applications", "GPU"]
 url_pdf = "/pdf/20170621_pearson_cem.pdf"
 authors = ["Carl Pearson", "Mert Hidayetoglu", "Wei Ren", "Weng Cho Chew", "Wen-Mei Hwu"]
 venue = "Computing and Electromagnetics International Workshop, IEEE 2017"
