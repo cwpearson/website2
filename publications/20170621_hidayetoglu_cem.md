@@ -1,6 +1,5 @@
 +++
 title = "Scalable Parallel DBIM Solutions of Inverse-Scattering Problems"
-draft = false
 date = 2017-06-21
 tags = ["applications", "GPU"]
 authors = ["Mert Hidayetoglu", "Carl Pearson", "Levent Gurel", "Wen-mei Hwu", "Weng Cho Chew"]
