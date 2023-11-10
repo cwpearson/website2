@@ -1,22 +1,22 @@
 +++
 draft = true
-title = "How does Kokkos manage team scratch spaces internally"
+title = "How does Kokkos Mange Team Scratch Internally"
 date = 2023-11-10T08:00:00-07:00
 +++
 
-Let's follow along three parallel examples:
+Hierarchical parallelism is a key feature of Kokkos - it provides a way for "teams", or subsets of active threads, to collaborate on a particular operations within a parallel region.
+Kokkos provides a "scratch" memory, which is a way of providing a fast scratchpad to a team, where supported by the underlying execution system.
+How the scratch memory ends up in the Team handle can be surprisingly convoluted - here, I attempt to outline it by following along with two examples:
 
 1. `Kokkos::Serial`, which supports Kokkos scratch but does not actually have a special software-managed scratch memory
 2. `Kokkos::Cuda`, which supports Kokkos scratch has a concept of scratch (shared memory)
-3. `Kokkos::OpenACC`, which does not currently support Kokkos scratch memory
 
 Even if a backend does not have a special scratch-like memory, it can provide a normal allocation that Kokkos Teams can use as scratch memory, just without any special performance characteristics.
 
 ## Telling Kokkos how much scratch space a functor needs
 
 Briefly: each Kokkos Team has a scratch pad, which is memory that is only available to threads within that team, and whose lifetime is scoped to that of the Team.
-Threads in the can use that memory for collaborative work.
-This is the same regardless of which backend you're using.
+Threads in the team can use that memory for collaborative work.
 
 Further reading: https://kokkos.github.io/kokkos-core-wiki/ProgrammingGuide/HierarchicalParallelism.html
 
@@ -48,31 +48,33 @@ Policy policy_3 = Policy(league_size, team_size).
 
 In the above method, the total scratch space per team is the `Kokkos::PerTeam` value plus the `Kokkos::PerThread` value times the number of threads.
 
+This interface is the same regardless of the Kokkos backend in use (as long as the backend supports Kokkos scratch memory!)
+
 ## How does a backend use this information?
 
-None of this is has to work this way, but the backends tend to follow a similar strategy.
+These two backends follow a similar strategy.
 
 ### `Kokkos::parallel_for` asks the functor how much scratch space it wants
 
-In `Kokkos::Serial`
+A `Kokkos::parallel_for` region is internally represented as a `ParallelFor` struct.
+
+In `Kokkos::Serial`, the `ParallelFor` ctor retrieves this information from the policy and some compile-time analysis of the functor.
 
 ```c++
+m_shared(arg_policy.scratch_size(0) + arg_policy.scratch_size(1) +
+          FunctorTeamShmemSize<FunctorType>::value(arg_functor, 1)) {}
 ```
+*https://github.com/kokkos/kokkos/blob/d5a4802911318aebecbc775990dd198260ce2383/core/src/Serial/Kokkos_Serial_Parallel_Team.hpp#L265C11-L266*
 
-In `Kokkos::Cuda`
+In `Kokkos::Cuda`, the `ParallelFor` ctor does something similar, except the size of the team may be larger than 1.
 
 ```c++
 m_shmem_size =
         (m_policy.scratch_size(0, m_team_size) +
          FunctorTeamShmemSize<FunctorType>::value(m_functor, m_team_size));
 ```
-
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L554-L556*
 
-In `Kokkos::OpenACC`
-
-```c++
-```
 
 ### Ask the provided `TeamPolicy` what execution space instance to execute in
 
@@ -84,8 +86,14 @@ In `Kokkos::Cuda`
 auto internal_space_instance =
     m_policy.space().impl_internal_space_instance();
 ```
-
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L539-L540*
+
+In `Kokkos::Serial`'s `ParallelFor::execute`
+
+```c++
+auto* internal_instance = m_policy.space().impl_internal_space_instance();
+```
+*https://github.com/kokkos/kokkos/blob/d5a4802911318aebecbc775990dd198260ce2383/core/src/Serial/Kokkos_Serial_Parallel_Team.hpp#L249*
 
 ### Asks the Execution Space instance to ensure that much scratch space is available
 
@@ -101,15 +109,40 @@ m_scratch_pool_id = internal_space_instance->acquire_team_scratch_space();
                                             (m_team_size * m_vector_size)),
                   static_cast<std::int64_t>(m_league_size))));
 ```
-
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L567-L574*
+
+In `Kokkos::Serial`
+
+```c++
+internal_instance->resize_thread_team_data(
+    pool_reduce_size, team_reduce_size, team_shared_size,
+    thread_local_size);
+```
+*https://github.com/kokkos/kokkos/blob/d5a4802911318aebecbc775990dd198260ce2383/core/src/Serial/Kokkos_Serial_Parallel_Team.hpp#L253-L255*
+
 
 ### Construct the Team handles and call the functor
 
 The team handles are provided to the functor, and provide it access to the various properties of the Team (size, scratch space, etc).
 Team handle gets a slice of the backing scratch allocation (using league id, team size, scratch pointer)
 
-In `Kokkos::Cuda`'s `ParallelFor::operator()`
+
+In `Kokkos::Serial`'s `ParallelFor::exec`, a `Member` is constructed for each index in the league iteration space, and the functor is immediately called on that member.
+
+```c++
+  template <class TagType>
+  inline std::enable_if_t<std::is_void<TagType>::value> exec(
+      HostThreadTeamData& data) const {
+    for (int ileague = 0; ileague < m_league; ++ileague) {
+      m_functor(Member(data, ileague, m_league));
+    }
+  }
+```
+*https://github.com/kokkos/kokkos/blob/d5a4802911318aebecbc775990dd198260ce2383/core/src/Serial/Kokkos_Serial_Parallel_Team.hpp#L225-L231*
+
+This `HostThreadTeamData` holds the various scratch allocations, and is a member of the underlying `Host::Serial` instance.
+
+In `Kokkos::Cuda`'s `ParallelFor::operator()`, the handles are constructed...
 
 ```c++
 this->template exec_team<WorkTag>(typename Policy::member_type(
@@ -121,9 +154,8 @@ this->template exec_team<WorkTag>(typename Policy::member_type(
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L504-L509*
 
-### Call the functor and pass the constructed handles
+... and immediately passed to `exec_team`, which just calls the functor with the member as an argument:
 
-In `Kokkos::Cuda`, `exec_team` from above just calls the functor.
 ```c++
 template <class TagType>
 __device__ inline std::enable_if_t<std::is_void<TagType>::value> exec_team(
@@ -139,10 +171,10 @@ __device__ inline std::enable_if_t<!std::is_void<TagType>::value> exec_team(
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L478-L488*
 
-But how does this actually get injected into a CUDA kernel launch?
+But this is just a single invocation of the functor using a single team member - how does this actually get injected into a CUDA kernel launch?
 
-The `ParallelFor`'s `execute` member passes the constructed `ParallelFor` object (itself), into a `CudaParallelLaunch`, helpfully annotated with a short comment
-Recall that that the grid dimensions, shared memory size, and CUDA stream are already known by this point, since they are determined in the `ParallelFor`` ctor.
+The `ParallelFor`'s `execute` member passes the constructed `ParallelFor` object (`*this`), into a `CudaParallelLaunch`, helpfully annotated with a short comment
+Recall that that the grid dimensions, shared memory size, and CUDA stream are already known by this point, since they are determined in the `ParallelFor` ctor.
 
 ```c++
 CudaParallelLaunch<ParallelFor, LaunchBounds>(
@@ -152,10 +184,11 @@ CudaParallelLaunch<ParallelFor, LaunchBounds>(
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L527-L530*
 
-Within `CudaParallelLaunch` (and most of `Kokkos_Cuda_KernelLaunch.hpp`), this `ParallelFor` type is referred to as the `DriverType`.
- 
+Within `CudaParallelLaunch` (and most of `Kokkos_Cuda_KernelLaunch.hpp`), this `ParallelFor` type fills the template parameter `DriverType`.
+Rather than a `ParallelFor` this could be a `ParallelReduce` or a `ParallelScan`, but we'll stick with `ParallelFor` for our purposes.
 
-`CudaParallelLaunch` examines the `ParallelFor` type to decide how to launch the kernel using `DeduceCudaLaunchMechanism<DriverType>`. This happens at compile-time through a default template parameter.
+`CudaParallelLaunch` is templated on an `Experimental::CudaLaunchMechanism`, which is set to whatever `DeduceCudaLaunchMechanism<DriverType>::launch_mechanism` evaluates to.
+This process happens at compile-time and is determined by things like the size of the functor.
 
 ```c++
 template <class DriverType, class LaunchBounds = Kokkos::LaunchBounds<>,
@@ -175,9 +208,7 @@ CudaParallelLaunch(Args&&... args) {
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_KernelLaunch.hpp#L707-L709*
 
-So what does `CudaParallelLaunchImpl` do?
-
-`CudaParallelLaunchImpl` is a derived class of `CudaParallelLaunchKernelInvoker`
+In turn, `CudaParallelLaunchImpl` is a derived class of `CudaParallelLaunchKernelInvoker`
 
 ```c++
 struct CudaParallelLaunchImpl<
@@ -192,15 +223,15 @@ struct CudaParallelLaunchImpl<
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_KernelLaunch.hpp#L633-L641*
 
-`CudaParallelLaunchImpl`'s `launch_kernel` method optionally adjusts the CUDA shared memory configuration, and then just calls `CudaParallelLaunchKernelInvoker`'s `invoke_kernel`
+`CudaParallelLaunchImpl`'s `launch_kernel` method optionally adjusts the CUDA shared memory configuration (e.g. the split between L1 cache and shared memory), and then just calls `CudaParallelLaunchKernelInvoker`'s `invoke_kernel`
 
 ```c++
 base_t::invoke_kernel(driver, grid, block, shmem, cuda_instance);
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_KernelLaunch.hpp#L669C15-L669C28*
 
-So what does `CudaParallelLaunchKernelInvoker` do?
-It's a dervied class of `CudaParallelLaunchKernelFunc`, and it's `invoke_kernel` method is finally what launches the kernel
+
+FInally turn, `CudaParallelLaunchKernelInvoker`'s `invoke_kernel` method is finally what launches the kernel
 
 ```c++
 static void invoke_kernel(DriverType const& driver, dim3 const& grid,
@@ -215,6 +246,8 @@ static void invoke_kernel(DriverType const& driver, dim3 const& grid,
 
 Recall that `DriverType` is actually `ParallelFor`, so the `ParallelFor` object is what gets passed into whatever kernel function is being executed.
 
+We've found where the CUDA kernel actually gets launched, but what is this function that it's launching?
+`base_t` here is a `CudaParallelLaunchKernelFunc` (the parent class of `CudaParallelLaunchKernelInvoker`).
 So what does this `get_kernel_func` from `CudaParallelLaunchKernelFunc` do?
 
 ```c++
@@ -236,22 +269,13 @@ __global__ static void cuda_parallel_launch_local_memory(
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_KernelLaunch.hpp#L85-L89*
 
-It is just a function that calls `operator()` from the DriverType, e.g. the `ParallelFor` instance.
-If you'll recall, that is what constructs a `TeamPolicy` from the location in the CUDA grid and the shared memory pointer, and actually executes the functor.
+It is just a function that calls `operator()` from the `DriverType``, e.g. the `ParallelFor` instance.
+If you'll recall, `operator()` is what constructs a `Member` from the location in the CUDA grid and the shared memory pointer, and actually executes the functor.
 
 
-Some underlying programming ssytems natively handle scratch space: e.g., when you launch a CUDA kernel, you tell CUDA how much scratch space you want, and CUDA provides it.
+## So what have we learned?
 
-
-
-1. A Kokkos functor describes how much scratch space it needs
-    * this can be a runtime value
-2. The backend's implementation of `Kokkos::parallel_for`
-    1. Define a team handle that knows how to access the underlying programming system scratch space.
-    2. asks the functor how much scratch space it wants
-    3. Launch the parallel region, telling the programming system how much scratch the functor wanted.
-3. When the functor is executed, it will ask the member for scratch space to operate in. The member knows how to retrieve the programming system scratch space, and it does.
-
-## Kokkos::ScratchSpace Type
-
-This is a type that takes a pointer to a level 0 (and optionally level 1) scratch space allocation, and handles all the pointer arithmetic to align requested sizes appropriately.
+When the application developer uses `team_shmem_size` on the functor or `set_scratch_size` on the `TeamPolicy`, they are making a request for how much scratch size to use.
+Inside the backend, the `ParallelFor` object that represents the parallel region has access to the functor and the `TeamPolicy`, so it can tell the execution space instance how much scratch memory this parallel region will need.
+The instance will ensure that much is available.
+Then the `ParallelFor` object will create the Team member handles, each of which will include its own piece of the scratch space, and call the functor on those handles.
