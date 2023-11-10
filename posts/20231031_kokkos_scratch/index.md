@@ -1,6 +1,6 @@
 +++
 draft = true
-title = "How Team Scratch gets into your Kokkos functor"
+title = "How Team Scratch gets into your Kokkos Functor"
 date = 2023-11-10T08:00:00-07:00
 +++
 
