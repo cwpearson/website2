@@ -1,6 +1,6 @@
 +++
-draft = true
-title = "How does Kokkos Mange Team Scratch Internally"
+draft = false
+title = "How Kokkos Manges Team Scratch"
 date = 2023-11-10T08:00:00-07:00
 +++
 
@@ -78,9 +78,10 @@ m_shmem_size =
 
 ### Ask the provided `TeamPolicy` what execution space instance to execute in
 
-The functor will be executed in a specific instance of the Execution Space.
+Sicne the functor will necessarily be executed in a specific instance of an execution space, `ParallelFor` needs to determine which instance that is.
+That information is carried along with the `TeamPolicy` the called provided.
 
-In `Kokkos::Cuda`
+In `Kokkos::Cuda` this happens in in the `ParallelFor` ctor...
 
 ```c++
 auto internal_space_instance =
@@ -88,7 +89,7 @@ auto internal_space_instance =
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L539-L540*
 
-In `Kokkos::Serial`'s `ParallelFor::execute`
+... and in `Kokkos::Serial` it happens in `ParallelFor::execute`
 
 ```c++
 auto* internal_instance = m_policy.space().impl_internal_space_instance();
@@ -97,7 +98,7 @@ auto* internal_instance = m_policy.space().impl_internal_space_instance();
 
 ### Asks the Execution Space instance to ensure that much scratch space is available
 
-In `Kokkos::Cuda`
+In `Kokkos::Cuda` this happens in the `ParallelFor` ctor...
 
 ```c++
 m_scratch_pool_id = internal_space_instance->acquire_team_scratch_space();
@@ -111,7 +112,7 @@ m_scratch_pool_id = internal_space_instance->acquire_team_scratch_space();
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L567-L574*
 
-In `Kokkos::Serial`
+In `Kokkos::Serial` it happens in `ParallelFor::execute`
 
 ```c++
 internal_instance->resize_thread_team_data(
@@ -120,14 +121,16 @@ internal_instance->resize_thread_team_data(
 ```
 *https://github.com/kokkos/kokkos/blob/d5a4802911318aebecbc775990dd198260ce2383/core/src/Serial/Kokkos_Serial_Parallel_Team.hpp#L253-L255*
 
+This `resize_thread_team_data` does a lot of work.
+Suffice it to say it manages various allocations that this execution space instance can use inside Kokkos parallel regions.
+
 
 ### Construct the Team handles and call the functor
 
-The team handles are provided to the functor, and provide it access to the various properties of the Team (size, scratch space, etc).
-Team handle gets a slice of the backing scratch allocation (using league id, team size, scratch pointer)
-
+The team handles are provided to the functor, and through these handles, the functor has access properties of the Team (size, index, scratch space, etc).
 
 In `Kokkos::Serial`'s `ParallelFor::exec`, a `Member` is constructed for each index in the league iteration space, and the functor is immediately called on that member.
+Since only one team executes at a time, they all use the same scratch allocation that lives inside `data`.
 
 ```c++
   template <class TagType>
@@ -142,7 +145,8 @@ In `Kokkos::Serial`'s `ParallelFor::exec`, a `Member` is constructed for each in
 
 This `HostThreadTeamData` holds the various scratch allocations, and is a member of the underlying `Host::Serial` instance.
 
-In `Kokkos::Cuda`'s `ParallelFor::operator()`, the handles are constructed...
+In `Kokkos::Cuda`'s `ParallelFor::operator()`, the handles are constructed.
+Since multiple teams can execute simultaneously, each handle gets its own slice of the backing scratch allocation according to which team it is and how large the team is.
 
 ```c++
 this->template exec_team<WorkTag>(typename Policy::member_type(
@@ -154,7 +158,7 @@ this->template exec_team<WorkTag>(typename Policy::member_type(
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L504-L509*
 
-... and immediately passed to `exec_team`, which just calls the functor with the member as an argument:
+This handle is immediately passed to `ParallelFor::exec_team`, which just calls the functor with the member as an argument:
 
 ```c++
 template <class TagType>
@@ -171,9 +175,11 @@ __device__ inline std::enable_if_t<!std::is_void<TagType>::value> exec_team(
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_Parallel_Team.hpp#L478-L488*
 
-But this is just a single invocation of the functor using a single team member - how does this actually get injected into a CUDA kernel launch?
+In short, `ParallelFor::operator()` is just a single invocation of the functor using a single team member.
+This team member is constructed using an index in a CUDA grid, so how does this actually get injected into a CUDA kernel launch?
 
-The `ParallelFor`'s `execute` member passes the constructed `ParallelFor` object (`*this`), into a `CudaParallelLaunch`, helpfully annotated with a short comment
+Just like in `Kokkos::Serial`, `ParallelFor::execute` makes the magic happen.
+It passes the constructed `ParallelFor` object (itself, `*this`), into a `CudaParallelLaunch`, helpfully annotated with a short comment.
 Recall that that the grid dimensions, shared memory size, and CUDA stream are already known by this point, since they are determined in the `ParallelFor` ctor.
 
 ```c++
@@ -220,6 +226,7 @@ struct CudaParallelLaunchImpl<
   using base_t = CudaParallelLaunchKernelInvoker<
       DriverType, Kokkos::LaunchBounds<MaxThreadsPerBlock, MinBlocksPerSM>,
       LaunchMechanism>;
+  ...
 ```
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_KernelLaunch.hpp#L633-L641*
 
@@ -231,7 +238,7 @@ base_t::invoke_kernel(driver, grid, block, shmem, cuda_instance);
 *https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Cuda/Kokkos_Cuda_KernelLaunch.hpp#L669C15-L669C28*
 
 
-FInally turn, `CudaParallelLaunchKernelInvoker`'s `invoke_kernel` method is finally what launches the kernel
+Finally turn, `CudaParallelLaunchKernelInvoker`'s `invoke_kernel` method is finally what launches the kernel
 
 ```c++
 static void invoke_kernel(DriverType const& driver, dim3 const& grid,
