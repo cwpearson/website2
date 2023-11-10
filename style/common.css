@@ -22,7 +22,8 @@ a:link {
 
 /*scroll on narrow screens*/
 .highlight {
-    overflow-x: scroll;
+    /* same as scroll, but don't show scrollbar if no scrolling needed*/
+    overflow-x: auto;
 }
 
 .post-title {
@@ -71,7 +72,8 @@ a:link {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    overflow-x: scroll;
+    /* same as scroll, but don't show scrollbar if no scrolling needed*/
+    overflow-x: auto;
     justify-content: center;
 }
 

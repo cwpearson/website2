@@ -14,7 +14,8 @@ d5bdaf
 
 .nav-links {
     display: flex;
-    overflow-x: scroll;
+    /* same as scroll, but don't show scrollbar if no scrolling needed*/
+    overflow-x: auto;
 }
 
 .nav-links a {
