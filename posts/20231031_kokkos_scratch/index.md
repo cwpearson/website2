@@ -5,19 +5,21 @@ date = 2023-11-10T08:00:00-07:00
 +++
 
 Hierarchical parallelism is a key feature of Kokkos - it provides a way for "teams", or subsets of active threads, to collaborate on a particular operations within a parallel region.
-Kokkos provides a "scratch" memory, which is a way of providing a fast scratchpad to a team, where supported by the underlying execution system.
+Kokkos provides a way for teams to get access to a private "scratch" memory.
+Where supported by the underlying execution platform, that scratch memory can be a high-performance scratchpad, like CUDA's shared memory.
 How the scratch memory ends up in the Team handle can be surprisingly convoluted - here, I attempt to outline it by following along with two examples:
 
 1. `Kokkos::Serial`, which supports Kokkos scratch but does not actually have a special software-managed scratch memory
 2. `Kokkos::Cuda`, which supports Kokkos scratch has a concept of scratch (shared memory)
 
-Even if a backend does not have a special scratch-like memory, it can provide a normal allocation that Kokkos Teams can use as scratch memory, just without any special performance characteristics.
-This is an excessive amount of information for a user of Kokkos, but it may be helpful to someone who has to work on a backend.
+Even if the system does not provide a fast scratchpad, Kokkos can instead provide its teams with a normal allocation, just without any special performance characteristics.
 
-## 1. Telling Kokkos how much scratch space a functor needs
+This post is aimed at a developer of Kokkos, and presumes some familiarity with Kokkos' hierarchical parallelism and C++.
 
-Briefly: each Kokkos Team has a scratch pad, which is memory that is only available to threads within that team, and whose lifetime is scoped to that of the Team.
-Threads in the team can use that memory for collaborative work.
+## 1. Telling Kokkos how much Scratch Space a Functor Needs
+
+When a user writes a functor in Kokkos that supports Team parallelism, they can optionally tell Kokkos how much scratch space each team and/or each thread in that team will need.
+This scratch space is only available to threads within that team, and the lifetime is scoped to that of the Team.
 
 Further reading: https://kokkos.github.io/kokkos-core-wiki/ProgrammingGuide/HierarchicalParallelism.html
 
@@ -36,6 +38,7 @@ struct functor {
 ```
 
 The second is to call the `set_scratch_size` member of the `Kokkos::TeamPolicy`.
+In this approach, the total scratch space provided to the team will be the `Kokkos::PerTeam` value plus the `Kokkos::PerThread` value times the number of threads.
 
 ```c++
 using Policy = TeamPolicy<ExecutionSpace>;
@@ -47,21 +50,41 @@ Policy policy_3 = Policy(league_size, team_size).
                          set_scratch_size(0, Kokkos::PerTeam(1024));
 ```
 
-In the above method, the total scratch space per team is the `Kokkos::PerTeam` value plus the `Kokkos::PerThread` value times the number of threads.
+The first argument to set_scratch_size is the scratch level.
 
 This interface is the same regardless of the Kokkos backend in use (as long as the backend supports Kokkos scratch memory!)
 
-## 2. How does a backend use this information?
+## 2. How does a Backend use this Information?
 
-These two backends follow a similar strategy.
+Once a functor has implemented one of the two methods to request scratch space, that information is used to produce Team handles that know where an appropriately-sized scratch allocation lives.
 
 ### 2.1 `Kokkos::parallel_for` asks the functor how much scratch space it wants
 
-A `Kokkos::parallel_for` region is internally represented as a `ParallelFor` struct.
+Our example backends retrieve the requested scratch size by directly calling the `scratch_size` method, and combining that with the `FunctorTeamShmemSize` method, which checks whether `team_shmem_size` or `shmem_size` is set on the functor, and returns it.
+
+```c++
+template <class FunctorType>
+struct FunctorTeamShmemSize<FunctorType, true, false> {
+  static inline size_t value(const FunctorType& f, int team_size) {
+    return f.team_shmem_size(team_size);
+  }
+};
+
+
+template <class FunctorType>
+struct FunctorTeamShmemSize<FunctorType, false, true> {
+  static inline size_t value(const FunctorType& f, int team_size) {
+    return f.shmem_size(team_size);
+  }
+};
+```
+*[core/src/Kokkos_Parallel.hpp#L469-L481](https://github.com/kokkos/kokkos/blob/1a3ea28f6e97b4c9dd2c8ceed53ad58ed5f94dfe/core/src/Kokkos_Parallel.hpp#L469-L481)*
+
+In all backends, a `Kokkos::parallel_for` region is internally represented as a `ParallelFor` struct with certain methods, so Kokkos can portably create and start the `Kokkos::parallel_for`.
 
 #### 2.1.1 `Kokkos::Serial`
 
-In `Kokkos::Serial`, the `ParallelFor` ctor retrieves this information from the policy and some compile-time analysis of the functor.
+In `Kokkos::Serial`, the `ParallelFor` ctor retrieves the requested shared memory size information from the policy and some compile-time analysis of the functor.
 
 ```c++
 m_shared(arg_policy.scratch_size(0) + arg_policy.scratch_size(1) +
