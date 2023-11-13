@@ -6,7 +6,7 @@ tags: ["latency", "bandwidth", "OpenMP", "GPU", "microbenchmark", "DOE", "superc
 description: "Talk at Performance Modeling, Benchmarking, and Simulation Wokshop at SC'23"
 authors: ["Christopher M. Siefert", "Carl Pearson", "Stephen L. Olivier", "Andrey Prokopenko", "Timothy J. Fuller", "Jonathan Hu"]
 event: Supercomputing 2023
-event_url: [https://clustercomp.org/2023/program/](https://www.dcs.warwick.ac.uk/pmbs/pmbs/PMBS/Welcome.html)
+event_url: https://www.dcs.warwick.ac.uk/pmbs/pmbs/PMBS/Welcome.html
 location: 503
 url_slides: /pdf/20231113_siefert_pmbs_slides.pdf
 how_invited: Proceedings Talk
