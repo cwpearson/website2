@@ -2,8 +2,7 @@
 title = "Latency and Bandwidth Microbenchmarks of US Department of Energy Systems in the June 2023 Top 500 List"
 date = 2023-11-13T09:30:00-0500
 authors = ["Christopher M. Siefert", "Carl Pearson", "Stephen L. Olivier", "Andrey Prokopenko", "Jonathan J. Hu", "Timothy J. Fuller"]
-venue = "The International Conference for High Performance Computing, Networking, Storage, and Analysis (SC23)"
-draft = false
+venue = "14th IEEE International Workshop on Performance Modeling, Benchmarking and Simulation of High Performance Computer Systems"
 tags = ["GPU", "memory bandwidth", "benchmark", "Top500", "supercomputing", "DOE"]
 description = ""
 url_pdf = "/pdf/20231113_siefert_pmbs.pdf"
