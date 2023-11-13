@@ -2,6 +2,7 @@
 draft = true
 title = "How Team Scratch gets into your Kokkos Functor"
 date = 2023-11-10T08:00:00-07:00
+tags = ["kokkos"]
 +++
 
 Hierarchical parallelism is a key feature of Kokkos - it provides a way for "teams", or subsets of active threads, to collaborate on a particular operations within a parallel region.
