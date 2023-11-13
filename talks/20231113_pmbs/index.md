@@ -10,4 +10,7 @@ event_url: https://www.dcs.warwick.ac.uk/pmbs/pmbs/PMBS/Welcome.html
 location: 503
 url_slides: /pdf/20231113_siefert_pmbs_slides.pdf
 how_invited: Proceedings Talk
+url_publication: /publication/202311_siefert_pmbs
 ---
+
+[Associated publication page](/publication/20231113_siefert_pmbs)

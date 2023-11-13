@@ -1,6 +1,6 @@
 +++
 title = "Latency and Bandwidth Microbenchmarks of US Department of Energy Systems in the June 2023 Top 500 List"
-date = 2023-11-13T09:30:00-0500
+date = 2023-11-13T09:00:00-0500
 authors = ["Christopher M. Siefert", "Carl Pearson", "Stephen L. Olivier", "Andrey Prokopenko", "Jonathan J. Hu", "Timothy J. Fuller"]
 venue = "14th IEEE International Workshop on Performance Modeling, Benchmarking and Simulation of High Performance Computer Systems"
 tags = ["GPU", "memory bandwidth", "benchmark", "Top500", "supercomputing", "DOE"]
