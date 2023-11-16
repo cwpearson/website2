@@ -157,6 +157,7 @@ class Talk:
     url_code: List[str] = field(default_factory=list)
     url_video: str = ""
     publication: str = None
+    project: str = None
     tags: List[Tag] = field(default_factory=list)
     keywords: List[str] = field(default_factory=list)
 
@@ -830,6 +831,7 @@ def render_talk(spec: TalkSpec) -> Pub:
         url_code=url_code,
         url_video=frontmatter.get("url_video", ""),
         publication=frontmatter.get("publication", None),
+        project=frontmatter.get("project", None),
         tags=canonical_tags(raw_tags),
         keywords=keywords,
     )
