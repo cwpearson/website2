@@ -122,7 +122,8 @@ class Pub:
     authors_html: str = ""
     venue_html: str = ""
     abstract: str = ""
-    url_pdf: List[str] = field(default_factory=list)
+    url_pdf: str = ""
+    url_arxiv: str = ""
     url_code: List[str] = field(default_factory=list)
     url_slides: str = ""
     url_poster: str = ""
@@ -652,9 +653,7 @@ def render_pub(spec: PubSpec) -> Pub:
     if isinstance(url_code, str):
         url_code = [url_code]
 
-    url_pdf = frontmatter.get("url_pdf", [])
-    if isinstance(url_pdf, str):
-        url_pdf = [url_pdf]
+    url_pdf = frontmatter.get("url_pdf", "")
 
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
         body_html = renderer.render(mistletoe.Document(markdown))
@@ -668,6 +667,7 @@ def render_pub(spec: PubSpec) -> Pub:
         authors_html=authors_html,
         abstract=frontmatter.get("abstract", ""),
         url_pdf=url_pdf,
+        url_arxiv=frontmatter.get("url_arxiv", ""),
         url_code=url_code,
         url_slides=frontmatter.get("url_slides", ""),
         url_poster=frontmatter.get("url_poster", ""),
@@ -869,12 +869,6 @@ def output_talk(talk: Talk):
     if talk.abstract:
         abstract_frag = page_abstract_frag(talk.abstract)
 
-    publication_frag = ""
-    if talk.publication:
-        publication_frag = (
-            f'<a href="/publication/{talk.publication}">related publication</a>\n'
-        )
-
     event_frag = ""
     if talk.event:
         event_frag = f'<div class="event">\n'
@@ -895,7 +889,6 @@ def output_talk(talk: Talk):
             slides_object += f'<div><a href="{talk.url_slides}">slides</a></div>'
         else:
             slides_object += f'<a href="{talk.url_slides}">slides</a>\n'
-
         slides_object += "</div>"
 
     links_frag = ""
@@ -1070,6 +1063,22 @@ def video_embed_frag(url) -> Tuple[str, str]:
         return tmpl.safe_substitute({"video_id": video_id}), style("video.css")
 
 
+def paper_embed_frag(url) -> Tuple[str, str]:
+    html = ""
+    if url:
+        html += f"<h2>Paper</h2>\n"
+        html += f'<div class="paper">\n'
+        if url.endswith(".pdf"):
+            html += f'<object class="paper-viewport" data="{url}" type="application/pdf" width="400" height="300">\n'
+            html += f'<a href="{url}">paper</a>\n'
+            html += "</object>\n"
+            html += f'<div><a href="{url}">paper</a></div>'
+        else:
+            html += f'<a href="{url}">paper</a>\n'
+        html += "</div>"
+    return html, ""
+
+
 def render_tags_frag(tags: List[Tag]) -> str:
     html = ""
     for tag in tags:
@@ -1082,12 +1091,10 @@ def render_tags_frag(tags: List[Tag]) -> str:
 
 
 def output_pub(pub: Pub):
+    output_dir = OUTPUT_DIR / pub.spec.output_dir
+    print(f"==== output {pub.spec.markdown_path} -> {output_dir}")
     links = []
-    for url in pub.url_pdf:
-        if "arxiv" in url:
-            links += [Link(url=url, name="arxiv")]
-        else:
-            links += [Link(url=url, name="pdf")]
+    links += [Link(url=pub.url_arxiv, name="arxiv")]
     for url in pub.url_code:
         ms = re.findall(".*github.com/(.+)", url)
         if ms:
@@ -1101,6 +1108,7 @@ def output_pub(pub: Pub):
     links_html, links_css = render_links_frag(links)
 
     video_html, video_css = video_embed_frag(pub.url_video)
+    paper_html, paper_css = paper_embed_frag(pub.url_pdf)
     nav_html, nav_css = nav_frag()
     footer_html, footer_css = footer_frag(
         edit_url=github_edit_url(pub.spec.markdown_path.relative_to(ROOT_DIR))
@@ -1112,6 +1120,7 @@ def output_pub(pub: Pub):
             + style("common.css")
             + style("tag.css")
             + links_css
+            + paper_css
             + video_css
             + style("publication.css")
             + footer_css,
@@ -1128,13 +1137,13 @@ def output_pub(pub: Pub):
             "abstract": pub.abstract,
             "links_frag": links_html,
             "body_frag": pub.body_html,
+            "paper_frag": paper_html,
             "video_frag": video_html,
             "tags_frag": render_tags_frag(pub.tags),
             "footer_frag": footer_html,
         }
     )
-    output_dir = OUTPUT_DIR / pub.spec.output_dir
-    print(f"==== output {pub.spec.markdown_path} -> {output_dir}")
+
     output_dir.mkdir(parents=True, exist_ok=True)
     html_path = output_dir / "index.html"
     write_file(html_path, html)

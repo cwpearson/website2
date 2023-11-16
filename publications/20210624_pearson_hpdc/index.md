@@ -6,7 +6,8 @@ tags = ["stencil", "MPI", "MPI datatypes", "Summit"]
 venue = "2021 ACM Symposium on High-Performance Parallel and Distributed Computing"
 authors = ["Carl Pearson", "Kun Wu", "I-Hsin Chung", "Jinjun Xiong", "Wen-Mei Hwu"]
 url_poster = "/pdf/20210624_pearson_hpdc_poster.pdf"
-url_pdf = ["/pdf/20210624_pearson_hpdc.pdf", "https://arxiv.org/abs/2012.14363"]
+url_pdf = "/pdf/20210624_pearson_hpdc.pdf"
+url_arxiv = "https://arxiv.org/abs/2012.14363"
 url_github = "https://github.com/cwpearson/tempi"
 url_slides = "/pdf/20210624_pearson_hpdc_slides.pdf"
 url_video = "https://www.youtube.com/watch?v=H-fbTWr85qw"

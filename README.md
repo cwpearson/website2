@@ -30,18 +30,22 @@ python build.py && python -m http.server --directory public
   - [x] slides URL
     - [ ] embed doesn't do anything useful in mobile safari
     - [ ] embed if pdf using pdf.js?
-  - [ ] publication cross-reference  
+  - [x] publication cross-reference
+  - [x] project cross-reference
   - [x] add venue to keywords
-- publication metadata
-  - [x] pdf
-  - [x] slides
-  - [x] poster
-  - [x] code
-  - [x] date
+- publication
+  - [x] embed pdf
+  - metadata
+    - [x] pdf
+    - [x] slides
+    - [x] poster
+    - [x] code
+    - [x] date
   - automatic video embeds
     - [x] youtube
     - [x] vimeo
   - [ ] project cross-reference
+  - [ ] talk cross-reference
   - [x] add venue to keywords
 - robots.txt
   - [x] allow all
