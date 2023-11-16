@@ -156,8 +156,8 @@ class Talk:
     url_slides: str = None
     url_code: List[str] = field(default_factory=list)
     url_video: str = ""
-    publication: str = None
-    project: str = None
+    publication: str = ""
+    project: str = ""
     tags: List[Tag] = field(default_factory=list)
     keywords: List[str] = field(default_factory=list)
 
@@ -350,7 +350,7 @@ def render_links_frag(links: List[Link]) -> Tuple[str, str]:
         html += "</div>\n"
 
     if html:
-        html = f'<div class="page-link-container">{html}</div>\n'
+        html = f'<div class="page-links-horiz">{html}</div>\n'
     return html, css
 
 
@@ -830,11 +830,29 @@ def render_talk(spec: TalkSpec) -> Pub:
         url_slides=frontmatter.get("url_slides", None),
         url_code=url_code,
         url_video=frontmatter.get("url_video", ""),
-        publication=frontmatter.get("publication", None),
-        project=frontmatter.get("project", None),
+        publication=frontmatter.get("publication", ""),
+        project=frontmatter.get("project", ""),
         tags=canonical_tags(raw_tags),
         keywords=keywords,
     )
+
+
+def render_crossref_frag(urls: List[str]) -> str:
+    """returns html,css for crossref frags"""
+    html = ""
+    for url in urls:
+        if not url:
+            continue
+        elif url.startswith("/project/"):
+            html += f'<div class="page-link"><a href="{url}">project</a></div>\n'
+        elif url.startswith("/publication/"):
+            html += f'<div class="page-link"><a href="{url}">publication</a></div>\n'
+        else:
+            html += f'<div class="page-link"><a href="{url}">{url}</a></div>\n'
+    if html:
+        html = f'<div class="page-links-horiz">\n{html}</div>\n'
+
+    return html, style("page_links.css")
 
 
 def output_talk(talk: Talk):
@@ -900,6 +918,8 @@ def output_talk(talk: Talk):
         edit_url=github_edit_url(talk.spec.markdown_path.relative_to(ROOT_DIR))
     )
 
+    crossref_frag, crossref_css = render_crossref_frag([talk.publication, talk.project])
+
     html = template("talk.tmpl").safe_substitute(
         {
             "style_frag": nav_css
@@ -907,6 +927,7 @@ def output_talk(talk: Talk):
             + video_css
             + style("tag.css")
             + style("talk.css")
+            + crossref_css
             + footer_css,
             "head_frag": head_frag(
                 title=talk.title,
@@ -921,6 +942,7 @@ def output_talk(talk: Talk):
             "event": event_frag,
             "address": address_html,
             "abstract": abstract_frag,
+            "crossref_frag": crossref_frag,
             "body_frag": talk.body_html,
             "video_frag": video_html,
             "links_frag": links_frag,
@@ -1535,11 +1557,6 @@ def render_tag_page(
     TIMER.start()
 
 
-def resolve_crossrefs(page, posts, projects, publications, talks):
-    """resolve crossreferences to posts, projects, publications, and talks in page"""
-    pass
-
-
 def render_tags(tags: List[Tag]) -> str:
     body_html = ""
     for tag in sorted(tags, key=lambda t: t.string()):
@@ -1583,16 +1600,6 @@ if __name__ == "__main__":
     talk_specs = find_talks()
     talks = [render_talk(spec) for spec in talk_specs]
     talks = [t for t in talks if t is not None]
-
-    # resolve cross-references
-    for post in posts:
-        resolve_crossrefs(post, [], projects, pubs, talks)
-    for project in projects:
-        resolve_crossrefs(project, posts, [], pubs, talks)
-    for pub in pubs:
-        resolve_crossrefs(pub, posts, projects, [], talks)
-    for talk in talks:
-        resolve_crossrefs(talk, posts, projects, pubs, [])
 
     # generate pages
     for project in projects:

@@ -1,6 +1,15 @@
-.page-link-container {
+.page-links-horiz {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* margin-top: 2em;*/
+    margin-bottom: 0.5em;
+}
+
+.page-links-vert {
+    display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
     /* margin-top: 2em;*/
