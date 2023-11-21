@@ -1,8 +1,3 @@
-## November 2021
-
-# * [The Copenhagen Interpretation of Ethics](https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/) ([archive](http://web.archive.org/web/20211130191353/https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/))
-# * [Anatomy of Racism](https://everythingstudies.com/2018/11/16/anatomy-of-racism/) ([archive](http://web.archive.org/web/20211130191402/https://everythingstudies.com/2018/11/16/anatomy-of-racism/))
-
 - name: "New Concerning Variant: B.1.1.529"
   url: https://yourlocalepidemiologist.substack.com/p/new-concerning-variant-b11529
   url_archive: http://web.archive.org/web/20211130193449/https://yourlocalepidemiologist.substack.com/p/new-concerning-variant-b11529
@@ -15,4 +10,12 @@
 - name: Hacker News Undocumented
   url: https://github.com/minimaxir/hacker-news-undocumented
   url_archive: http://web.archive.org/web/20211130191445/https://github.com/minimaxir/hacker-news-undocumented
+  date: 2021-11-01
+- name: The Copenhagen Interpretation of Ethics
+  url: https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/
+  url_archive: http://web.archive.org/web/20211130191353/https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/
+  date: 2021-11-01
+- name: Anatomy of Racism
+  url: https://everythingstudies.com/2018/11/16/anatomy-of-racism/
+  url_archive: http://web.archive.org/web/20211130191402/https://everythingstudies.com/2018/11/16/anatomy-of-racism/
   date: 2021-11-01

@@ -8,6 +8,8 @@ python build.py && python -m http.server --directory public
 
 - link page
   - [ ] authors
+  - [ ] disclaimer
+  - [ ] in navbar
 - have most functions return html + needed style
   - [x] navbar
   - [x] footer
