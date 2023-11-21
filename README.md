@@ -6,6 +6,8 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
+- link page
+  - [ ] authors
 - have most functions return html + needed style
   - [x] navbar
   - [x] footer

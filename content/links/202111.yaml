@@ -1,7 +1,5 @@
 ## November 2021
 
-# * [Ask HN: What are the best-designed things you've ever used?](https://news.ycombinator.com/item?id=29353980)
-# * [Hacker News Undocumented](https://github.com/minimaxir/hacker-news-undocumented) ([archive](http://web.archive.org/web/20211130191445/https://github.com/minimaxir/hacker-news-undocumented))
 # * [The Copenhagen Interpretation of Ethics](https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/) ([archive](http://web.archive.org/web/20211130191353/https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/))
 # * [Anatomy of Racism](https://everythingstudies.com/2018/11/16/anatomy-of-racism/) ([archive](http://web.archive.org/web/20211130191402/https://everythingstudies.com/2018/11/16/anatomy-of-racism/))
 
@@ -11,3 +9,10 @@
   date: 2021-11-01
   authors:
     - Kaitlin Jetelina
+- name: "Ask HN: What are the best-designed things you've ever used?"
+  url: https://news.ycombinator.com/item?id=29353980
+  date: 2021-11-01
+- name: Hacker News Undocumented
+  url: https://github.com/minimaxir/hacker-news-undocumented
+  url_archive: http://web.archive.org/web/20211130191445/https://github.com/minimaxir/hacker-news-undocumented
+  date: 2021-11-01

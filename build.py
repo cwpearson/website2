@@ -68,6 +68,17 @@ def canonical_tags(l: List[str]) -> List[Tag]:
 
 
 @dataclass
+class LinkSpec:
+    """A link on the links page"""
+
+    name: str
+    url: str
+    url_archive: str = ""
+    date: datetime.datetime = None
+    description: str = ""
+
+
+@dataclass
 class Link:
     url: str
     name: str
@@ -337,6 +348,69 @@ def find_projects() -> List[ProjectSpec]:
                 ]
 
     return specs
+
+
+def load_links() -> List[LinkSpec]:
+    specs = []
+    for yaml_path in (CONTENT_DIR / "links").glob("*.yaml"):
+        print(f"==== {yaml_path}")
+        with open(yaml_path, "r") as yaml_file:
+            data = yaml.load(yaml_file, Loader=yaml.CLoader)
+        for entry in data:
+            name = entry["name"]
+            url = entry["url"]
+            date = entry["date"]
+            url_archive = entry.get("url_archive", "")
+            description = entry.get("description", "")
+            specs += [LinkSpec(name, url, url_archive, date, description)]
+    return specs
+
+
+def output_links_page(links: List[LinkSpec]):
+    frontmatter, markdown = read_markdown(CONTENT_DIR / "links" / "index.md")
+
+    nav_html, nav_css = nav_frag()
+    footer_html, footer_css = footer_frag()
+
+    by_month = {}
+    for spec in links:
+        year, month = spec.date.year, spec.date.month
+        by_month[(year, month)] = by_month.get((year, month), []) + [spec]
+
+    links_html = ""
+    for (year, month), specs in by_month.items():
+        links_html += '<div class="month-group">\n'
+        links_html += f'<h2>{spec.date.strftime("%B %Y")}</h2>\n'
+        for spec in specs:
+            links_html += '<div class="link">\n'
+            links_html += f'<a class="name" href="{spec.url}">{spec.name}</a>\n'
+            if spec.url_archive:
+                links_html += f'<div class="archive">(<a href="{spec.url_archive}">archive</a>)</div>\n'
+            if spec.description:
+                links_html += f'<div class="description">{spec.description}</div>\n'
+            links_html += "</div>\n"
+        links_html += "</div>\n"
+    if links_html:
+        links_html = f'<div class="link-wrapper">\n{links_html}</div>\n'
+
+    html = template("links.tmpl").safe_substitute(
+        {
+            "style_frag": nav_css
+            + style("common.css")
+            + style("links.css")
+            + footer_css,
+            "head_frag": head_frag(),
+            "nav_frag": nav_html,
+            "title": frontmatter["title"],
+            "body_frag": links_html,
+            "footer_frag": footer_html,
+        }
+    )
+    output_dir = OUTPUT_DIR / "links"
+    print(f'==== output {CONTENT_DIR / "links" / "index.md"} -> {output_dir}')
+    output_dir.mkdir(parents=True, exist_ok=True)
+    html_path = output_dir / "index.html"
+    write_file(html_path, html)
 
 
 def render_links_frag(links: List[Link]) -> Tuple[str, str]:
@@ -1609,6 +1683,9 @@ if __name__ == "__main__":
     talk_specs = find_talks()
     talks = [render_talk(spec) for spec in talk_specs]
     talks = [t for t in talks if t is not None]
+
+    link_specs = load_links()
+    links = output_links_page(link_specs)
 
     # generate pages
     for project in projects:
