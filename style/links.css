@@ -1,0 +1,18 @@
+.link-wrapper {}
+
+.link {}
+
+.link>.name {}
+
+.link>.archive {
+    display: inline-block;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.link>.description {
+    font-style: italic;
+    display: inline-block;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
