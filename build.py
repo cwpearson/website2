@@ -378,7 +378,7 @@ def output_links_page(links: List[LinkSpec]):
         by_month[(year, month)] = by_month.get((year, month), []) + [spec]
 
     links_html = ""
-    for (year, month), specs in by_month.items():
+    for (year, month), specs in sorted(by_month.items(), reverse=True):
         links_html += '<div class="month-group">\n'
         h2 = datetime.datetime.strptime(f"{year} {month}", "%Y %m").strftime("%B %Y")
         links_html += f"<h2>{h2}</h2>\n"
