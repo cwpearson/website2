@@ -1,4 +1,16 @@
-# * [A Chemical Hunger – Part I: Mysteries](https://slimemoldtimemold.com/2021/07/07/a-chemical-hunger-part-i-mysteries/) ([archive](https://web.archive.org/web/20221026172946/https://slimemoldtimemold.com/2021/07/07/a-chemical-hunger-part-i-mysteries/))
-# * [A Chemical Hunger - Part II: Current Theories of Obeisity are Inadequate](https://slimemoldtimemold.com/2021/07/11/a-chemical-hunger-part-ii-current-theories-of-obesity-are-inadequate/) ([archive](https://web.archive.org/web/20221021133153/https://slimemoldtimemold.com/2021/07/11/a-chemical-hunger-part-ii-current-theories-of-obesity-are-inadequate/))
-# * [Pointers Are Complicated, or: What's in a Byte?](https://www.ralfj.de/blog/2018/07/24/pointers-and-bytes.html) ([archive](https://web.archive.org/web/20221121101304/https://www.ralfj.de/blog/2018/07/24/pointers-and-bytes.html))
-# * [How an Ancient Philosophy Problem Explains Software Dependence](https://www.pathsensitive.com/2022/09/bet-you-cant-solve-these-9-dependency.html) ([archive](https://web.archive.org/web/20221002004527/https://www.pathsensitive.com/2022/09/bet-you-cant-solve-these-9-dependency.html))
+- name: "A Chemical Hunger - Part I: Mysteries"
+  url: https://slimemoldtimemold.com/2021/07/07/a-chemical-hunger-part-i-mysteries/
+  url_archive: https://web.archive.org/web/20221026172946/https://slimemoldtimemold.com/2021/07/07/a-chemical-hunger-part-i-mysteries/
+  date: 2022-09-01
+- name: "A Chemical Hunger - Part II: Current Theories of Obeisity are Inadequate"
+  url: https://slimemoldtimemold.com/2021/07/11/a-chemical-hunger-part-ii-current-theories-of-obesity-are-inadequate/
+  url_archive: https://web.archive.org/web/20221021133153/https://slimemoldtimemold.com/2021/07/11/a-chemical-hunger-part-ii-current-theories-of-obesity-are-inadequate/
+  date: 2022-09-01
+- name: "Pointers Are Complicated, or: What's in a Byte?"
+  url: https://www.ralfj.de/blog/2018/07/24/pointers-and-bytes.html
+  url_archive: https://web.archive.org/web/20221121101304/https://www.ralfj.de/blog/2018/07/24/pointers-and-bytes.html
+  date: 2022-09-01
+- name: How an Ancient Philosophy Problem Explains Software Dependence
+  url: https://www.pathsensitive.com/2022/09/bet-you-cant-solve-these-9-dependency.html
+  url_archive: https://web.archive.org/web/20221002004527/https://www.pathsensitive.com/2022/09/bet-you-cant-solve-these-9-dependency.html
+  date: 2022-09-01
