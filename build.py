@@ -356,13 +356,14 @@ def load_links() -> List[LinkSpec]:
         print(f"==== {yaml_path}")
         with open(yaml_path, "r") as yaml_file:
             data = yaml.load(yaml_file, Loader=yaml.CLoader)
-        for entry in data:
-            name = entry["name"]
-            url = entry["url"]
-            date = entry["date"]
-            url_archive = entry.get("url_archive", "")
-            description = entry.get("description", "")
-            specs += [LinkSpec(name, url, url_archive, date, description)]
+        if data:
+            for entry in data:
+                name = entry["name"]
+                url = entry["url"]
+                date = entry["date"]
+                url_archive = entry.get("url_archive", "")
+                description = entry.get("description", "")
+                specs += [LinkSpec(name, url, url_archive, date, description)]
     return specs
 
 
