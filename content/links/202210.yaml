@@ -2,6 +2,14 @@
   url: https://slatestarcodex.com/2013/07/17/who-by-very-slow-decay/
   url_archive: https://web.archive.org/web/20221012063744/https://slatestarcodex.com/2013/07/17/who-by-very-slow-decay/
   date: 2022-10-01
-# * [Identifying Forum Agitators, PSYOPS & Shills](https://edith.reisen/computers/security/forum_shills.html) ([archive](https://web.archive.org/web/20221026232712/https://edith.reisen/computers/security/forum_shills.html))
-# * [Comparing Floating-Point Numbers Is Tricky](https://bitbashing.io/comparing-floats.html) ([archive](https://web.archive.org/web/20221023072325/https://bitbashing.io/comparing-floats.html))
-# * [Pink Trombone: Bare-Handed Speech Synthesis](https://dood.al/pinktrombone/)
+- name: Identifying Forum Agitators, PSYOPS & Shills
+  url: https://edith.reisen/computers/security/forum_shills.html
+  url_archive: https://web.archive.org/web/20221026232712/https://edith.reisen/computers/security/forum_shills.html
+  date: 2022-10-01
+- name: Comparing Floating-Point Numbers Is Tricky
+  url: https://bitbashing.io/comparing-floats.html
+  url_archive: https://web.archive.org/web/20221023072325/https://bitbashing.io/comparing-floats.html
+  date: 2022-10-01
+- name: "Pink Trombone: Bare-Handed Speech Synthesis"
+  url: https://dood.al/pinktrombone/
+  date: 2022-10-01
