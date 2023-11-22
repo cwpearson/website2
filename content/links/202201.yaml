@@ -1,7 +1,11 @@
-# - name: This World of Ours
-#   url: https://www.usenix.org/system/files/1401_08-12_mickens.pdf) ([pdf](static/pdf/1401_08-12_mickens.pdf))
-# - name: How ISO C Became Unusable for OS Development
-#   url: https://arxiv.org/pdf/2201.07845.pdf) ([pdf](static/pdf/2201.07845.pdf))
+- name: This World of Ours
+  url: https://www.usenix.org/system/files/1401_08-12_mickens.pdf
+  url_archive: /pdf/1401_08-12_mickens.pdf
+  date: 2022-01-01
+- name: How ISO C Became Unusable for OS Development
+  url: https://arxiv.org/pdf/2201.07845.pdf
+  url_archive: /pdf/2201.07845.pdf
+  date: 2022-01-01
 - name: u/Ilforte on Lies and Loyalty
   url: https://reddit.com/r/TheMotte/comments/s78sjo/_/ht9kfca/?context=1
   url_archive: http://web.archive.org/web/20220124135911/https://www.reddit.com/r/TheMotte/comments/s78sjo/_/ht9kfca/?context=1
