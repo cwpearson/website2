@@ -1,8 +1,31 @@
-# * [Letter to the US Senate Judiciary Committee on App Stores](https://www.schneier.com/essays/archives/2022/01/letter-to-the-us-senate-judiciary-committee-on-app-stores.html), ([archive](http://web.archive.org/web/20220305142704/https://www.schneier.com/essays/archives/2022/01/letter-to-the-us-senate-judiciary-committee-on-app-stores.html))
-# * [Words Known Better by Males than Females, and Vice Versa](https://observablehq.com/@yurivish/words) ([archive](http://web.archive.org/web/20220305143236/https://observablehq.com/@yurivish/words))
-# * [How to Drop Out](https://ranprieur.com/essays/dropout.html) ([archive](http://web.archive.org/web/20220224104041/https://ranprieur.com/essays/dropout.html))
-# * [dylanaraps/pure-bash-bible ](https://github.com/dylanaraps/pure-bash-bible) ([archive](http://web.archive.org/web/20220305143706/https://github.com/dylanaraps/pure-bash-bible))
-# * [Line Goes Up – The Problem With NFTs](https://youtu.be/YQ_xWvX1n9g)
-# * [My favorite essays of life advice](https://www.benkuhn.net/weeklyessays/) ([archive](http://web.archive.org/web/20220305143856/https://www.benkuhn.net/weeklyessays/))
-# * [programming time](https://punkjazz.org/programming-time/) ([archive](http://web.archive.org/web/20220305143947/https://punkjazz.org/programming-time/))
-# * [Rewriting the Technical Interview](https://aphyr.com/posts/353-rewriting-the-technical-interview) ([archive](http://web.archive.org/web/20220305144038/https://aphyr.com/posts/353-rewriting-the-technical-interview))
+- name: Letter to the US Senate Judiciary Committee on App Stores
+  date: 2022-02-01
+  url: https://www.schneier.com/essays/archives/2022/01/letter-to-the-us-senate-judiciary-committee-on-app-stores.html
+  url_archive: http://web.archive.org/web/20220305142704/https://www.schneier.com/essays/archives/2022/01/letter-to-the-us-senate-judiciary-committee-on-app-stores.html
+- name: Words Known Better by Males than Females, and Vice Versa
+  date: 2022-02-01
+  url: https://observablehq.com/@yurivish/words
+  url_archive: http://web.archive.org/web/20220305143236/https://observablehq.com/@yurivish/words
+- name: How to Drop Out
+  date: 2022-02-01
+  url: https://ranprieur.com/essays/dropout.html
+  url_archive: http://web.archive.org/web/20220224104041/https://ranprieur.com/essays/dropout.html
+- name: dylanaraps/pure-bash-bible 
+  date: 2022-02-01
+  url: https://github.com/dylanaraps/pure-bash-bible
+  url_archive: http://web.archive.org/web/20220305143706/https://github.com/dylanaraps/pure-bash-bible
+- name: Line Goes Up - The Problem With NFTs
+  date: 2022-02-01
+  url: https://youtu.be/YQ_xWvX1n9g
+- name: My favorite essays of life advice
+  date: 2022-02-01
+  url: https://www.benkuhn.net/weeklyessays/
+  url_archive: http://web.archive.org/web/20220305143856/https://www.benkuhn.net/weeklyessays/
+- name: programming time
+  date: 2022-02-01
+  url: https://punkjazz.org/programming-time/
+  url_archive: http://web.archive.org/web/20220305143947/https://punkjazz.org/programming-time/
+- name: Rewriting the Technical Interview
+  date: 2022-02-01
+  url: https://aphyr.com/posts/353-rewriting-the-technical-interview
+  url_archive: http://web.archive.org/web/20220305144038/https://aphyr.com/posts/353-rewriting-the-technical-interview
