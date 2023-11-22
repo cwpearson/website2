@@ -1,8 +1,22 @@
-# * [From AI to Abortion, the Scientific Failure to Understand Consciousness Harms the Nation](https://erikhoel.substack.com/p/from-ai-to-abortion-the-scientific) ([archive](https://web.archive.org/web/20221010211638/https://erikhoel.substack.com/p/from-ai-to-abortion-the-scientific))
-# * [C23 is Finished: Here is What is on the Menu](https://thephd.dev/c23-is-coming-here-is-what-is-on-the-menu) ([archive](https://web.archive.org/web/20221109211615/https://thephd.dev/c23-is-coming-here-is-what-is-on-the-menu))
-# * [Counterfeits, fraud, and theft: Why Silca changed its return policy](https://cyclingtips.com/2022/07/interview-silca-on-amazon-e-commerce-fraud-theft-returns/) ([archive](https://web.archive.org/web/20221121015243/https://cyclingtips.com/2022/07/interview-silca-on-amazon-e-commerce-fraud-theft-returns/))
-# * [elonlit/Genesis](https://github.com/elonlit/Genesis)
-# * [Your Makefiles are Wrong](https://tech.davis-hansson.com/p/make/) ([archive](https://web.archive.org/web/20221120135205/https://tech.davis-hansson.com/p/make/))
+- name: From AI to Abortion, the Scientific Failure to Understand Consciousness Harms the Nation
+  url: https://erikhoel.substack.com/p/from-ai-to-abortion-the-scientific
+  url_archive: https://web.archive.org/web/20221010211638/https://erikhoel.substack.com/p/from-ai-to-abortion-the-scientific
+  date: 2022-08-01
+- name: "C23 is Finished: Here is What is on the Menu"
+  url: https://thephd.dev/c23-is-coming-here-is-what-is-on-the-menu
+  url_archive: https://web.archive.org/web/20221109211615/https://thephd.dev/c23-is-coming-here-is-what-is-on-the-menu
+  date: 2022-08-01
+- name: "Counterfeits, fraud, and theft: Why Silca changed its return policy"
+  url: https://cyclingtips.com/2022/07/interview-silca-on-amazon-e-commerce-fraud-theft-returns/
+  url_archive: https://web.archive.org/web/20221121015243/https://cyclingtips.com/2022/07/interview-silca-on-amazon-e-commerce-fraud-theft-returns/
+  date: 2022-08-01
+- name: elonlit/Genesis
+  url: https://github.com/elonlit/Genesis
+  date: 2022-08-01
+- name: Your Makefiles are Wrong
+  url: https://tech.davis-hansson.com/p/make/
+  url_archive: https://web.archive.org/web/20221120135205/https://tech.davis-hansson.com/p/make/
+  date: 2022-08-01
 - name: Failure to Cope "Under Capitalism"
   url: https://www.gawker.com/culture/failure-to-cope-under-capitalism
   url_archive: https://web.archive.org/web/20221115231251/https://www.gawker.com/culture/failure-to-cope-under-capitalism
