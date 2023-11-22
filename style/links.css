@@ -4,6 +4,13 @@
 
 .link>.name {}
 
+.link>.authors {
+    font-style: italic;
+    display: inline-block;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
 .link>.archive {
     display: inline-block;
     margin-left: 0.5em;

@@ -76,6 +76,7 @@ class LinkSpec:
     url_archive: str = ""
     date: datetime.datetime = None
     description: str = ""
+    authors: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -363,7 +364,8 @@ def load_links() -> List[LinkSpec]:
                 date = entry["date"]
                 url_archive = entry.get("url_archive", "")
                 description = entry.get("description", "")
-                specs += [LinkSpec(name, url, url_archive, date, description)]
+                authors = entry.get("authors", [])
+                specs += [LinkSpec(name, url, url_archive, date, description, authors)]
     return specs
 
 
@@ -388,6 +390,8 @@ def output_links_page(links: List[LinkSpec]):
             links_html += f'<a class="name" href="{spec.url}">{spec.name}</a>\n'
             if spec.url_archive:
                 links_html += f'<div class="archive">(<a href="{spec.url_archive}">archive</a>)</div>\n'
+            if spec.authors:
+                links_html += f'<div class="authors">{", ".join(spec.authors)}</div>\n'
             if spec.description:
                 links_html += f'<div class="description">{spec.description}</div>\n'
             links_html += "</div>\n"

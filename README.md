@@ -7,9 +7,10 @@ python build.py && python -m http.server --directory public
 ## Roadmap
 
 - link page
-  - [ ] authors
+  - [x] authors
   - [ ] disclaimer
   - [ ] in navbar
+  - [ ] `url_hn` and `url_hn_archive`
 - have most functions return html + needed style
   - [x] navbar
   - [x] footer

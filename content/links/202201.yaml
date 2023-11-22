@@ -1,11 +1,41 @@
-# * [This World of Ours](https://www.usenix.org/system/files/1401_08-12_mickens.pdf) ([pdf](static/pdf/1401_08-12_mickens.pdf))
-# * [How ISO C Became Unusable for OS Development](https://arxiv.org/pdf/2201.07845.pdf) ([pdf](static/pdf/2201.07845.pdf))
-# * [u/Ilforte on Lies and Loyalty](https://reddit.com/r/TheMotte/comments/s78sjo/_/ht9kfca/?context=1) ([archive](http://web.archive.org/web/20220124135911/https://www.reddit.com/r/TheMotte/comments/s78sjo/_/ht9kfca/?context=1))
-# * [XKCD: Average Familiarity](https://xkcd.com/2501/) ([archive](http://web.archive.org/web/20220124135814/https://xkcd.com/2501/))
-# * [LeanTL: A Lean version of Twitter Timeline](http://leantl.com/)
-# * [Twitter Thread of Naval Mistakes](https://twitter.com/thedreadships/status/1285870278174703617?s=21) ([archive](http://web.archive.org/web/20220124135718/https://twitter.com/thedreadships/status/1285870278174703617?s=21))
-# * [Analysing Network Quality on MacOS](https://danpetrov.xyz/macos/2021/11/14/analysing-network-quality-macos.html) ([archive](http://web.archive.org/web/20220124135630/https://danpetrov.xyz/macos/2021/11/14/analysing-network-quality-macos.html))
-# * [My First Impressions of Web3](https://moxie.org/2022/01/07/web3-first-impressions.html) ([archive](http://web.archive.org/web/20220124135418/https://moxie.org/2022/01/07/web3-first-impressions.html)),  [HN](https://news.ycombinator.com/item?id=29845208) ([archive](http://web.archive.org/web/20220124135412/https://news.ycombinator.com/item?id=29845208))
-# * [Top Risks 2022](https://www.eurasiagroup.net/issues/top-risks-2022) ([archive](https://web.archive.org/web/20220103093756/https://www.eurasiagroup.net/issues/top-risks-2022))
-# * [Your Email Validation Logic is Wrong](https://www.netmeister.org/blog/email.html) ([archive](http://web.archive.org/web/20220124135117/https://www.netmeister.org/blog/email.html))
-# * [700000 Lines of Code and 20 Years: How Dwarf Fortress is Built](https://stackoverflow.blog/2021/12/31/700000-lines-of-code-20-years-and-one-developer-how-dwarf-fortress-is-built/), ([archive](http://web.archive.org/web/20220124134954/https://stackoverflow.blog/2021/12/31/700000-lines-of-code-20-years-and-one-developer-how-dwarf-fortress-is-built/))
+# - name: This World of Ours
+#   url: https://www.usenix.org/system/files/1401_08-12_mickens.pdf) ([pdf](static/pdf/1401_08-12_mickens.pdf))
+# - name: How ISO C Became Unusable for OS Development
+#   url: https://arxiv.org/pdf/2201.07845.pdf) ([pdf](static/pdf/2201.07845.pdf))
+- name: u/Ilforte on Lies and Loyalty
+  url: https://reddit.com/r/TheMotte/comments/s78sjo/_/ht9kfca/?context=1
+  url_archive: http://web.archive.org/web/20220124135911/https://www.reddit.com/r/TheMotte/comments/s78sjo/_/ht9kfca/?context=1
+  date: 2022-01-01
+- name: "XKCD: Average Familiarity"
+  url: https://xkcd.com/2501/
+  url_archive: http://web.archive.org/web/20220124135814/https://xkcd.com/2501/
+  date: 2022-01-01
+- name: "LeanTL: A Lean version of Twitter Timeline"
+  url: http://leantl.com/
+  date: 2022-01-01
+- name: Twitter Thread of Naval Mistakes
+  url: https://twitter.com/thedreadships/status/1285870278174703617?s=21
+  url_archive: http://web.archive.org/web/20220124135718/https://twitter.com/thedreadships/status/1285870278174703617?s=21
+  date: 2022-01-01
+- name: Analysing Network Quality on MacOS
+  url: https://danpetrov.xyz/macos/2021/11/14/analysing-network-quality-macos.html
+  url_archive: http://web.archive.org/web/20220124135630/https://danpetrov.xyz/macos/2021/11/14/analysing-network-quality-macos.html
+  date: 2022-01-01
+- name: My First Impressions of Web3
+  url: https://moxie.org/2022/01/07/web3-first-impressions.html
+  url_archive: http://web.archive.org/web/20220124135418/https://moxie.org/2022/01/07/web3-first-impressions.html
+  url_hn: https://news.ycombinator.com/item?id=29845208
+  url_hn_archive: http://web.archive.org/web/20220124135412/https://news.ycombinator.com/item?id=29845208
+  date: 2022-01-01
+- name: Top Risks 2022
+  url: https://www.eurasiagroup.net/issues/top-risks-2022
+  url_archive: https://web.archive.org/web/20220103093756/https://www.eurasiagroup.net/issues/top-risks-2022
+  date: 2022-01-01
+- name: Your Email Validation Logic is Wrong
+  url: https://www.netmeister.org/blog/email.html
+  url_archive: http://web.archive.org/web/20220124135117/https://www.netmeister.org/blog/email.html
+  date: 2022-01-01
+- name: "700000 Lines of Code and 20 Years: How Dwarf Fortress is Built"
+  url: https://stackoverflow.blog/2021/12/31/700000-lines-of-code-20-years-and-one-developer-how-dwarf-fortress-is-built/
+  url_archive: http://web.archive.org/web/20220124134954/https://stackoverflow.blog/2021/12/31/700000-lines-of-code-20-years-and-one-developer-how-dwarf-fortress-is-built/
+  date: 2022-01-01

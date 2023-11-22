@@ -3,7 +3,19 @@
 # * [Counterfeits, fraud, and theft: Why Silca changed its return policy](https://cyclingtips.com/2022/07/interview-silca-on-amazon-e-commerce-fraud-theft-returns/) ([archive](https://web.archive.org/web/20221121015243/https://cyclingtips.com/2022/07/interview-silca-on-amazon-e-commerce-fraud-theft-returns/))
 # * [elonlit/Genesis](https://github.com/elonlit/Genesis)
 # * [Your Makefiles are Wrong](https://tech.davis-hansson.com/p/make/) ([archive](https://web.archive.org/web/20221120135205/https://tech.davis-hansson.com/p/make/))
-# * [Failure to Cope "Under Capitalism"](https://www.gawker.com/culture/failure-to-cope-under-capitalism) ([archive](https://web.archive.org/web/20221115231251/https://www.gawker.com/culture/failure-to-cope-under-capitalism))
-# * [The Cursed Computer Iceberg Meme](https://suricrasia.online/iceberg/) ([archive](https://web.archive.org/web/20221122150207/https://suricrasia.online/iceberg/))
-# * [Rights, Laws, and Google](https://stratechery.com/2022/rights-laws-and-google/) ([archive](https://web.archive.org/web/20221114170656/https://stratechery.com/2022/rights-laws-and-google/))
-# * [Software Engineering Research Questions](https://neverworkintheory.org/2022/08/30/software-engineering-research-questions.html) ([archive](https://web.archive.org/web/20221126183702/https://neverworkintheory.org/2022/08/30/software-engineering-research-questions.html))
+- name: Failure to Cope "Under Capitalism"
+  url: https://www.gawker.com/culture/failure-to-cope-under-capitalism
+  url_archive: https://web.archive.org/web/20221115231251/https://www.gawker.com/culture/failure-to-cope-under-capitalism
+  date: 2022-08-01
+- name: The Cursed Computer Iceberg Meme
+  url: https://suricrasia.online/iceberg/
+  url_archive: https://web.archive.org/web/20221122150207/https://suricrasia.online/iceberg/
+  date: 2022-08-01
+- name: Rights, Laws, and Google
+  url: https://stratechery.com/2022/rights-laws-and-google/
+  url_archive: https://web.archive.org/web/20221114170656/https://stratechery.com/2022/rights-laws-and-google/
+  date: 2022-08-01
+- name: Software Engineering Research Questions
+  url: https://neverworkintheory.org/2022/08/30/software-engineering-research-questions.html
+  url_archive: https://web.archive.org/web/20221126183702/https://neverworkintheory.org/2022/08/30/software-engineering-research-questions.html
+  date: 2022-08-01
