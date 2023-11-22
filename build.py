@@ -352,9 +352,13 @@ def find_projects() -> List[ProjectSpec]:
 
 
 def load_links() -> List[LinkSpec]:
+    global BYTES_RD
     specs = []
     for yaml_path in (CONTENT_DIR / "links").glob("*.yaml"):
         print(f"==== {yaml_path}")
+        TIMER.stop()
+        BYTES_RD += file_size(yaml_path)
+        TIMER.start()
         with open(yaml_path, "r") as yaml_file:
             data = yaml.load(yaml_file, Loader=yaml.CLoader)
         if data:
