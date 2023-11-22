@@ -1,9 +1,35 @@
-# * [Banana Nut Bread](http://www.cookingforengineers.com/recipe/108/Banana-Nut-Bread/trn) ([archive](https://web.archive.org/web/20220331013307/http://www.cookingforengineers.com/recipe/108/Banana-Nut-Bread/trn))
-# * [You are not your Name](https://www.lingerandlook.com/Names/You.htm) ([archive](http://web.archive.org/web/20220403043938/https://www.lingerandlook.com/Names/You.htm))
-# * [The AMD Branch (Mis)predictor: Just Set it and Forget it!](https://grsecurity.net/amd_branch_mispredictor_just_set_it_and_forget_it) ([archive](https://web.archive.org/web/20220222161113/https://grsecurity.net/amd_branch_mispredictor_just_set_it_and_forget_it))
-# * [Death by PowerPoint: the slide that killed seven people](https://mcdreeamiemusings.com/blog/2019/4/13/gsux1h6bnt8lqjd7w2t2mtvfg81uhx) ([archive](http://web.archive.org/web/20220403044056/https://mcdreeamiemusings.com/blog/2019/4/13/gsux1h6bnt8lqjd7w2t2mtvfg81uhx))
-# * [Scooping the Loop Snooper: A Proof that the Halting Problem is Undecideable](http://www.lel.ed.ac.uk/~gpullum/loopsnoop.html) ([archive](https://web.archive.org/web/20220422071252/http://www.lel.ed.ac.uk/~gpullum/loopsnoop.html))
-# * [dbrereton lists non-Google search engines](https://news.ycombinator.com/item?id=30783391) ([archive](https://web.archive.org/web/20220506024813/https://news.ycombinator.com/item?id=30783391))
-# * [Generics can Make your Go Code Slower](https://planetscale.com/blog/generics-can-make-your-go-code-slower) ([archive](https://web.archive.org/web/20220506024826/https://planetscale.com/blog/generics-can-make-your-go-code-slower))
-# * [The Uselessness of Phenylephrine](https://www.science.org/content/blog-post/uselessness-phenylephrine) ([archive](https://web.archive.org/web/20220506024857/https://www.science.org/content/blog-post/uselessness-phenylephrine))
-# * [Some examples of people quickly accomplishing ambitious things together](https://patrickcollison.com/fast)
+- name: Banana Nut Bread
+  date: 2022-03-01
+  url: http://www.cookingforengineers.com/recipe/108/Banana-Nut-Bread/trn
+  url_archive: https://web.archive.org/web/20220331013307/http://www.cookingforengineers.com/recipe/108/Banana-Nut-Bread/trn
+- name: You are not your Name
+  date: 2022-03-01
+  url: https://www.lingerandlook.com/Names/You.htm
+  url_archive: http://web.archive.org/web/20220403043938/https://www.lingerandlook.com/Names/You.htm
+- name: "The AMD Branch (Mis)predictor: Just Set it and Forget it!"
+  date: 2022-03-01
+  url: https://grsecurity.net/amd_branch_mispredictor_just_set_it_and_forget_it
+  url_archive: https://web.archive.org/web/20220222161113/https://grsecurity.net/amd_branch_mispredictor_just_set_it_and_forget_it
+- name: "Death by PowerPoint: the slide that killed seven people"
+  date: 2022-03-01
+  url: https://mcdreeamiemusings.com/blog/2019/4/13/gsux1h6bnt8lqjd7w2t2mtvfg81uhx
+  url_archive: http://web.archive.org/web/20220403044056/https://mcdreeamiemusings.com/blog/2019/4/13/gsux1h6bnt8lqjd7w2t2mtvfg81uhx
+- name: "Scooping the Loop Snooper: A Proof that the Halting Problem is Undecideable"
+  date: 2022-03-01
+  url: http://www.lel.ed.ac.uk/~gpullum/loopsnoop.html
+  url_archive: https://web.archive.org/web/20220422071252/http://www.lel.ed.ac.uk/~gpullum/loopsnoop.html
+- name: dbrereton lists non-Google search engines
+  date: 2022-03-01
+  url: https://news.ycombinator.com/item?id=30783391
+  url_archive: https://web.archive.org/web/20220506024813/https://news.ycombinator.com/item?id=30783391
+- name: Generics can Make your Go Code Slower
+  date: 2022-03-01
+  url: https://planetscale.com/blog/generics-can-make-your-go-code-slower
+  url_archive: https://web.archive.org/web/20220506024826/https://planetscale.com/blog/generics-can-make-your-go-code-slower
+- name: The Uselessness of Phenylephrine
+  date: 2022-03-01
+  url: https://www.science.org/content/blog-post/uselessness-phenylephrine
+  url_archive: https://web.archive.org/web/20220506024857/https://www.science.org/content/blog-post/uselessness-phenylephrine
+- name: Some examples of people quickly accomplishing ambitious things together
+  date: 2022-03-01
+  url: https://patrickcollison.com/fast
