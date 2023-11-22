@@ -9,7 +9,7 @@ python build.py && python -m http.server --directory public
 - link page
   - [x] authors
   - [x] disclaimer
-  - [ ] in navbar
+  - [x] in navbar
   - [ ] `url_hn` and `url_hn_archive`
 - have most functions return html + needed style
   - [x] navbar
