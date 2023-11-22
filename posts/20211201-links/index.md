@@ -44,10 +44,6 @@ Here are some interesting things I've read.
 Presented without comment or endorsement.
 
 <!-- 
-
-
-
-
 * [A Chemical Hunger – Interlude D: Glyphosate (AKA the active ingredient in Roundup)](https://slimemoldtimemold.com/2021/08/10/a-chemical-hunger-interlude-d-glyphosate-aka-the-active-ingredient-in-roundup/)
 * [A Chemical Hunger – Interlude E: Bad Seeds](https://slimemoldtimemold.com/2021/08/18/a-chemical-hunger-interlude-e-bad-seeds/)
 * [A Chemical Hunger – Part VIII: Paradoxical Reactions](https://slimemoldtimemold.com/2021/08/21/a-chemical-hunger-part-viii-paradoxical-reactions/)
