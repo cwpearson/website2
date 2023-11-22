@@ -1,10 +1,39 @@
-# * [A Solar-Powered Website](https://witch.solar/) ([archive](https://web.archive.org/web/20220401152153/https://witch.solar/))
-# * [nickcammarata with Dall-E examples](https://twitter.com/nickcammarata/status/1511861061988892675?s=21&t=8aSpwebIGVPb0LkksGkgXA) ([archive](https://web.archive.org/web/20220506030145/https://twitter.com/nickcammarata/status/1511861061988892675?s=21&t=8aSpwebIGVPb0LkksGkgXA))
-# * [Self-Actualization is no the Sole Purpose of Human Existence](https://freddiedeboer.substack.com/p/self-actualization-is-not-the-sole) ([archive](https://web.archive.org/web/20220506030309/https://freddiedeboer.substack.com/p/self-actualization-is-not-the-sole))
-# * [Obscure Pregnancy Interventions: Much More Than You Wanted To Know](https://astralcodexten.substack.com/p/obscure-pregnancy-interventions-much) ([archive](https://web.archive.org/web/20220506014012/https://astralcodexten.substack.com/p/obscure-pregnancy-interventions-much))
-# * [How to spot great remote jobs: The Joel test for remote work](https://andreschweighofer.com/career/how-to-spot-great-remote-jobs-the-joel-test-for-remote-work/) ([archive](https://web.archive.org/web/20220506025759/https://andreschweighofer.com/career/how-to-spot-great-remote-jobs-the-joel-test-for-remote-work/))
-# * [The Best Engineering Interview Question I've Ever Gotten: Part 2](https://quuxplusone.github.io/blog/2022/01/07/memcached-interview-solution/) ([archive](https://web.archive.org/web/20220424023538/https://quuxplusone.github.io/blog/2022/01/07/memcached-interview-solution/))
-# * [Workmode: Great Places to Work From](https://workmode.co/)
-# * [Chris Lattner on Garbage Collection vs. ARC](https://atp.fm/205-chris-lattner-interview-transcript#gc) ([archive](https://web.archive.org/web/20211101114918/https://atp.fm/205-chris-lattner-interview-transcript))
-# * [How to Write a Git Commit Message](https://cbea.ms/git-commit/) ([archive](https://web.archive.org/web/20211219182849/https://cbea.ms/git-commit/))
-# * [103 Bits of Advice I Wish I Had Known](https://kk.org/thetechnium/103-bits-of-advice-i-wish-i-had-known/) ([archive](https://web.archive.org/web/20220506010031/https://kk.org/thetechnium/103-bits-of-advice-i-wish-i-had-known/))
+- name: A Solar-Powered Website
+  date: 2022-04-01
+  url: https://witch.solar/
+  url_archive: https://web.archive.org/web/20220401152153/https://witch.solar/
+- name: nickcammarata with Dall-E examples
+  date: 2022-04-01
+  url: https://twitter.com/nickcammarata/status/1511861061988892675?s=21&t=8aSpwebIGVPb0LkksGkgXA
+  url_archive: https://web.archive.org/web/20220506030145/https://twitter.com/nickcammarata/status/1511861061988892675?s=21&t=8aSpwebIGVPb0LkksGkgXA
+- name: Self-Actualization is no the Sole Purpose of Human Existence
+  date: 2022-04-01
+  url: https://freddiedeboer.substack.com/p/self-actualization-is-not-the-sole
+  url_archive: https://web.archive.org/web/20220506030309/https://freddiedeboer.substack.com/p/self-actualization-is-not-the-sole
+- name: "Obscure Pregnancy Interventions: Much More Than You Wanted To Know"
+  date: 2022-04-01
+  url: https://astralcodexten.substack.com/p/obscure-pregnancy-interventions-much
+  url_archive: https://web.archive.org/web/20220506014012/https://astralcodexten.substack.com/p/obscure-pregnancy-interventions-much
+- name: "How to spot great remote jobs: The Joel test for remote work"
+  date: 2022-04-01
+  url: https://andreschweighofer.com/career/how-to-spot-great-remote-jobs-the-joel-test-for-remote-work/
+  url_archive: https://web.archive.org/web/20220506025759/https://andreschweighofer.com/career/how-to-spot-great-remote-jobs-the-joel-test-for-remote-work/
+- name: "The Best Engineering Interview Question I've Ever Gotten: Part 2"
+  date: 2022-04-01
+  url: https://quuxplusone.github.io/blog/2022/01/07/memcached-interview-solution/
+  url_archive: https://web.archive.org/web/20220424023538/https://quuxplusone.github.io/blog/2022/01/07/memcached-interview-solution/
+- name: "Workmode: Great Places to Work From"
+  date: 2022-04-01
+  url: https://workmode.co/
+- name: Chris Lattner on Garbage Collection vs. ARC
+  date: 2022-04-01
+  url: https://atp.fm/205-chris-lattner-interview-transcript#gc
+  url_archive: https://web.archive.org/web/20211101114918/https://atp.fm/205-chris-lattner-interview-transcript
+- name: How to Write a Git Commit Message
+  date: 2022-04-01
+  url: https://cbea.ms/git-commit/
+  url_archive: https://web.archive.org/web/20211219182849/https://cbea.ms/git-commit/
+- name: 103 Bits of Advice I Wish I Had Known
+  date: 2022-04-01
+  url: https://kk.org/thetechnium/103-bits-of-advice-i-wish-i-had-known/
+  url_archive: https://web.archive.org/web/20220506010031/https://kk.org/thetechnium/103-bits-of-advice-i-wish-i-had-known/
