@@ -1,7 +1,27 @@
-# * [Compound pejoratives on Reddit – from buttface to wankpuffin](http://colinmorris.github.io/blog/compound-curse-words) ([archive](https://web.archive.org/web/20220701220815/http://colinmorris.github.io/blog/compound-curse-words))
-# * [What caused the 2020 Homicide Spike?](https://astralcodexten.substack.com/p/what-caused-the-2020-homicide-spike) ([archive](https://web.archive.org/web/20220703093234/https://astralcodexten.substack.com/p/what-caused-the-2020-homicide-spike))
-# * [How Do Individual Contributors Get Stuck? A Primer](https://www.elidedbranches.com/2017/01/how-do-individual-contributors-get.html) ([archive](https://web.archive.org/web/20220703111528/https://www.elidedbranches.com/2017/01/how-do-individual-contributors-get.html))
-# * [Lethal Partisanship](https://www.dannyhayes.org/uploads/6/9/8/5/69858539/kalmoe___mason_ncapsa_2019_-_lethal_partisanship_-_final_lmedit.pdf)
-# * [The Copenhagen Interpretation of Ethics](https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/) ([archive](https://web.archive.org/web/20220618225755/https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/))
-# * [Rewriting the Technical Interview](https://aphyr.com/posts/353-rewriting-the-technical-interview) ([archive](https://web.archive.org/web/20220615123956/https://aphyr.com/posts/353-rewriting-the-technical-interview))
-# * [Why the government breeds and releases billions of flies a year](https://www.nationalgeographic.com/animals/article/north-american-screwworm-barrier) ([archive](https://web.archive.org/web/20220621044438/https://www.nationalgeographic.com/animals/article/north-american-screwworm-barrier))
+- name: Compound pejoratives on Reddit - from buttface to wankpuffin
+  date: 2022-06-01
+  url: http://colinmorris.github.io/blog/compound-curse-words 
+  url_archive: https://web.archive.org/web/20220701220815/http://colinmorris.github.io/blog/compound-curse-words
+- name: What caused the 2020 Homicide Spike?
+  date: 2022-06-01
+  url: https://astralcodexten.substack.com/p/what-caused-the-2020-homicide-spike 
+  url_archive: https://web.archive.org/web/20220703093234/https://astralcodexten.substack.com/p/what-caused-the-2020-homicide-spike
+- name: How Do Individual Contributors Get Stuck? A Primer
+  date: 2022-06-01
+  url: https://www.elidedbranches.com/2017/01/how-do-individual-contributors-get.html 
+  url_archive: https://web.archive.org/web/20220703111528/https://www.elidedbranches.com/2017/01/how-do-individual-contributors-get.html
+- name: Lethal Partisanship
+  date: 2022-06-01
+  url: https://www.dannyhayes.org/uploads/6/9/8/5/69858539/kalmoe___mason_ncapsa_2019_-_lethal_partisanship_-_final_lmedit.pdf
+- name: The Copenhagen Interpretation of Ethics
+  date: 2022-06-01
+  url: https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/ 
+  url_archive: https://web.archive.org/web/20220618225755/https://blog.jaibot.com/the-copenhagen-interpretation-of-ethics/
+- name: Rewriting the Technical Interview
+  date: 2022-06-01
+  url: https://aphyr.com/posts/353-rewriting-the-technical-interview
+  url_archive: https://web.archive.org/web/20220615123956/https://aphyr.com/posts/353-rewriting-the-technical-interview
+- name: Why the government breeds and releases billions of flies a year
+  date: 2022-06-01
+  url: https://www.nationalgeographic.com/animals/article/north-american-screwworm-barrier 
+  url_archive: https://web.archive.org/web/20220621044438/https://www.nationalgeographic.com/animals/article/north-american-screwworm-barrier
