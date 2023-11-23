@@ -8,3 +8,17 @@
     font-style: italic;
     display: inline;
 }
+
+.content-card {
+    background-color: #e3d5ca;
+    margin: 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.content-card:hover {
+    background-color: #d6ccc2;
+}

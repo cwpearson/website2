@@ -518,7 +518,10 @@ def render_projects_index(projects: List[Project]) -> str:
     footer_html, footer_css = footer_frag()
     return template("projects.tmpl").safe_substitute(
         {
-            "style_frag": nav_css + style("common.css") + footer_css,
+            "style_frag": nav_css
+            + style("common.css")
+            + style("cards.css")
+            + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,
             "body_frag": project_links,
@@ -1498,7 +1501,10 @@ def render_posts(posts: List[Post]) -> str:
     footer_html, footer_css = footer_frag()
     return tmpl.safe_substitute(
         {
-            "style_frag": nav_css + style("common.css") + footer_css,
+            "style_frag": nav_css
+            + style("common.css")
+            + style("cards.css")
+            + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,
             "body_frag": post_links,
