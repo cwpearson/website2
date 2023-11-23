@@ -478,7 +478,7 @@ def output_project(project: Project):
             + style("tag.css")
             + links_css
             + footer_css,
-            "head_frag": head_frag(),
+            "head_frag": head_frag(title=project.title),
             "nav_frag": nav_html,
             "body_frag": project.body_html,
             "links_frag": links_html,
@@ -522,7 +522,7 @@ def render_projects_index(projects: List[Project]) -> str:
             + style("common.css")
             + style("cards.css")
             + footer_css,
-            "head_frag": head_frag(),
+            "head_frag": head_frag(title="Projects", descr="Links to project pages"),
             "nav_frag": nav_html,
             "body_frag": project_links,
             "footer_frag": footer_html,
@@ -1449,7 +1449,9 @@ def render_publications(pubs: List[Pub]) -> str:
             + style("common.css")
             + style("cards.css")
             + footer_css,
-            "head_frag": head_frag(),
+            "head_frag": head_frag(
+                title="Publications", descr="List of my publications"
+            ),
             "nav_frag": nav_html,
             "body_frag": pub_links,
             "footer_frag": footer_html,
@@ -1505,7 +1507,7 @@ def render_posts(posts: List[Post]) -> str:
             + style("common.css")
             + style("cards.css")
             + footer_css,
-            "head_frag": head_frag(),
+            "head_frag": head_frag(title="Posts", descr="Links to my posts"),
             "nav_frag": nav_html,
             "body_frag": post_links,
             "footer_frag": footer_html,
@@ -1576,7 +1578,7 @@ def render_talks(talks: List[Talk]) -> str:
             + style("common.css")
             + style("cards.css")
             + footer_css,
-            "head_frag": head_frag(),
+            "head_frag": head_frag(title="Talks", descr="Links to my talks"),
             "nav_frag": nav_html,
             "body_frag": talk_links,
             "footer_frag": footer_html,
@@ -1621,6 +1623,7 @@ def render_tag_page(
 
     nav_html, nav_css = nav_frag()
     footer_html, footer_css = footer_frag()
+    title = f"#{tag.string()}"
     html = template("tag.tmpl").safe_substitute(
         {
             "style_frag": nav_css
@@ -1628,9 +1631,9 @@ def render_tag_page(
             + style("cards.css")
             + style("tag_page.css")
             + footer_css,
-            "head_frag": head_frag(),
+            "head_frag": head_frag(title=title),
             "nav_frag": nav_html,
-            "title": f"#{tag.string()}",
+            "title": title,
             "pubs_frag": pubs_frag,
             "posts_frag": posts_frag,
             "talks_frag": talks_frag,
@@ -1666,7 +1669,7 @@ def render_tags(tags: List[Tag]) -> str:
     return template("tags.tmpl").safe_substitute(
         {
             "style_frag": nav_css + style("common.css") + style("tag.css") + footer_css,
-            "head_frag": head_frag(),
+            "head_frag": head_frag(title="Tags", descr="List of all tags"),
             "nav_frag": nav_html,
             "body_frag": body_html,
             "footer_frag": footer_html,
