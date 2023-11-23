@@ -22,3 +22,18 @@
 .content-card:hover {
     background-color: #d6ccc2;
 }
+
+/*take up all the extra container space*/
+.pub-ref {
+    flex-grow: 1;
+}
+
+.pub-title {
+    display: inline;
+    font-variant-caps: small-caps;
+}
+
+.pub-date {
+    display: inline;
+    padding-left: 10px;
+}

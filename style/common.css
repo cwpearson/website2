@@ -34,21 +34,6 @@ a:link {
     display: inline;
 }
 
-/*take up all the extra container space*/
-.pub-ref {
-    flex-grow: 1;
-}
-
-.pub-title {
-    display: inline;
-    font-variant-caps: small-caps;
-}
-
-.pub-date {
-    display: inline;
-    padding-left: 10px;
-}
-
 .no-decoration {
     text-decoration: none;
 }
