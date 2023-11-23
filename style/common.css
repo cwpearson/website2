@@ -38,21 +38,6 @@ a:link {
     text-decoration: none;
 }
 
-.gallery {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    /* same as scroll, but don't show scrollbar if no scrolling needed*/
-    overflow-x: auto;
-    justify-content: center;
-}
-
-.gallery img {
-    width: 250px;
-    height: auto;
-    margin: 1em;
-}
-
 .body-container {
     display: flex;
     flex-direction: column;
