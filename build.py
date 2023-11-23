@@ -397,15 +397,16 @@ def output_links_page(links: List[LinkSpec]):
     if links_html:
         links_html = f'<div class="link-wrapper">\n{links_html}</div>\n'
 
+    title = frontmatter["title"]
     html = template("links.tmpl").safe_substitute(
         {
             "style_frag": nav_css
             + style("common.css")
             + style("links.css")
             + footer_css,
-            "head_frag": head_frag(),
+            "head_frag": head_frag(title=title, descr="Interesting things I've read"),
             "nav_frag": nav_html,
-            "title": frontmatter["title"],
+            "title": title,
             "body_frag": links_html,
             "footer_frag": footer_html,
         }
