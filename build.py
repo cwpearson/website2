@@ -1620,6 +1620,7 @@ def render_tag_page(
             "style_frag": nav_css
             + style("common.css")
             + style("cards.css")
+            + style("tag_page.css")
             + footer_css,
             "head_frag": head_frag(),
             "nav_frag": nav_html,

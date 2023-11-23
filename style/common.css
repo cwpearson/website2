@@ -96,11 +96,3 @@ a:link {
     when max-width=750*/
     max-width: min(1000px, 100%);
 }
-
-/*used in the title block of each tag's page*/
-.title-block {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
