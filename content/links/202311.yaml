@@ -29,3 +29,7 @@
   url: https://www.stroustrup.com/quotes.html
   url_archive: https://web.archive.org/web/20231126232753/https://www.stroustrup.com/quotes.html
   date: 2023-11-26
+- name: "C++ Memory Model: Migrating from X86 to ARM"
+  url: https://arangodb.com/2021/02/cpp-memory-model-migrating-from-x86-to-arm/
+  url_archive: https://web.archive.org/web/20231128073902/https://arangodb.com/2021/02/cpp-memory-model-migrating-from-x86-to-arm/
+  date: 2023-11-28
