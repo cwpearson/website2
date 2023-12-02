@@ -1,3 +1,7 @@
+- name: Hardball Questions for the Next Debate
+  url: https://www.astralcodexten.com/p/hardball-questions-for-the-next-debate
+  url_archive: http://web.archive.org/web/20231129060645/https://www.astralcodexten.com/p/hardball-questions-for-the-next-debate
+  date: 2023-11-07
 - name: Friends Don't Let Friends Make Bad Graphs
   url: https://github.com/cxli233/FriendsDontLetFriends
   date: 2023-11-23
@@ -33,3 +37,12 @@
   url: https://arangodb.com/2021/02/cpp-memory-model-migrating-from-x86-to-arm/
   url_archive: https://web.archive.org/web/20231128073902/https://arangodb.com/2021/02/cpp-memory-model-migrating-from-x86-to-arm/
   date: 2023-11-28
+- name: Modern C++ Programming Course
+  url: https://github.com/federico-busato/Modern-CPP-Programming
+  url_archive: http://web.archive.org/web/20231130210414/https://github.com/federico-busato/Modern-CPP-Programming
+  url_hn: https://news.ycombinator.com/item?id=38444834
+  url_hn_archive: http://web.archive.org/web/20231130141325/https://news.ycombinator.com/item?id=38444834
+  date: 2023-11-28
+- name: Down to Earth
+  url: https://github.com/pedrosbmartins/downtoearth
+  date: 2023-11-30
