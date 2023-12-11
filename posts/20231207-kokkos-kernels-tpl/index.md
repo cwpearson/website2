@@ -18,12 +18,12 @@ Throughout, I will use placeholders COMPONENT, FUNC, and LIBWHATEVER.
 4. LIBWHATEVER is a specific TPL, e.g. MAGMA or oneMKL.
 
 There are two primary pieces
-1. The "**TPL availability struct**": this struct has a single boolean member that says whether the TPL has an implementation of the function for a particular combination of data types.
-2. The "**function implementation struct**": This struct has a static member function that implements the particular function in question.
+1. The "**TPL availability struct**": 
+2. The "**function implementation struct**": This struct has a static member function that implements above TPL/parameter type/function combination.
 
 ### **TPL Availability Struct**
-The **TPL availability struct** is a struct template that encodes, at compile time, whether Kokkos Kernels has been configured with a TPL that supports a specific FUNC in a COMPONENT.
-It is a struct template, since the above depends on the 
+The **TPL availability struct** has a single boolean member that says whether Kokkos Kernels know how to use a particular TPL for PARAMETER_TYPES to a particular FUNC.
+This is a struct template, a standard C++ technique for creating values based on C++ type information.
 
 ### **Function Implementation Struct**
 The **function implementation struct** is the core of the system.
@@ -48,8 +48,6 @@ The other we can ignore, as it's related to ETI
 
 
 ## Code of the TPL system
-
-
 
 Each component has a `tpls` subdirectory, for example, `blas/tpls`.
 In that directory, there is a pair of files for each interface, a `COMPONENT_FUNC_spec_avail.hpp` and `COMPONENT_FUNC_spec_decl.hpp` file.
