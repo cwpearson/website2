@@ -6,6 +6,8 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
+- posts
+  - [x] add title to metadata
 - link page
   - [x] authors
   - [x] disclaimer

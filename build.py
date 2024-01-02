@@ -693,6 +693,7 @@ def output_post(post: Post):
             + footer_css
             + post.css,
             "head_frag": head_frag(
+                title=post.title,
                 math=post.math,
                 descr=post.description,
                 keywords=post.keywords,
