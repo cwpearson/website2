@@ -1,6 +1,8 @@
 +++
 title = "Using c++ to Solve the Jindosh Riddle Dishonored 2's Dust District"
 date = 2023-12-24T10:00:00-0700
+description = "Brute-force and depth-first search to solve a variation of an Einstein riddle"
+tags = ["c++"]
 +++
 
 Without further ado, two solutions are presented here: https://github.com/cwpearson/jindosh-riddle/
