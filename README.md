@@ -7,6 +7,7 @@ python build.py && python -m http.server --directory public
 ## Roadmap
 
 - posts
+  - [ ] Ignore non-markdown files (e.g. `.DS_store`)
   - [x] add title to metadata
 - link page
   - [x] authors
