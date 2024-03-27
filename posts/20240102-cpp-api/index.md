@@ -69,8 +69,8 @@ Another option would have been to do an overload
 ```c++
 // Immediate ommitted since the signature is different
 enum class Mode {
-    Bare,
     Blocking,
+    Buffered,
     Immediate,
     Ready,
     Synchronous
@@ -81,7 +81,7 @@ struct SendResult {
     MPI_Request req;
 };
 
-SendResult send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm, const Mode mode = Mode::Bare)
+SendResult send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm, const Mode mode = Mode::Blocking)
 ```
 
 This reduces the number of public APIs we have, which is nice, but there are several downsides.
@@ -96,8 +96,8 @@ This basically moves the `mode` parameter from the "Overload" case from run-time
 
 ```c++
 enum class Mode {
-    Bare,
     Blocking,
+    Buffered,
     Immediate,
     Ready,
     Synchronous
@@ -120,11 +120,6 @@ template<> struct SendReturn<Mode::Immediate> {
 
 template <Mode mode>
 SendReturn<mode>::type send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm);
-
-template<>
-SendReturn<Mode::Bare>::type send<Mode::Bare>(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm) {
-    // implementation of bare send
-}
 
 template<>
 SendReturn<Mode::Blocking>::type send<Mode::Blocking>(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm) {
