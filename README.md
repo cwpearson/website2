@@ -23,6 +23,7 @@ python build.py && python -m http.server --directory public
   - [x] links
   - [ ] external_link (replace project page)
 - tags
+  - [ ] "uncategorized" category for empty tags
   - [x] canonicalize tags when reading (prevents duplicates later)
   - [x] generate a page for each tag
   - [x] add tag links to each page
