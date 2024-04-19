@@ -17,6 +17,9 @@ import mistletoe
 from mistletoe.contrib.pygments_renderer import PygmentsRenderer
 import yaml
 from PIL import Image
+from pillow_heif import register_heif_opener
+
+register_heif_opener()
 
 BYTES_RD = 0
 BYTES_WR = 0
@@ -80,21 +83,27 @@ class Link:
 
 
 @dataclass
+class GalleryItem:
+    src: Path  # relative path to the input image
+    caption: str
+    dst: Path  # relative path to the transformed image (may be same as source)
+    thumb: Path  # relative path to the thumbnail
+
+
+@dataclass
 class PostSpec:
     markdown_path: Path
+    markdown: str
+    frontmatter: dict
     # path to the posts's directory, if there is one
     input_dir: Union[Path, None]
     output_dir: str
     resources: List[Path] = field(
         default_factory=list
     )  # paths to other things in the post directory
-
-
-@dataclass
-class GalleryItem:
-    image: Path  # post/gallery/image is the path to the image
-    caption: str
-    full_path: Path = None  # full path to the image
+    gallery_items: List[GalleryItem] = field(
+        default_factory=list
+    )  # paths to other things in the post directory
 
 
 @dataclass
@@ -536,18 +545,31 @@ def find_posts() -> List[PostSpec]:
     for post in POSTS_DIR.iterdir():
         output_dir = Path("post") / f"{post.stem}"
         if post.is_file():
+            frontmatter, markdown = read_markdown(post)
             specs += [
-                PostSpec(markdown_path=post, input_dir=None, output_dir=output_dir)
+                PostSpec(
+                    markdown_path=post,
+                    frontmatter=frontmatter,
+                    markdown=markdown,
+                    input_dir=None,
+                    output_dir=output_dir,
+                )
             ]
         elif post.is_dir():
             md_path = post / "index.md"
             if md_path.is_file():
+                frontmatter, markdown = read_markdown(md_path)
                 resources = [
-                    x.relative_to(post) for x in post.iterdir() if x.name != "index.md"
+                    x.relative_to(post)
+                    for x in post.iterdir()
+                    if x.name not in ("gallery", "index.md")
                 ]
+
                 specs += [
                     PostSpec(
                         markdown_path=md_path,
+                        frontmatter=frontmatter,
+                        markdown=markdown,
                         input_dir=post,
                         output_dir=output_dir,
                         resources=resources,
@@ -555,6 +577,32 @@ def find_posts() -> List[PostSpec]:
                 ]
 
     return specs
+
+
+def preprocess_gallery(spec: PostSpec):
+
+    gallery_items: List[GalleryItem] = []
+
+    for gi in spec.frontmatter.get("gallery_item", []):
+
+        src = Path(gi["image"])
+
+        if src.suffix.lower() == ".heic":
+            dst = src.with_suffix(".jpg")
+        else:
+            dst = src
+
+        thumb = dst.stem + "_thumb" + dst.suffix
+
+        gallery_items += [
+            GalleryItem(
+                src=src,
+                caption=gi.get("caption", ""),
+                dst=dst,
+                thumb=thumb,
+            )
+        ]
+    ps.gallery_items = gallery_items
 
 
 def maybe_localize_to_mountain(dt: datetime.datetime) -> datetime.datetime:
@@ -595,7 +643,7 @@ def move_post_resources(spec: PostSpec):
     global BYTES_RD
     global BYTES_WR
     output_dir = OUTPUT_DIR / spec.output_dir
-    print(f"==== post resources {spec.markdown_path} -> {output_dir}")
+    print(f"==== post resources into -> {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     for res in spec.resources:
         src = spec.input_dir / res
@@ -615,54 +663,73 @@ def move_post_resources(spec: PostSpec):
             TIMER.start()
             BYTES_RD += sz
             BYTES_WR += sz
+    for gi in spec.gallery_items:
+        src_path = spec.input_dir / "gallery" / gi.src
+        thumb_path = output_dir / "gallery" / gi.thumb
+        src_img = Image.open(src_path)
+        BYTES_RD += file_size(src_path)
+        if gi.src != gi.dst:
+            dst_path = output_dir / "gallery" / gi.dst
+            print(f"==== gallery image {src_path} -> {dst_path}")
+            dst_path.parent.mkdir(exist_ok=True, parents=True)
+            src_img.save(dst_path)
+            BYTES_WR += file_size(dst_path)
+
+        print(f"==== gallery thumb {src_path} -> {thumb_path}")
+        src_img.thumbnail((256, 256), Image.Resampling.LANCZOS)
+        thumb_path.parent.mkdir(exist_ok=True, parents=True)
+        src_img.save(thumb_path, quality=75)
+        BYTES_WR += file_size(thumb_path)
 
 
-def render_gallery_frag(gallery_items: List[GalleryItem]) -> str:
+def render_gallery_frag(gallery_items: List[GalleryItem], post_root: Path) -> str:
     if not gallery_items:
         return ""
 
     html = '<div class="gallery">\n'
 
     for gi in gallery_items:
-        html += (
-            img(src=Path("gallery") / gi.image, alt=gi.caption, path=gi.full_path)
-            + "\n"
+        html += '<div class="item">\n'
+        html += '<div class="image">\n'
+
+        img_frag = img(
+            src=Path("gallery") / gi.thumb,
+            alt=gi.caption,
+            path=OUTPUT_DIR / post_root / "gallery" / gi.thumb,
         )
 
-    html += "</div>\n"
+        html += f'<a href="gallery/{gi.dst}">{img_frag}</a>\n'
+        html += "</div>\n"  # .image
+        html += '<div class="caption">\n'
+        html += gi.caption + "\n"
+        html += "</div>\n"  # .caption
+
+        html += "</div>\n"  # .item
+
+    html += "</div>\n"  # .gallery
     return html
 
 
 def render_post(spec: PostSpec) -> Post:
-    print(f"==== render {spec.markdown_path}")
-    frontmatter, markdown = read_markdown(spec.markdown_path)
+    print(f"==== render {spec.input_dir} -> {spec.output_dir}")
 
-    draft = frontmatter.get("draft", False)
+    draft = spec.frontmatter.get("draft", False)
     if draft:
         return None
-    title = frontmatter["title"]
-    create_time = frontmatter["date"]
+    title = spec.frontmatter["title"]
+    create_time = spec.frontmatter["date"]
     create_time = maybe_localize_to_mountain(create_time)
-    mod_time = frontmatter.get("lastmod", create_time)
+    mod_time = spec.frontmatter.get("lastmod", create_time)
     mod_time = maybe_localize_to_mountain(mod_time)
-    math = frontmatter.get("math", False)
+    math = spec.frontmatter.get("math", False)
 
-    gallery_items = [
-        GalleryItem(
-            gi["image"],
-            gi["caption"],
-            full_path=OUTPUT_DIR / spec.output_dir / "gallery" / gi["image"],
-        )
-        for gi in frontmatter.get("gallery_item", [])
-    ]
-
-    gallery_html = render_gallery_frag(gallery_items)
-    raw_tags = frontmatter.get("tags", [])
+    gallery_html = render_gallery_frag(spec.gallery_items, post_root=spec.output_dir)
+    raw_tags = spec.frontmatter.get("tags", [])
 
     body_html = ""
     body_html += f"<h1>{title}</h1>\n"
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
-        body_html += renderer.render(mistletoe.Document(markdown))
+        body_html += renderer.render(mistletoe.Document(spec.markdown))
 
     return Post(
         spec=spec,
@@ -672,10 +739,10 @@ def render_post(spec: PostSpec) -> Post:
         mod_time=mod_time,
         gallery_html=gallery_html,
         math=math,
-        css=frontmatter.get("css", ""),
+        css=spec.frontmatter.get("css", ""),
         tags=canonical_tags(raw_tags),
-        keywords=uniqify(frontmatter.get("keywords", []) + raw_tags),
-        description=frontmatter.get("description", ""),
+        keywords=uniqify(spec.frontmatter.get("keywords", []) + raw_tags),
+        description=spec.frontmatter.get("description", ""),
     )
 
 
@@ -1251,7 +1318,13 @@ def render_index(top_k_posts: List[Post], top_k_pubs: List[Pub]) -> str:
     # fake "Post" that just links to all posts
     top_k_posts_frag += post_card(
         Post(
-            spec=PostSpec(markdown_path=None, input_dir=None, output_dir=Path("posts")),
+            spec=PostSpec(
+                markdown_path=None,
+                markdown=None,
+                frontmatter=None,
+                input_dir=None,
+                output_dir=Path("posts"),
+            ),
             title="...",
             body_html=None,
         )
@@ -1689,6 +1762,8 @@ if __name__ == "__main__":
     projects = [render_project(spec) for spec in project_specs]
 
     post_specs = find_posts()
+    for ps in post_specs:
+        preprocess_gallery(ps)
     for ps in post_specs:
         move_post_resources(ps)
     posts = [render_post(spec) for spec in post_specs]

@@ -4,3 +4,4 @@ pillow==10.0.1
 pytz
 pyyaml==6.0.1
 pygments==2.16
+pillow_heif==0.16.0
