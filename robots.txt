@@ -1,8 +1,14 @@
 User-agent: *
 Allow: /
 
+# OpenAI training
 User-agent: GPTBot
 Disallow: /
 
+# Google AI training
 User-agent: Google-Extended
+Disallow: /
+
+# Common Crawl
+User-agent: CCBot
 Disallow: /
