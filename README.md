@@ -9,6 +9,7 @@ python build.py && python -m http.server --directory public
 - posts
   - [ ] Ignore non-markdown files (e.g. `.DS_store`)
   - [x] add title to metadata
+  - [ ] special styling for block quotes?
 - link page
   - [x] authors
   - [x] disclaimer
