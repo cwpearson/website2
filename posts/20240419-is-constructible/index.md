@@ -28,11 +28,11 @@ Even so, `std::is_constructible_v<S, float>` is `true`.
 
 The [C++ 11 standard](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3337.pdf), which introduced `std::is_constructible`, says
 
-    `is_constructible<T, Args...>` shall be satisfied if and only if the following variable definition would be well-formed for some invented variable `t`: `T t(create<Args>()...)`;
+> `is_constructible<T, Args...>` shall be satisfied if and only if the following variable definition would be well-formed for some invented variable `t`: `T t(create<Args>()...)`;
 
 A well-formed expression is presumably one that is part of a well-formed program, which is a
 
-    C++ program constructed according to the syntax rules, diagnosable semantic rules, and the One Definition Rule (3.2).
+> C++ program constructed according to the syntax rules, diagnosable semantic rules, and the One Definition Rule (3.2).
 
 `S(1.0f)` is certainly valid syntax, and our mini-program follows ODR, so that leaves whether this `static_assert` failure is a diagnosable semantic rule.
 In general I think it is not - imagine this
