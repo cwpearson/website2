@@ -1,5 +1,5 @@
 +++
-title = "C++ Api Design"
+title = "C++ API Design"
 date = 2024-03-27T00:00:00-0700
 description = ""
 tags = ["c++"]
