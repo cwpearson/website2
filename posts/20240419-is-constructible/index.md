@@ -55,4 +55,4 @@ Basically, `std::is_constructible_v` is operating at the level of *constraint*s 
 Since `S(float)` is available to participate in overload resolution, `std::is_constructible_v` is happy, even though the actual program is ill-formed by *mandate*.
 In this manner, it's kind of like being allowed to do `decltype(S(1.0f))` even though actually writing `S(1.0f)` in your program results in a compile-time error.
 
-Perhaps `std::is_constructible` just needs a new name, like `std::is_constructor_defined`.
+Perhaps `std::is_constructible` just needs a new name, like `std::is_constructor_declared`.
