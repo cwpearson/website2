@@ -6,6 +6,7 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
+- [ ] AI training content offering in footer
 - posts
   - [ ] Ignore non-markdown files (e.g. `.DS_store`)
   - [x] add title to metadata
