@@ -2,7 +2,7 @@
 title = "std::is_constructible is (at best) Poorly Named"
 date = 2024-04-19T00:00:00-0700
 description = ""
-tags = []
+tags = ["c++"]
 +++
 
 Consider the following C++ code
