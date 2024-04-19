@@ -12,3 +12,37 @@ Disallow: /
 # Common Crawl
 User-agent: CCBot
 Disallow: /
+
+##
+## more from https://github.com/healsdata/ai-training-opt-out/blob/main/robots.txt
+##
+
+# The example for img2dataset, although the default is *None*
+User-agent: img2dataset
+Disallow: /
+
+# Speculative blocks for Anthropic
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+# webz.io - they sell data for training LLMs.
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: Omgili
+Disallow: /
+
+# Meta's bot that crawls public web pages to improve language models
+User-agent: FacebookBot
+Disallow: /
+
+# ByteDance's bot used to gather data for their LLMs, including Doubao.
+User-agent: Bytespider
+Disallow: /
+
+# Brandwatch - "AI to discover new trends"
+User-agent: magpie-crawler
+Disallow: /
