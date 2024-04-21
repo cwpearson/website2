@@ -1,7 +1,7 @@
-mistletoe==1.2.1
-toml==0.10.2
-pillow>=10.3.0
+mistletoe==1.2
+toml==0.10
+pillow==10.3
 pytz
-pyyaml==6.0.1
+pyyaml==6.0
 pygments==2.16
-pillow_heif==0.16.0
+pillow_heif==0.16
