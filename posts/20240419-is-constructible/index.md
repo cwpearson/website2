@@ -1,7 +1,7 @@
 +++
 title = "std::is_constructible is (at best) Poorly Named"
 date = 2024-04-19T00:00:00-0700
-description = ""
+description = "Interaction of std::is_constructible and static_assert, with code examples."
 tags = ["c++"]
 +++
 
