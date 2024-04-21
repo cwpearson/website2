@@ -25,8 +25,7 @@
     margin: 1rem;
 }
 
-.body .gallery .item .image {
-}
+.body .gallery .item .image {}
 
 .body .gallery .item .image img {
     width: auto;
@@ -39,5 +38,11 @@
     text-align: center;
 }
 
+blockquote {
+    border-left: 10px solid #d5bdaf;
+    background-color: #e3d5ca;
 
-
+    p {
+        padding: 0.25rem;
+    }
+}

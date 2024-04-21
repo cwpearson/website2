@@ -6,7 +6,6 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
-- [ ] AI training content offering in footer
 - posts
   - [x] Image Gallery support
     - [x] Support HEIC input images
@@ -16,7 +15,7 @@ python build.py && python -m http.server --directory public
     - [x] Only copy GalleryItem `dst` member
   - [ ] Ignore non-markdown files (e.g. `.DS_store`)
   - [x] add title to metadata
-  - [ ] special styling for block quotes?
+  - [x] style block quotes
 - link page
   - [x] authors
   - [x] disclaimer
