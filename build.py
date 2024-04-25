@@ -1153,7 +1153,7 @@ def footer_frag(edit_url="") -> Tuple[str, str]:
         )
         SHA = cp.stdout.decode("utf-8").strip()
     html = '<div class="footer">\n'
-    html += "<hr \>\n"
+    html += "<hr />\n"
     html += '<div class="footer-items">\n'
     html += f"<div>build {SHA} on {now_str}</div>\n"
     html += f'<div><a href="https://github.com/cwpearson/website2">github.com/cwpearson/website2</a></div>\n'
