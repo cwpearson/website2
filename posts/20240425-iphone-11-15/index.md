@@ -27,7 +27,7 @@ First, the specs:
 <tr><td>Dims</td><td>144x71.4x8.1 mm</td><td>146.6x70.6x8.25 mm</td></tr>
 <tr><td>Weight</td><td></td>188g<td>187g</td></tr>
 <tr><td>Display</td><td>5.8", 60Hz, 8bit, 800-1200 nits max</td><td>6.1", 1-120 Hz, 8 bit (?), 1000-2000 nits max</td></tr>
-<tr><td>Wi-Fi</td>6<td></td><td>6E</td></tr>
+<tr><td>Wi-Fi</td><td>6</td><td>6E</td></tr>
 <tr><td>Price</td><td>$1,149 (256GB)</td><td>$1,300 (512GB)</td></tr>
 </table>
 </div>
