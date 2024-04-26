@@ -24,8 +24,8 @@ First, the specs:
 <tr><td>CPU</td><td>A13</td><td>A17 Pro</td></tr>
 <tr><td>GeekBench 15 Single-Core</td><td>1329</td><td>2147</td></tr>
 <tr><td>RAM</td><td>4 GB</td><td>8 GB</td></tr>
-<tr><td>Dims</td>144x71.4x8.1 mm<td></td><td>146.6x70.6x8.25 mm</td></tr>
-<tr><td>Weight</td>188g<td></td><td>187g</td></tr>
+<tr><td>Dims</td><td>144x71.4x8.1 mm</td><td>146.6x70.6x8.25 mm</td></tr>
+<tr><td>Weight</td><td></td>188g<td>187g</td></tr>
 <tr><td>Display</td><td>5.8", 60Hz, 8bit, 800-1200 nits max</td><td>6.1", 1-120 Hz, 8 bit (?), 1000-2000 nits max</td></tr>
 <tr><td>Wi-Fi</td>6<td></td><td>6E</td></tr>
 <tr><td>Price</td><td>$1,149 (256GB)</td><td>$1,300 (512GB)</td></tr>
