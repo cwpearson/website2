@@ -6,7 +6,7 @@ tags = ["c++", "cmake"]
 draft = true
 +++
 
-I've created a fork of the [mantevo/miniAero](https://github.com/mantevo/miniAero) proxy application, featuring support for Kokkos 4, the CMake build system, and Python 3.
+I've created an **unofficial** fork of the [mantevo/miniAero](https://github.com/mantevo/miniAero) proxy application, featuring support for Kokkos 4, the CMake build system, and Python 3.
 You can explore the fork on [github](https://github.com/cwpearson/miniAero).
 Although miniAero was originally developed by researchers at my employer, Sandia National Labs, I have not consulted with them on this fork. The original project seems to be inactive.
 
