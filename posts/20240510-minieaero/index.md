@@ -2,7 +2,7 @@
 title = "miniAero Fork for Kokkos 4"
 date = 2024-05-10T00:00:00-0700
 description = "miniAero fork with Kokkos 4, CMake, and Python 3"
-tags = []
+tags = ["c++", "cmake"]
 draft = true
 +++
 
