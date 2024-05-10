@@ -3,7 +3,6 @@ title = "miniAero"
 date = 2024-05-10T00:00:00-0700
 description = "miniAero fork with Kokkos 4, CMake, and Python 3"
 tags = []
-"""
 draft = true
 +++
 
@@ -11,7 +10,8 @@ I've [created an **unofficial** fork](https://github.com/cwpearson/miniAero) of 
 
 miniAero is one of the [mantevo](manetvo.org) mini-applications.
 Mini-apps are intended to distill the key computational components of larger high-performance computing applications into a smaller package that is easier to experiment with and study.
-miniAero was released in 2016 and enough has changed in the HPC software community to make it a bit annoying to run, even though the underlying computation is still relevant.
+MiniAero was released in 2016 and enough has changed in the HPC software community to make it a bit annoying to run, even though the underlying computation is still relevant.
+This fork is intended to be easier to build and run in 2024.
 
 miniAero is implemented using the [Kokkos](kokkos.org) performance portability library.
 Kokkos has had several major releases since miniAero was written, and although the basic features that miniAero uses haven't changed much, the API has drifted slightly.
