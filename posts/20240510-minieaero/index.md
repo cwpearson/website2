@@ -6,10 +6,15 @@ tags = []
 draft = true
 +++
 
-I've [created an **unofficial** fork](https://github.com/cwpearson/miniAero) of [mantevo/miniAero](https://github.com/mantevo/miniAero) with support for Kokkos 4, the CMake build system, and Python 3.
+I've created a fork of the [mantevo/miniAero](https://github.com/mantevo/miniAero) mini-app, featuring support for Kokkos 4, the CMake build system, and Python 3.
+You can explore the fork on [github](https://github.com/cwpearson/miniAero).
 
-miniAero is one of the [mantevo](manetvo.org) mini-applications.
-Mini-apps are intended to distill the key computational components of larger high-performance computing applications into a smaller package that is easier to experiment with and study.
+miniAero is part of the [mantevo](manetvo.org) suite of proxy applications.
+These mini-apps simplify the core computational components of larger high-performance computing applications into more manageable, smaller packages.
+MiniAero is a computation fluid dynamics code.
+It utilizes a cell-centered unstructured finite volume solver that can operate with either first-order or second-order accuracy, alongside explicit time integration via a standard fourth-order Runge Kutta method.
+MiniAero is structured to support simulations based on either the Euler or compressible Navier-Stokes equations, making it versatile for studying transonic turbulent flows among other scenarios.
+
 MiniAero was released in 2016 and enough has changed in the HPC software community to make it a bit annoying to run, even though the underlying computation is still relevant.
 This fork is intended to be easier to build and run in 2024.
 
