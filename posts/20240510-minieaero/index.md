@@ -29,4 +29,4 @@ On the subject of testing, the original test scripts were written with Python 2.
 Python 2 is pretty much gone now, so I updated them to use Python 3.
 I also added CI tests with Github Actions to hopefully prevent introducing any future regressions.
 
-*Although miniAero was originally developed by researchers at my employer, Sandia National Labs, I have not consulted with them on this fork. The original project seems to be unmaintained.*
+*Although miniAero was originally developed by researchers at my employer, Sandia National Labs, I have not consulted with them on this fork. The original project seems to be inactive.*
