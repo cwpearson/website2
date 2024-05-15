@@ -3,7 +3,7 @@ title = "miniAero Fork for Kokkos 4"
 date = 2024-05-10T00:00:00-0700
 description = "miniAero fork with Kokkos 4, CMake, and Python 3"
 tags = ["c++", "cmake"]
-draft = true
+draft = false
 +++
 
 I've created an **unofficial** fork of the [mantevo/miniAero](https://github.com/mantevo/miniAero) proxy application, featuring support for Kokkos 4, the CMake build system, and Python 3.
