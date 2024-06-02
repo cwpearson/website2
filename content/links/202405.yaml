@@ -1,0 +1,12 @@
+- name: "Ask HN: What is your ChatGPT customization prompt?"
+  url: https://news.ycombinator.com/item?id=40474716
+  date: 2024-05-26
+- name: Visualizing Crowd Sizes
+  url: https://blog.lime.link/visualizing-crowd-sizes/
+  url_archive: https://web.archive.org/web/20240512094619/https://blog.lime.link/visualizing-crowd-sizes/
+  date: 2024-05-11
+- name: Making Sense of Acquire-Release Semantics
+  url: https://davekilian.com/acquire-release.html
+  url_archive: https://web.archive.org/web/20240511190226/https://davekilian.com/acquire-release.html
+  date: 2024-05-11
+

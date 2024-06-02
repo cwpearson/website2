@@ -1,3 +1,11 @@
 - name: The exhaust emissions scandal ("Dieselgate")
   url: https://media.ccc.de/v/32c3-7331-the_exhaust_emissions_scandal_dieselgate
   date: 2024-04-21
+- name: The Man who Killed Google Search
+  url: https://www.wheresyoured.at/the-men-who-killed-google/
+  date: 2024-04-23
+  url_archive: https://web.archive.org/web/20240423223452/https://www.wheresyoured.at/the-men-who-killed-google/
+- name: "Crash-Only Software: More than Meets the Eye"
+  url: https://lwn.net/Articles/191059/
+  url_archive: https://web.archive.org/web/20240430210521/https://lwn.net/Articles/191059/
+  date: 2024-04-30
