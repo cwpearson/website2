@@ -220,7 +220,8 @@ File > Open > report3.nsys-rep
 ## Extras: MPI + nsys
 
 ```bash
-nsys profile -t cuda,nvtx,mpi
+nsys profile -t cuda,nvtx,mpi --mpi-impl=openmpi
+nsys profile -t cuda,nvtx,mpi --mpi-impl=mpich
 ```
 
 ## Extras: Unified Memory + nsys
