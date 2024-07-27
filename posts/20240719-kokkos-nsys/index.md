@@ -35,8 +35,6 @@ The nvtx-connector is a crucial component that bridges the gap between Kokkos ap
 ## Annotating Your Application with Kokkos Profiling Regions
 To get the most out of the nvtx-connector and Nsight Systems, it's crucial to properly annotate your Kokkos application with profiling regions. These annotations allow you to mark specific sections of your code, making it easier to identify performance bottlenecks and understand the behavior of your application at a granular level.
 
-## Understanding Kokkos Profiling Regions
-
 Kokkos profiling regions are sections of code that you explicitly mark for profiling. When using the nvtx-connector, these regions are translated into NVTX ranges, which appear as colored bars in the Nsight Systems timeline view.
 
 ## How to Add Profiling Regions
@@ -119,6 +117,9 @@ nsys
 
 Then I usually just `scp` the resulting trace files to my client and fire up Nsight Systems. File > Import > Select your trace files.
 
+## Installing Nsight Systems on your Client
+
+There are two halves to Night Systems: the first does the profiling on the target platform, and the second is installed on your client to view the results. Go to Nvidia's website and look for "Download Nsight Systems for [your OS] host". There are Windows, macOS, and Linux versions. This is what you will use to view and analyze the profiling results.
 
 ## Putting it all together: miniFE
 
@@ -190,6 +191,31 @@ export KOKKOS_TOOLS_LIBS=$TOOLS_BUILD/profiling/nvtx-connector/libkp_nvtx_connec
 
 nsys profile -f true -t cuda,nvtx $MINIFE_BUILD/miniFE.kokkos
 ```
+
+If it worked, you will see a couple messages in your output
+
+```
+-----------------------------------------------------------
+KokkosP: NVTX Analyzer Connector (sequence is 0, version: 20211015)
+-----------------------------------------------------------
+```
+
+```
+-----------------------------------------------------------
+KokkosP: Finalization of NVTX Connector. Complete.
+-----------------------------------------------------------
+```
+
+```
+Generating '/tmp/nsys-report-e218.qdstrm'
+[1/1] [========================100%] report3.nsys-rep
+Generated:
+    /.../report3.nsys-rep
+```
+
+## Looking at the Result
+
+File > Open > report3.nsys-rep
 
 ## Extras: MPI + nsys
 
