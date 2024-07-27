@@ -124,23 +124,83 @@ Then I usually just `scp` the resulting trace files to my client and fire up Nsi
 
 miniFE is a 
 
+**Set up some paths for the example**
+```bash
+ROOT=kokkos_nsys_example
+KOKKOS_SRC=$ROOT/kokkos
+KOKKOS_BUILD=$KOKKOS_SRC/build
+KOKKOS_INSTALL=$KOKKOS_SRC/install
+TOOLS_SRC=$ROOT/kokkos-tools
+TOOLS_BUILD=$ROOT/kokkos-tools/build
+MINIFE_SRC=$ROOT/miniFE
+MINIFE_BUILD=$MINIFE_SRC/build
+```
 
 **Compile Kokkos for CUDA**
-```c++
+
+You're probably already doing this for your application if you use Nvidia GPUs, but I include it here for completeness.
+* Remember to choose a `-DKokkos_ARCH_` appropriate for your GPU
+
+```bash
+git clone https://github.com/kokkos/kokkos.git $KOKKOS_SRC
+
+cmake -S $KOKKOS_SRC -B $KOKKOS_BUILD \
+ -DCMAKE_INSTALL_PREFIX=$KOKKOS_INSTALL \
+ -DCMAKE_CXX_COMIPLER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
+ -DKokkos_ENABLE_CUDA=ON \
+ -DKokkos_ARCH_AMPERE86=ON \
+ -DCMAKE_CXX_STANDARD=17 \
+ -DCMAKE_CXX_EXTENSIONS=OFF
+
+cmake --build $KOKKOS_BUILD --target install
 ```
 
 **Compile the nvtx-connector**
-```c++
+
+The nvtx-connector needs to know where Kokkos is installed so it can retrieve the CUDA toolkit path.
+
+```bash
+git clone https://github.com/kokkos/kokkos-tools.git $TOOLS_SRC
+
+cmake -S $TOOLS_SRC -B $TOOLS_BUILD \
+  -DKokkos_ROOT=$KOKKOS_INSTALL
+
+cmake --build $TOOLS_BUILD/profiling/nvtx-connector
 ```
 
 **Compile miniFE**
-```c++
+```bash
+git clone https://github.com/cwpearson/miniFE.git $MINIFE_SRC
+
+cmake -S $MINIFE_SRC/kokkos -B $MINIFE_BUILD \
+  -DCMAKE_CXX_COMPILER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
+  -DKokkos_ROOT=$KOKKOS_INSTALL \
+  -DMINIFE_ENABLE_MPI=OFF
+
+cmake --build $MINIFE_BUILD
+```
+
+**Run miniFE with nsight systems**
+
+This will create `reportX.nsys-rep`
+
+```bash
+# tell Kokkos::initialize which tools library to use
+export KOKKOS_TOOLS_LIBS=$TOOLS_BUILD/profiling/nvtx-connector/libkp_nvtx_connector.so
+
+nsys profile -f true -t cuda,nvtx $MINIFE_BUILD/miniFE.kokkos
 ```
 
 ## Extras: MPI + nsys
 
-
+```bash
+nsys profile -t cuda,nvtx,mpi
+```
 
 ## Extras: Unified Memory + nsys
 
 CUDA Unified Memory `cudaMallocManaged`, or on newer platforms like Grace/Hopper.
+
+```bash
+nsys profile --cuda-um-cpu-page-faults=true --cuda-um-gpu-page-faults=true
+```
