@@ -146,17 +146,18 @@ You're probably already doing this for your application if you use Nvidia GPUs, 
 * Remember to choose a `-DKokkos_ARCH_` appropriate for your GPU
 
 ```bash
-git clone https://github.com/kokkos/kokkos.git $KOKKOS_SRC
+git clone --branch develop --depth 1 https://github.com/kokkos/kokkos.git $KOKKOS_SRC
 
 cmake -S $KOKKOS_SRC -B $KOKKOS_BUILD \
- -DCMAKE_INSTALL_PREFIX=$KOKKOS_INSTALL \
- -DCMAKE_CXX_COMIPLER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
- -DKokkos_ENABLE_CUDA=ON \
- -DKokkos_ARCH_AMPERE86=ON \
- -DCMAKE_CXX_STANDARD=17 \
- -DCMAKE_CXX_EXTENSIONS=OFF
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=$KOKKOS_INSTALL \
+  -DCMAKE_CXX_COMIPLER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
+  -DKokkos_ENABLE_CUDA=ON \
+  -DKokkos_ARCH_AMPERE86=ON \
+  -DCMAKE_CXX_STANDARD=17 \
+  -DCMAKE_CXX_EXTENSIONS=OFF
 
-cmake --build $KOKKOS_BUILD --target install
+cmake --build $KOKKOS_BUILD --target install --parallel $(nproc)
 ```
 
 **Compile the nvtx-connector**
@@ -164,9 +165,11 @@ cmake --build $KOKKOS_BUILD --target install
 The nvtx-connector needs to know where Kokkos is installed so it can retrieve the CUDA toolkit path.
 
 ```bash
-git clone https://github.com/kokkos/kokkos-tools.git $TOOLS_SRC
+git clone --branch develop --depth 1 https://github.com/kokkos/kokkos-tools.git $TOOLS_SRC
 
 cmake -S $TOOLS_SRC -B $TOOLS_BUILD \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_CXX_EXTENSIONS=OFF \
   -DKokkos_ROOT=$KOKKOS_INSTALL
 
 cmake --build $TOOLS_BUILD/profiling/nvtx-connector
