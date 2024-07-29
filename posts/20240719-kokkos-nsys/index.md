@@ -217,14 +217,16 @@ KokkosP: Finalization of NVTX Connector. Complete.
 
 ```
 Generating '/tmp/nsys-report-e218.qdstrm'
-[1/1] [========================100%] report3.nsys-rep
+[1/1] [========================100%] report1.nsys-rep
 Generated:
-    /.../report3.nsys-rep
+    /.../report1.nsys-rep
 ```
 
 ## Looking at the Result
 
-File > Open > report3.nsys-rep
+Copy the produced `report[N].nsys-rep` file from the server to the client, and open it in the client Nsight Systems.
+
+File > Open > report1.nsys-rep
 
 ## Extras: MPI + nsys
 
