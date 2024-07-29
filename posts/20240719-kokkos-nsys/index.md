@@ -180,7 +180,10 @@ cmake --build $TOOLS_BUILD/profiling/nvtx-connector
 git clone https://github.com/cwpearson/miniFE.git $MINIFE_SRC
 
 cmake -S $MINIFE_SRC/kokkos -B $MINIFE_BUILD \
+  -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_CXX_COMPILER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
+  -DCMAKE_CXX_STANDARD=17 \
+  -DCMAKE_CXX_EXTENSIONS=OFF \
   -DKokkos_ROOT=$KOKKOS_INSTALL \
   -DMINIFE_ENABLE_MPI=OFF
 
