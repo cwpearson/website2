@@ -125,6 +125,9 @@ There are two halves to Night Systems: the first does the profiling on the targe
 
 miniFE is a 
 
+
+I added profiling regions to my fork of miniFE in [this PR](https://github.com/cwpearson/miniFE/pull/11/files).
+
 **Set up some paths for the example**
 ```bash
 ROOT=kokkos_nsys_example
