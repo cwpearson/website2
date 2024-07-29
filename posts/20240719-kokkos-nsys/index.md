@@ -1,21 +1,20 @@
 +++
-title = "Maximizing Kokkos Performance: Harnessing the Power of nvtx-connector and Nsight Systems"
-date = 2024-07-26T00:00:00-0700
-description = ""
-tags = ["kokkos", "cmake"]
-draft = true
+title = "Using nvtx-connector and Nsight Systems to Understand your Kokkos Application"
+date = 2024-07-29T00:00:00-0700
+description = "How to use nvtx-connector with Nsight Systems to understand your Kokkos codes"
+tags = ["kokkos", "cmake", "nvidia", "nsight"]
+draft = false
 +++
 
-How can you ensure your Kokkos-based applications are truly optimized? Enter the dynamic duo of nvtx-connector and NVIDIA's Nsight Systems – tools that can take your Kokkos development to the next level.
-In this blog post, we'll explore how integrating nvtx-connector and Nsight Systems into your Kokkos workflow can help you:
+In my experience, even expert developers of an application can be surprised about where the most time is consumed in their programs.
+This has only gotten harder as the size of scientific applications has ballooned and computer systems have gotten more complex.
+This blog post explore how to integrate Kokkos Tools' nvtx-connector and Nvidia's Nsight Systems into your Kokkos workflow to help you
 
-* Gain unprecedented visibility: Peer into the inner workings of your Kokkos applications with detailed, hierarchical timelines.
-* Identify performance bottlenecks: Pinpoint exactly where your code is spending time, from kernel executions to memory transfers.
-* Optimize with precision: Make data-driven decisions to refine your Kokkos code for maximum efficiency.
-* Streamline debugging: Correlate application-level events with low-level system activities for easier troubleshooting.
-* Enhance collaboration: Generate comprehensive performance reports that speak both to Kokkos experts and hardware specialists.
+* Peer into the inner workings of your Kokkos applications with detailed timelines.
+* Pinpoint exactly where your code is spending time, from kernel executions to memory transfers.
+* Correlate application-level events with low-level system activities for easier troubleshooting.
 
-Whether you're fine-tuning an existing Kokkos application or embarking on a new project, mastering these tools will empower you to squeeze every ounce of performance from your code. Let's dive in and discover how nvtx-connector and Nsight Systems can transform your Kokkos development experience and help you create blazingly fast, efficient applications.
+These tools are great for existing Kokkos application or embarking on a new project.
 
 ## Configuring your Kokkos Build
 
@@ -23,19 +22,16 @@ You don't need to change anything about how you build Kokkos for your applicatio
 
 ## The nvtx-connector: Bridging Kokkos and NVIDIA Nsight Systems
 
-Kokkos Tools is a suite of profiling and analysis tools designed to work seamlessly with Kokkos applications. It provides a powerful framework for gathering performance data and insights into your Kokkos-based code. The Kokkos Tools ecosystem includes various plugins and connectors that allow you to interface with different profiling and visualization tools, enhancing your ability to optimize Kokkos applications.
+[Kokkos Tools](https://github.com/kokkos/kokkos-tools) is a suite of profiling and analysis tools designed to work seamlessly with Kokkos applications. It provides a powerful framework for gathering performance data and insights into your Kokkos-based code. The Kokkos Tools ecosystem includes various plugins and connectors that allow you to interface with different profiling and visualization tools, enhancing your ability to optimize Kokkos applications.
 One of the key components of Kokkos Tools is the profiling API, which enables the collection of detailed performance data without requiring changes to your application code. This API is leveraged by various backends, including the nvtx-connector, which we'll focus on in this post.
 
 The nvtx-connector is a crucial component that bridges the gap between Kokkos applications and NVIDIA's powerful profiling tools, particularly Nsight Systems. It translates Kokkos events into NVIDIA Tools Extension (NVTX) ranges, allowing you to visualize and analyze your Kokkos application's performance within the Nsight Systems interface.
 
-```cmake
-
-```
-
 ## Annotating Your Application with Kokkos Profiling Regions
-To get the most out of the nvtx-connector and Nsight Systems, it's crucial to properly annotate your Kokkos application with profiling regions. These annotations allow you to mark specific sections of your code, making it easier to identify performance bottlenecks and understand the behavior of your application at a granular level.
 
-Kokkos profiling regions are sections of code that you explicitly mark for profiling. When using the nvtx-connector, these regions are translated into NVTX ranges, which appear as colored bars in the Nsight Systems timeline view.
+Kokkos will automatically add NVTX ranges for various Kokkos operations, like parallel regions and allocations.
+However, you can also add ranges of your own to help you correlate Kokkos activity with application phases.
+These annotations allow you to mark specific sections of your code, making it easier to identify performance bottlenecks and understand the behavior of your application at a granular level.
 
 ## How to Add Profiling Regions
 
@@ -101,32 +97,31 @@ void dont_do_this() {
 
 ## How to Profile
 
-From time to time Nvidia changes their profiling tools.
-Thus far, however, the approach has been roughly this:
+Once you've added profiling regions to your application, you're ready to run Nsight Systems.
+There are two halves to Night Systems: the first does the profiling on the target platform, and the second is installed on your client to view the results. Go to Nvidia's website and look for "Download Nsight Systems for [your OS] host". There are Windows, macOS, and Linux versions. This is what you will use to view and analyze the profiling results.
 
-1. Run your application on the target platform using `nsys`
-2. Copy the produced trace database file(s) to your client
-3. View and analyze the results using Nsight Systems
+The approach is essentially this:
 
-There are variations on this theme that I won't cover - Nsight Systems can connect to a remote system to profile directly, or perhaps the client and target systems are the same.
+1. Run your application on the target platform using `nsys` to generate one or more trace files.
+2. Copy the produced trace file(s) to your client.
+3. View and analyze the results using Nsight Systems on your client.
 
-The approach will be something like this
+There are variations on this theme that I won't cover: for example, Nsight Systems can connect to a remote system to profile directly, or perhaps the client and target systems are the same.
+
+The approach to generate the trace will be something like this
 ```bash
-nsys 
+nsys profile [nsys flags] your/app [your application flags]
 ```
 
-Then I usually just `scp` the resulting trace files to my client and fire up Nsight Systems. File > Import > Select your trace files.
-
-## Installing Nsight Systems on your Client
-
-There are two halves to Night Systems: the first does the profiling on the target platform, and the second is installed on your client to view the results. Go to Nvidia's website and look for "Download Nsight Systems for [your OS] host". There are Windows, macOS, and Linux versions. This is what you will use to view and analyze the profiling results.
+Then I usually just `scp` the resulting trace files to my client and fire up Nsight Systems. File > Open > Select your trace files.
 
 ## Putting it all together: miniFE
 
-miniFE is a 
+miniFE is a relatively simple, but realistic test case.
 
+> MiniFE is an proxy application for unstructured implicit finite element codes. It is similar to HPCCG and pHPCCG but provides a much more complete vertical covering of the steps in this class of applications. MiniFE also provides support for computation on multicore nodes, including pthreads and Intel Threading Building Blocks (TBB) for homogeneous multicore and CUDA for GPUs. Like HPCCG and pHPCCG, MiniFE is intended to be the "best approximation to an unstructured implicit finite element or finite volume application, but in 8000 lines or fewer."
 
-I added profiling regions to my fork of miniFE in [this PR](https://github.com/cwpearson/miniFE/pull/11/files).
+I added profiling regions to [my fork of miniFE](https://github.com/cwpearson/miniFE) in [this PR](https://github.com/cwpearson/miniFE/pull/11/files).
 
 **Set up some paths for the example**
 ```bash
@@ -226,18 +221,43 @@ Generated:
 
 Copy the produced `report[N].nsys-rep` file from the server to the client, and open it in the client Nsight Systems.
 
-File > Open > report1.nsys-rep
+"File" > "Open" > "report[N].nsys-rep"
+
+![Overview screenshot of Nsight Systems viewing miniFE trace](nsys_overview.png)
+
+This first figure is an overview of the whole miniFE execution.
+The central "Timeline View" displays a timeline of GPU and CPU activities, allowing the user to visualize the execution over time.
+The "CUDA HW" rows show activity on the GPU, including kernels and memory transfers.
+Below that is the NVTX ranges, which are associated with Kokkos activities and the profiling ranges added to the application.
+The "CUDA API" section shows what underlying CUDA API calls are made by the host.
+By correlating these three sections, you can understand what Kokkos operations are associated with which CUDA and GPU activity.
+Note that many Kokkos operations are asynchronous, so the GPU activity may occur *after* the Kokkos operation.
+
+![Detailed screenshot of Nsight Systems viewing miniFE trace](nsys_detail.png)
+
+This second screenshot is zoomed in on the main conjugate-gradient loop in miniFE.
+Here it's easier to see individual Kokkos parallel regions and the associated GPU activity and fences.
 
 ## Extras: MPI + nsys
+
+Nsight Systems can also show MPI communication in the trace view.
+For supported MPI operations, you can tell Nsight Systems to do so automatically:
 
 ```bash
 nsys profile -t cuda,nvtx,mpi --mpi-impl=openmpi
 nsys profile -t cuda,nvtx,mpi --mpi-impl=mpich
 ```
 
+The other needed step is to have each MPI process generate a different trace file.
+You can do this with the `-o` flag, and use `%q` to tell nsight systems to read an environment variable and put it in the output name.
+
+```bash
+nsys profile -o report_%q{OMPI_COMM_WORLD_RANK}.nsys-rep
+```
+
 ## Extras: Unified Memory + nsys
 
-CUDA Unified Memory `cudaMallocManaged`, or on newer platforms like Grace/Hopper.
+If your application uses CUDA Unified Memory (`Kokkos::CudaUVMSpace`), it will almost certainly be useful to ask Nsight Systems to collect information about that as well:
 
 ```bash
 nsys profile --cuda-um-cpu-page-faults=true --cuda-um-gpu-page-faults=true
