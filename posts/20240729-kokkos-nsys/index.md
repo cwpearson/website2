@@ -223,7 +223,7 @@ Copy the produced `report[N].nsys-rep` file from the server to the client, and o
 
 "File" > "Open" > "report[N].nsys-rep"
 
-![Overview screenshot of Nsight Systems viewing miniFE trace](nsys_overview.png)
+[![Overview screenshot of Nsight Systems viewing miniFE trace](nsys_overview.png)](nsys_overview.png)
 
 This first figure is an overview of the whole miniFE execution.
 The central "Timeline View" displays a timeline of GPU and CPU activities, allowing the user to visualize the execution over time.
@@ -233,7 +233,7 @@ The "CUDA API" section shows what underlying CUDA API calls are made by the host
 By correlating these three sections, you can understand what Kokkos operations are associated with which CUDA and GPU activity.
 Note that many Kokkos operations are asynchronous, so the GPU activity may occur *after* the Kokkos operation.
 
-![Detailed screenshot of Nsight Systems viewing miniFE trace](nsys_detail.png)
+[![Detailed screenshot of Nsight Systems viewing miniFE trace](nsys_detail.png)](nsys_detail.png)
 
 This second screenshot is zoomed in on the main conjugate-gradient loop in miniFE.
 Here it's easier to see individual Kokkos parallel regions and the associated GPU activity and fences.
