@@ -2,23 +2,24 @@
 title = "Using nvtx-connector and Nsight Systems to Understand your Kokkos Application"
 date = 2024-07-29T00:00:00-0700
 description = "How to use nvtx-connector with Nsight Systems to understand your Kokkos codes"
-tags = ["kokkos", "cmake", "nvidia", "nsight"]
+tags = ["kokkos", "cmake", "nvidia", "nsight", "CUDA", "GPU"]
 draft = false
 +++
 
-In my experience, even expert developers of an application can be surprised about where the most time is consumed in their programs.
-This has only gotten harder as the size of scientific applications has ballooned and computer systems have gotten more complex.
-This blog post explore how to integrate Kokkos Tools' nvtx-connector and Nvidia's Nsight Systems into your Kokkos workflow to help you
+In my experience, even expert developers of an application can be surprised about how their program uses a GPU-enabled system.
+This has only gotten harder as the size of scientific applications has ballooned and computer architectures have gotten more complex.
+This blog post explore how to integrate Kokkos Tools' nvtx-connector and Nvidia's Nsight Systems into your Kokkos workflow to help you:
 
-* Peer into the inner workings of your Kokkos applications with detailed timelines.
-* Pinpoint exactly where your code is spending time, from kernel executions to memory transfers.
-* Correlate application-level events with low-level system activities for easier troubleshooting.
+* peer into the inner workings of your Kokkos applications with detailed timelines.
+* pinpoint exactly where your code is spending time, from kernel executions to memory transfers.
+* correlate application-level events with low-level system activities for easier troubleshooting.
 
-These tools are great for existing Kokkos application or embarking on a new project.
+These tools are great for existing Kokkos application or when embarking on a new project.
 
 ## Configuring your Kokkos Build
 
-You don't need to change anything about how you build Kokkos for your application: Kokkos' profiling interface is always enabled.
+Nsight systems is meant for applications that use Nvidia GPUs.
+As long as you're using Kokkos' CUDA backend: `-DKokkos_ENABLE_CUDA=ON`, you're all set: Kokkos' profiling hooks are always enabled.
 
 ## The nvtx-connector: Bridging Kokkos and NVIDIA Nsight Systems
 
@@ -35,7 +36,11 @@ These annotations allow you to mark specific sections of your code, making it ea
 
 ## How to Add Profiling Regions
 
-Kokkos provides a pair of functions for adding profiling regions to your code. Here's how you use them
+Kokkos provides a pair of functions for adding profiling regions to your code.
+Don't be afraid to add these calls throughout your application: if you do not have a profiling library loaded, these calls will just become a check whether a function pointer is null.
+This branch is easy for the CPU to predict (because it is always true or always false), so there is no real performance cost.
+
+Here's how you use them
 
 ```c++
 void foo() {
@@ -95,7 +100,7 @@ void dont_do_this() {
 }
 ```
 
-## How to Profile
+## Collecting a Trace with Nvidia Nsight Systems
 
 Once you've added profiling regions to your application, you're ready to run Nsight Systems.
 There are two halves to Night Systems: the first does the profiling on the target platform, and the second is installed on your client to view the results. Go to Nvidia's website and look for "Download Nsight Systems for [your OS] host". There are Windows, macOS, and Linux versions. This is what you will use to view and analyze the profiling results.
@@ -115,7 +120,7 @@ nsys profile [nsys flags] your/app [your application flags]
 
 Then I usually just `scp` the resulting trace files to my client and fire up Nsight Systems. File > Open > Select your trace files.
 
-## Putting it all together: miniFE
+## An example of putting it all together: miniFE
 
 miniFE is a relatively simple, but realistic test case.
 
