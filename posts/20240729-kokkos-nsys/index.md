@@ -8,10 +8,9 @@ draft = false
 
 In my experience, even expert developers of an application can be surprised about how their program uses a GPU-enabled system.
 This has only gotten harder as the size of scientific applications has ballooned and computer architectures have gotten more complex.
-This blog post explore how to integrate Kokkos Tools' nvtx-connector and Nvidia's Nsight Systems into your Kokkos workflow to help you:
+This blog post explore how to use Kokkos Tools' nvtx-connector and Nvidia's Nsight Systems with your CUDA-enabled Kokkos application to help you:
 
-* peer into the inner workings of your Kokkos applications with detailed timelines.
-* pinpoint exactly where your code is spending time, from kernel executions to memory transfers.
+* visualize where your code is spending time, from kernel executions to memory transfers.
 * correlate application-level events with low-level system activities for easier troubleshooting.
 
 These tools are great for existing Kokkos application or when embarking on a new project.
