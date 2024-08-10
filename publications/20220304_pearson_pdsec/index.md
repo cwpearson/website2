@@ -5,7 +5,7 @@ authors = ["Carl Pearson", "Aurya Javeed", "Karen Devine"]
 venue = "23rd IEEE International Workshop on Parallel and Distributed Scientific and Engineering Computing (PDSEC)"
 draft = false
 tags = ["CUDA", "mpi", "CUDA streams"]
-url_pdf = "https://arxiv.org/abs/2203.02530"
+url_arxiv = "https://arxiv.org/abs/2203.02530"
 url_code = "https://github.com/sandialabs/tenzing"
 abstract = """We present a new strategy for automatically exploring the design space of key CUDA+MPI programs and providing design rules that discriminate slow from fast implementations. 
 In such programs, the order of operations (e.g., GPU kernels, MPI communication) and assignment of operations to resources (e.g., GPU streams) makes the space of possible designs enormous.
