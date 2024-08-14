@@ -16,6 +16,7 @@ python build.py && python -m http.server --directory public
   - [ ] Ignore non-markdown files (e.g. `.DS_store`)
   - [x] add title to metadata
   - [x] style block quotes
+  - [x] author
 - link page
   - [x] authors
   - [x] disclaimer

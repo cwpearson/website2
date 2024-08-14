@@ -728,6 +728,7 @@ def render_post(spec: PostSpec) -> Post:
 
     body_html = ""
     body_html += f"<h1>{title}</h1>\n"
+    body_html += f'<div class="byline">by Carl Pearson</div>'
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
         body_html += renderer.render(mistletoe.Document(spec.markdown))
 

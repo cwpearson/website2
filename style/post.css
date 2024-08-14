@@ -5,6 +5,10 @@
     margin: 1em auto;
 }
 
+.byline {
+    font-style: italic;
+}
+
 @media (max-width: 30em) {
     .body img {
         width: 90dvw;
