@@ -32,3 +32,33 @@
   url_hn: https://news.ycombinator.com/item?id=38842116
   url_hn_archive: https://web.archive.org/web/20240102212131/https://news.ycombinator.com/item?id=38842116
   date: 2024-08-13
+- name: How bad are search results? Let's compare Google, Bing, Marginalia, Kagi, Mwmbl, and ChatGPT
+  url: https://danluu.com/seo-spam/
+  date: 2024-08-13
+- name: The Art of HPC
+  url: https://theartofhpc.com/
+  url_archive: https://web.archive.org/web/20240704210654/https://theartofhpc.com/
+  date: 2024-08-13
+- name: C++ Should be C++
+  url: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p3023r1.html
+  url_archive: https://web.archive.org/web/20240630075922/https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p3023r1.html
+  date: 2024-08-13
+- name: Your Don't Need Javascript for That
+  url: https://www.htmhell.dev/adventcalendar/2023/2/
+  url_archive: https://web.archive.org/web/20240112194500/https://www.htmhell.dev/adventcalendar/2023/2/
+  date: 2024-08-14
+- name: downtoearth
+  url: https://pedrosbmartins.github.io/downtoearth/
+  date: 2024-08-14
+- name: Hyphens, Minus, and Dashes in Debian man Pages
+  url: https://lwn.net/Articles/947941/
+  url_archive: https://web.archive.org/web/20240115122317/https://lwn.net/Articles/947941/
+  date: 2024-08-14
+- name: Driving Compilers
+  url: https://fabiensanglard.net/dc/driver.php
+  url_archive: https://web.archive.org/web/20240806225623/https://fabiensanglard.net/dc/driver.php
+  date: 2024-08-14
+- name: How to build Highly Debuggable C++ Binaries
+  url: https://dhashe.com/how-to-build-highly-debuggable-c-binaries.html
+  url_archive: https://web.archive.org/web/20240729154104/https://dhashe.com/how-to-build-highly-debuggable-c-binaries.html
+  date: 2024-08-14
