@@ -1189,7 +1189,7 @@ def head_frag(
 
     html += '<link rel="icon" type="image/x-icon" href="/favicon.ico"/>\n'
 
-    html += '<script async src="https://analytics.carlpearson.net/script.js" data-website-id="46b59655-f30d-4bd5-a2b3-68868264b698"></script>\n'
+    html += '<script async src="https://analytics.carlpearson.net/script.js" data-website-id="4f4469b9-91eb-4a1e-9f85-6be37368d942"></script>\n'
 
     return html
 
