@@ -66,6 +66,12 @@
   url_archive: https://archive.is/g9bsW
   url_hn: https://news.ycombinator.com/item?id=41253244
   date: 2024-08-18
+- name: "stream_libarchive: workaround various types of locale braindeath"
+  url: https://github.com/mpv-player/mpv/commit/1e70e82baa9193f6f027338b0fab0f5078971fbe
+  date: 2024-08-03
+- name: "flux on potato"
+  url: https://gist.github.com/AmericanPresidentJimmyCarter/873985638e1f3541ba8b00137e7dacd9
+  date: 2024-08-03
 - name: "Generating Mazes"
   url: https://healeycodes.com/generating-mazes
   url_archive: https://archive.is/KB0GL
