@@ -1,9 +1,3 @@
-- name: "My Favorite Algorithm: Linear Time Median Finding"
-  url: https://rcoh.me/posts/linear-time-median-finding/
-  url_hn: https://news.ycombinator.com/item?id=41066536
-  url_archive: https://web.archive.org/web/20240702080156/https://www.tracingwoodgrains.com/p/the-faas-hiring-scandal-a-quick-overview
-  url_hn_archive: https://web.archive.org/web/20240729080841/https://news.ycombinator.com/item?id=41066536
-  date: 2024-08-13
 - name: Reflection for C++26
   url: https://isocpp.org/files/papers/P2996R4.html
   url_archive: https://web.archive.org/web/20240709200733/https://isocpp.org/files/papers/P2996R4.html
