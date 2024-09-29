@@ -56,7 +56,21 @@
   url: https://dhashe.com/how-to-build-highly-debuggable-c-binaries.html
   url_archive: https://web.archive.org/web/20240729154104/https://dhashe.com/how-to-build-highly-debuggable-c-binaries.html
   date: 2024-08-14
-- name: "Coordinate Precision"
-  url: https://xkcd.com/2170/
-  url_archive: https://archive.is/jMpss
-  date: 2024-08-30
+- name: "noexcept affects libstdc++'s ordered set"
+  url: https://quuxplusone.github.io/blog/2024/08/16/libstdcxx-noexcept-hash/
+  url_archive: https://archive.is/3kTWN
+  url_hn: https://news.ycombinator.com/item?id=41283018
+  date: 2024-08-18
+- name: "The Key to Bizzaro's Symbols"
+  url: https://www.bizarro.com/secret-symbols
+  url_archive: https://archive.is/g9bsW
+  url_hn: https://news.ycombinator.com/item?id=41253244
+  date: 2024-08-18
+- name: "Generating Mazes"
+  url: https://healeycodes.com/generating-mazes
+  url_archive: https://archive.is/KB0GL
+  date: 2024-08-25
+- name: "Live Lightning Maps"
+  url: https://www.blitzortung.org/en/live_lightning_maps.php?map=30
+  date: 2024-08-27
+
