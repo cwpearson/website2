@@ -1245,7 +1245,8 @@ def output_pub(pub: Pub):
     output_dir = OUTPUT_DIR / pub.spec.output_dir
     print(f"==== output {pub.spec.markdown_path} -> {output_dir}")
     links = []
-    links += [Link(url=pub.url_arxiv, name="arxiv")]
+    if pub.url_arxiv:
+        links += [Link(url=pub.url_arxiv, name="arxiv")]
     for url in pub.url_code:
         ms = re.findall(".*github.com/(.+)", url)
         if ms:
