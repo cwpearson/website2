@@ -1,7 +1,7 @@
 +++
 title = "KokkosComm: Communication Layer for Distributed Kokkos Applications"
 date = 2024-09-25T09:00:00-0500
-authors = []
+authors = ["Gabriel Dos Santos", "Nicole Avans", "Cedric Chevalier", "Hugo Taboada", "Carl Pearson", "Jan Ciesko", "Stephen L. Olivier", "Marc Perache"]
 venue = "EuroMPI"
 tags = ["Kokkos", "MPI"]
 description = ""
