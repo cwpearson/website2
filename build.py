@@ -665,15 +665,14 @@ def move_post_resources(spec: PostSpec):
             BYTES_WR += sz
     for gi in spec.gallery_items:
         src_path = spec.input_dir / "gallery" / gi.src
+        dst_path = output_dir / "gallery" / gi.dst
         thumb_path = output_dir / "gallery" / gi.thumb
         src_img = Image.open(src_path)
         BYTES_RD += file_size(src_path)
-        if gi.src != gi.dst:
-            dst_path = output_dir / "gallery" / gi.dst
-            print(f"==== gallery image {src_path} -> {dst_path}")
-            dst_path.parent.mkdir(exist_ok=True, parents=True)
-            src_img.save(dst_path)
-            BYTES_WR += file_size(dst_path)
+        print(f"==== gallery image {src_path} -> {dst_path}")
+        dst_path.parent.mkdir(exist_ok=True, parents=True)
+        src_img.save(dst_path)
+        BYTES_WR += file_size(dst_path)
 
         print(f"==== gallery thumb {src_path} -> {thumb_path}")
         src_img.thumbnail((256, 256), Image.Resampling.LANCZOS)
