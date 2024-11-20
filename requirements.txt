@@ -4,4 +4,4 @@ pillow==10.3
 pytz
 pyyaml>=6.0,<6.1
 pygments==2.16
-pillow_heif==0.16
+pillow_heif==0.18 # needed for iPhone 16 Pro images
