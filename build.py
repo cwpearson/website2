@@ -727,7 +727,12 @@ def render_post(spec: PostSpec) -> Post:
 
     body_html = ""
     body_html += f"<h1>{title}</h1>\n"
-    body_html += f'<div class="byline">by Carl Pearson</div>'
+    body_html += '<div class="byline">'
+    if mod_time != create_time:
+        body_html += f'last updated {mod_time.strftime("%b %d, %Y")}'
+    else:
+        body_html += f'{create_time.strftime("%b %d, %Y")}'
+    body_html += " by Carl Pearson</div>\n"
     with PygmentsRenderer(style=PYGMENTS_STYLE) as renderer:
         body_html += renderer.render(mistletoe.Document(spec.markdown))
 
