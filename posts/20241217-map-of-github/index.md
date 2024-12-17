@@ -4,32 +4,32 @@ date = 2024-12-17T00:00:00-0700
 lastmod = 2024-12-17T00:00:00-0700
 description = ""
 tags = []
-draft = true
-
+draft = false
 
 [[gallery_item]]
 image = "zoom_1.png"
-caption = ""
+caption = "The full map of GitHub, annotated to show where the Kokkos ecosystem is."
 [[gallery_item]]
 image = "zoom_2.png"
-caption = ""
+caption = "\"AILandia\", the GitHub continent annotated to show the Kokkos ecosystem in SimuVisia."
 [[gallery_item]]
 image = "zoom_3.png"
-caption = ""
+caption = "\"SimuVisia\" annotated to show where the Kokkos ecosystem is."
 [[gallery_item]]
 image = "zoom_4.png"
-caption = ""
+caption = "Zoomed-in view of \"SimuVisia\" where Kokkos, Kokkos Kernels, and Trilinos are clearly visible."
 
 +++
 
-*this is not my work*
+**this is not my work**
 
-https://news.ycombinator.com/item?id=42426284
-
-https://anvaka.github.io/map-of-github/#2/0/0
-
-https://github.com/anvaka/map-of-github
+User [anvaka](https://github.com/anvaka) has created a ["Map of Github"](https://anvaka.github.io/map-of-github/) using a public dataset that captures GitHub activity between 2020 and 2023. 
 
 "Dots are close to each other if they have a lot of common stargazers."
+* Jaccard similarity between lists of stargazers
+* Leiden clustering to cluster the repositories
+* A custom layout engine to create the visualization
+* ChatGPT to help generate the names (e.g. "SimuVisia")
 
-Jaccard similarity + Leiden Clustering + custom layout engine + ChatGPT-generated country names
+The source and a more extensive description are available in the [GitHub repository](https://github.com/anvaka/map-of-github).
+Additional discussion on [Hacker News](https://news.ycombinator.com/item?id=42426284).
