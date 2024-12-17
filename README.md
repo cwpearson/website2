@@ -6,6 +6,7 @@ python build.py && python -m http.server --directory public
 
 ## Roadmap
 
+- Python 3.13 support
 - posts
   - [x] Image Gallery support
     - [x] Support HEIC input images
