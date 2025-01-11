@@ -30,4 +30,4 @@ jobs:
     - name: Build
       run: python build.py
     - name: Deploy
-      run: echo scp -r public/ pearson_carlpearson@ssh.nyc1.nearlyfreespeech.net:~/public
+      run: sshpass -p "${{ secrets.NFS_TOKEN }}" rsync -av --delete public/ pearson_carlpearson@ssh.nyc1.nearlyfreespeech.net:~/public/
