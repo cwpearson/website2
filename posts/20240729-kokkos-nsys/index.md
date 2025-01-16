@@ -164,12 +164,12 @@ cmake --build "$KOKKOS_BUILD" --target install --parallel $(nproc)
 The nvtx-connector needs to know where Kokkos is installed so it can retrieve the CUDA toolkit path.
 
 ```bash
-git clone --branch develop --depth 1 https://github.com/kokkos/kokkos-tools.git $TOOLS_SRC
+git clone --branch develop --depth 1 https://github.com/kokkos/kokkos-tools.git "$TOOLS_SRC"
 
-cmake -S $TOOLS_SRC -B $TOOLS_BUILD \
+cmake -S "$TOOLS_SRC" -B "$TOOLS_BUILD" \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_CXX_EXTENSIONS=OFF \
-  -DKokkos_ROOT=$KOKKOS_INSTALL
+  -DKokkos_ROOT="$KOKKOS_INSTALL"
 
 cmake --build $TOOLS_BUILD/profiling/nvtx-connector
 ```
