@@ -150,7 +150,7 @@ git clone --branch develop --depth 1 https://github.com/kokkos/kokkos.git $KOKKO
 cmake -S $KOKKOS_SRC -B $KOKKOS_BUILD \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=$KOKKOS_INSTALL \
-  -DCMAKE_CXX_COMIPLER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
+  -DCMAKE_CXX_COMPILER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
   -DKokkos_ENABLE_CUDA=ON \
   -DKokkos_ARCH_AMPERE86=ON \
   -DCMAKE_CXX_STANDARD=17 \
