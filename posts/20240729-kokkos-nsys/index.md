@@ -1,8 +1,8 @@
 +++
-title = "Using nvtx-connector and Nsight Systems to Understand your Kokkos Application"
+title = "Using Kokkos Tools and Nsight Systems to Understand your Kokkos Application"
 date = 2024-07-29T00:00:00-0700
 description = "How to use nvtx-connector with Nsight Systems to understand your Kokkos codes"
-tags = ["kokkos", "cmake", "nvidia", "nsight", "CUDA", "GPU"]
+tags = ["kokkos", "cmake", "nvidia", "nsight", "CUDA", "GPU", "kokkos tools"]
 draft = false
 +++
 
