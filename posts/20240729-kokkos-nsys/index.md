@@ -171,14 +171,14 @@ cmake -S "$TOOLS_SRC" -B "$TOOLS_BUILD" \
   -DCMAKE_CXX_EXTENSIONS=OFF \
   -DKokkos_ROOT="$KOKKOS_INSTALL"
 
-cmake --build $TOOLS_BUILD/profiling/nvtx-connector
+cmake --build "$TOOLS_BUILD"/profiling/nvtx-connector
 ```
 
 **Compile miniFE**
 ```bash
-git clone https://github.com/cwpearson/miniFE.git $MINIFE_SRC
+git clone https://github.com/cwpearson/miniFE.git "$MINIFE_SRC"
 
-cmake -S $MINIFE_SRC/kokkos -B $MINIFE_BUILD \
+cmake -S $MINIFE_SRC/kokkos -B "$MINIFE_BUILD" \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_CXX_COMPILER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
   -DCMAKE_CXX_STANDARD=17 \
@@ -186,7 +186,7 @@ cmake -S $MINIFE_SRC/kokkos -B $MINIFE_BUILD \
   -DKokkos_ROOT=$KOKKOS_INSTALL \
   -DMINIFE_ENABLE_MPI=OFF
 
-cmake --build $MINIFE_BUILD
+cmake --build "$MINIFE_BUILD"
 ```
 
 **Run miniFE with nsight systems**
@@ -195,9 +195,9 @@ This will create `reportX.nsys-rep`
 
 ```bash
 # tell Kokkos::initialize which tools library to use
-export KOKKOS_TOOLS_LIBS=$TOOLS_BUILD/profiling/nvtx-connector/libkp_nvtx_connector.so
+export KOKKOS_TOOLS_LIBS="$TOOLS_BUILD"/profiling/nvtx-connector/libkp_nvtx_connector.so
 
-nsys profile -f true -t cuda,nvtx $MINIFE_BUILD/miniFE.kokkos
+nsys profile -f true -t cuda,nvtx "$MINIFE_BUILD"/miniFE.kokkos
 ```
 
 If it worked, you will see a couple messages in your output
