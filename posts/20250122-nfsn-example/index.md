@@ -3,7 +3,7 @@ title = "Automatically Deploy a Web Application to NearlyFreeSpeech.net"
 date = 2025-01-22T00:00:00-0700
 lastmod = 2025-01-22T00:00:00-0700
 description = ""
-tags = []
+tags = ["go", "nearlyfreespeech.net", "continuous deployment"]
 draft = false
 +++
 
