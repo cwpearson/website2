@@ -150,7 +150,7 @@ git clone --branch develop --depth 1 https://github.com/kokkos/kokkos.git "$KOKK
 cmake -S "$KOKKOS_SRC" -B "$KOKKOS_BUILD" \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX="$KOKKOS_INSTALL" \
-  -DCMAKE_CXX_COMPILER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
+  -DCMAKE_CXX_COMPILER=$(realpath "$KOKKOS_SRC"/bin/nvcc_wrapper) \
   -DKokkos_ENABLE_CUDA=ON \
   -DKokkos_ARCH_AMPERE86=ON \
   -DCMAKE_CXX_STANDARD=17 \
@@ -178,12 +178,12 @@ cmake --build "$TOOLS_BUILD"/profiling/nvtx-connector
 ```bash
 git clone https://github.com/cwpearson/miniFE.git "$MINIFE_SRC"
 
-cmake -S $MINIFE_SRC/kokkos -B "$MINIFE_BUILD" \
+cmake -S "$MINIFE_SRC"/kokkos -B "$MINIFE_BUILD" \
   -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_CXX_COMPILER=$(realpath $KOKKOS_SRC/bin/nvcc_wrapper) \
+  -DCMAKE_CXX_COMPILER=$(realpath "$KOKKOS_SRC"/bin/nvcc_wrapper) \
   -DCMAKE_CXX_STANDARD=17 \
   -DCMAKE_CXX_EXTENSIONS=OFF \
-  -DKokkos_ROOT=$KOKKOS_INSTALL \
+  -DKokkos_ROOT="$KOKKOS_INSTALL" \
   -DMINIFE_ENABLE_MPI=OFF
 
 cmake --build "$MINIFE_BUILD"
