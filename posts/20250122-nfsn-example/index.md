@@ -67,23 +67,23 @@ GOOS=freebsd GOARCH=amd64 go build ./...
 2. A protected shutdown endpoint to facilitate automatic restarts (shown here for the Echo framework)
 
 ```go
-	e.POST("/shutdown", func(c echo.Context) error {
-		token := c.Request().Header.Get("Authorization")
-		expectedToken := "Bearer " + os.Getenv("BEARER_TOKEN")
+e.POST("/shutdown", func(c echo.Context) error {
+	token := c.Request().Header.Get("Authorization")
+	expectedToken := "Bearer " + os.Getenv("BEARER_TOKEN")
 
-		if token != expectedToken {
-			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid token")
-		}
+	if token != expectedToken {
+		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid token")
+	}
 
-		// allow some time to send a response before app exits
-		go func() {
-			log.Println("Shutdown triggered via /shutdown: 5s...")
-			time.Sleep(time.Second * time.Duration(5))
-			os.Exit(42)
-		}()
+	// allow some time to send a response before app exits
+	go func() {
+		log.Println("Shutdown triggered via /shutdown: 5s...")
+		time.Sleep(time.Second * time.Duration(5))
+		os.Exit(42)
+	}()
 
-		return c.String(http.StatusOK, "shutdown in 5s\n")
-	})
+	return c.String(http.StatusOK, "shutdown in 5s\n")
+})
 ```
 
 ## 3. Create a Wrapper Script
