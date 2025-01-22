@@ -7,7 +7,7 @@ tags = []
 draft = false
 +++
 
-I've set up a repository(https://github.com/cwpearson/nfsn-example) which contains an example of how automatically deploy a Go web application to [NearlyFreeSpeech.net](https://www.nearlyfreespeech.net/).
+I've set up a [GitHub repository](https://github.com/cwpearson/nfsn-example) which contains an example of how automatically deploy a Go web application to [NearlyFreeSpeech.net](https://www.nearlyfreespeech.net/).
 It shows continuous deployment for a custom web server that automatically updates whenever you push changes to your repository.
 
 ## Overview
