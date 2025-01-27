@@ -12,10 +12,11 @@ I spent a few days trying to be mindful of every time I ran into an apparent sof
 ### January 25, 2025
 
 When I logged into a bank online, they called me to deliver a one-time code, and the call was just 8 seconds of silence.
+Then I received three automated calls with the same code in the following minutes.
 
 ### January 25. 2025
 
-When I logged into a financial broker on my iPhone, the app immediately crashed
+When I logged into a financial broker on my iPhone, the app immediately crashed.
 
 ### January 24 2025
 
@@ -33,7 +34,8 @@ Play/pause button on iOS overlay screen didn't work.
 
 ### January 20 2025
 
-I paused an in-progress vacuum in the iRobot app and it rebooted into an error state.
+I paused an in-progress vacuum in the iRobot app and the robot rebooted into an error state.
+I had to press a button on the robot to clear that error.
 
 ![](20250120_1.jpeg)
 
@@ -41,7 +43,7 @@ I paused an in-progress vacuum in the iRobot app and it rebooted into an error s
 
 ### January 19 2025
 
-I selected a URL in Firefox for iOS and couldn't edit it or drag the little handles.
+I selected a URL in Firefox for iOS and couldn't edit it or drag the selection handles.
 
 ![](20250119.jpeg)
 
