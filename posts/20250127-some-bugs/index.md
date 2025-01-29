@@ -8,6 +8,8 @@ draft = false
 +++
 
 I spent a few days trying to be mindful of every time I ran into an apparent software bug (outside of work!).
+I had a feeling it was happening all the time and I had just trained myself to move on without even noticing.
+Probably 95% of my personal computing is on my iPhone, so that's where they all show up.
 
 ### January 28, 2025
 
