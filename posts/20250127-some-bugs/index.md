@@ -1,13 +1,21 @@
 +++
 title = "Some Bugs"
 date = 2025-01-27T00:00:00-0700
-lastmod = 2025-01-27T00:00:00-0700
+lastmod = 2025-01-29T00:00:00-0700
 description = ""
 tags = ["bugs"]
 draft = false
 +++
 
 I spent a few days trying to be mindful of every time I ran into an apparent software bug (outside of work!).
+
+### January 28, 2025
+
+The AirPods popover came up on my iPhone and I couldn't close it by tapping the "x" button.
+
+![](20250128.jpeg)
+
+I tapped the "skip forward" button in the Pocket Casts app, and the audio stopped and the play/pause button no longer worked. I had to restart the app to resume listening.
 
 ### January 25, 2025
 
@@ -52,6 +60,10 @@ I selected a URL in Firefox for iOS and couldn't edit it or drag the selection h
 Reddit's video element is only a few pixels high in landscape mode in Firefox for iOS.
 
 ![](20250118.png)
+
+My iPhone's unlock screen got totally mangled when I switched from landscape to portrait orientation.
+
+![](20250118_2.png)
 
 ### January 17, 2025
 
